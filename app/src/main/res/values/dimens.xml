@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_full_width_margin_horizontal">-3dp</dimen>
+    <dimen name="expanded_appbar_height">200dp</dimen>
+    <dimen name="image_width">100dp</dimen>
+    <dimen name="image_final_width">32dp</dimen>
+    <dimen name="expanded_toolbar_height">200dp</dimen>
+    <dimen name="textsize_large">20sp</dimen>
+    <dimen name="textsize_medium">18sp</dimen>
+    <dimen name="textsize_xlarge">30sp</dimen>
+    <dimen name="border_width">2dp</dimen>
+
+    <dimen name="spacing_xxlarge">36dp</dimen>
+    <dimen name="spacing_xlarge">28dp</dimen>
+    <dimen name="spacing_large">22dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="spacing_small">12dp</dimen>
+    <dimen name="spacing_xsmall">8dp</dimen>
+    <dimen name="spacing_xxsmall">4dp</dimen>
+    <dimen name="spacing_no_spacing">0dp</dimen>
+
+    <dimen name="card_xsmall_radius">4dp</dimen>
+    <dimen name="card_small_radius">8dp</dimen>
+    <dimen name="card_medium_radius">12dp</dimen>
+    <dimen name="card_large_radius">16dp</dimen>
+
+    <dimen name="card_no_elevation">0dp</dimen>
+    <dimen name="card_small_elevation">4dp</dimen>
+    <dimen name="card_medium_elevation">8dp</dimen>
+    <dimen name="card_large_elevation">12dp</dimen>
+    <dimen name="spacing_xxxlarge">50dp</dimen>
+
+    <dimen name="bookmark_dot_size">7dp</dimen>
+
+    <dimen name="bottomsheet_peek_height">30dp</dimen>
+</resources>

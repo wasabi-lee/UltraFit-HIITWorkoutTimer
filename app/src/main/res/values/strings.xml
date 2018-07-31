@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">UltraFit -HIIT Workout Timer</string>
+    <string name="save_this_setting">Save This Setting</string>
 </resources>

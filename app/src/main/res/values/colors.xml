@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#c9fd14</color>
+    <color name="secondaryGray">#8e8e8e</color>
+    <color name="statusbar_background">#4e000000</color>
+
+    <!-- Light theme -->
+    <color name="windowBackground_light">#ffffff</color>
+    <color name="textColor_light">#000000</color>
+    <color name="cardBackground_light">#f3f3f3</color>
+
+    <!-- Dark theme -->
+    <color name="windowBackground_dark">#202020</color>
+    <color name="textColor_dark">#ffffff</color>
+    <color name="cardBackground_dark">#2c2c2c</color>
+
+
 </resources>

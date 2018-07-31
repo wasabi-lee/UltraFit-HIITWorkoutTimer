@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme_light" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:fontFamily">@font/roboto_regular</item>
+
+        <item name="android:windowBackground">@color/windowBackground_light</item>
+        <item name="bottomsheet_background_color">@color/windowBackground_light</item>
+        <item name="card_background_color">@color/cardBackground_light</item>
+        <item name="android:textColor">@color/textColor_light</item>
+
+        <item name="transparent_toolbar_style">@style/transparent_toolbar_style_light</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/statusbar_background</item>
+        <item name="button_accent_style">@style/button_accent_light</item>
+    </style>
+
+    <style name="AppTheme_dark" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:fontFamily">@font/roboto_regular</item>
+
+        <item name="android:windowBackground">@color/windowBackground_light</item>
+        <item name="bottomsheet_background_color">@color/windowBackground_dark</item>
+        <item name="card_background_color">@color/cardBackground_dark</item>
+        <item name="android:textColor">@color/textColor_dark</item>
+
+        <item name="transparent_toolbar_style">@style/transparent_toolbar_style_dark</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/statusbar_background</item>
+        <item name="button_accent_style">@style/button_accent_dark</item>
+    </style>
+
+</resources>

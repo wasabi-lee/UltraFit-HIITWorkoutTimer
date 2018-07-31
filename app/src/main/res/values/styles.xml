@@ -1,11 +1,108 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_light" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:fontFamily">@font/roboto_regular</item>
+
+        <item name="android:windowBackground">@color/windowBackground_light</item>
+        <item name="bottomsheet_background_color">@color/windowBackground_light</item>
+        <item name="card_background_color">@color/cardBackground_light</item>
+        <item name="android:textColor">@color/textColor_light</item>
+
+        <item name="transparent_toolbar_style">@style/transparent_toolbar_style_dark</item>
+        <item name="button_accent_style">@style/button_accent_light</item>
     </style>
+
+
+    <style name="AppTheme_dark" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:fontFamily">@font/roboto_regular</item>
+
+        <item name="android:windowBackground">@color/windowBackground_light</item>
+        <item name="bottomsheet_background_color">@color/windowBackground_dark</item>
+        <item name="card_background_color">@color/cardBackground_dark</item>
+        <item name="android:textColor">@color/textColor_dark</item>
+
+        <item name="transparent_toolbar_style">@style/transparent_toolbar_style_dark</item>
+        <item name="button_accent_style">@style/button_accent_dark</item>
+    </style>
+
+
+
+
+    <!-- attrs -->
+
+    <attr name="bottomsheet_background_color" format="reference"/>
+    <attr name="transparent_toolbar_style" format="reference"/>
+    <attr name="card_background_color" format="reference"/>
+    <attr name="button_accent_style" format="reference"/>
+
+
+    <!-- Widget styles -->
+
+
+    <style name="editText_large" parent="Base.V7.Widget.AppCompat.EditText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">@dimen/spacing_no_spacing</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+
+    </style>
+
+    <style name="button_accent_light" >
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/rounded_button_accent</item>
+        <item name="android:textColor">@color/textColor_light</item>
+    </style>
+
+    <style name="button_accent_dark">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/rounded_button_accent</item>
+        <item name="android:textColor">@color/textColor_dark</item>
+    </style>
+
+
+    <style name="transparent_toolbar_style_light" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorControlNormal">@android:color/black</item>
+        <item name="android:textColorSecondary">@android:color/black</item>
+    </style>
+
+    <style name="transparent_toolbar_style_dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+
+
+    <!-- Text styles -->
+
+    <style name="toolbarTextStyle">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
+    <style name="workoutSettingHeaderTextStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+
+
+
+
 
 </resources>

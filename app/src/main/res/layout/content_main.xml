@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:isScrollContainer="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/spacing_normal"
+        android:paddingEnd="@dimen/spacing_normal"
+        android:paddingLeft="@dimen/spacing_normal"
+        android:paddingRight="@dimen/spacing_normal"
+        android:paddingStart="@dimen/spacing_normal">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/main_card_warmup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background"
+            android:padding="@dimen/spacing_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/main_session_header_warmup_tv"
+                style="@style/workoutSettingHeaderTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Warm Up"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/main_session_time_warmup_edit"
+                style="@style/editText_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xxsmall"
+                android:background="@null"
+                android:ems="5"
+                android:inputType="time"
+                android:text="01:00"
+                android:textCursorDrawable="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/main_session_header_warmup_tv"
+                tools:text="05:00" />
+
+            <ImageView
+                android:id="@+id/main_session_warmup_minus_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:layout_marginRight="@dimen/spacing_small"
+                app:layout_constraintBottom_toBottomOf="@+id/main_session_warmup_plus_iv"
+                app:layout_constraintEnd_toStartOf="@+id/main_session_warmup_plus_iv"
+                app:srcCompat="@drawable/ic_remove_circle_black"/>
+
+            <ImageView
+                android:id="@+id/main_session_warmup_plus_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/main_session_time_warmup_edit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/main_session_time_warmup_edit"
+                app:srcCompat="@drawable/ic_add_circle_black" />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/main_card_workout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:background="@drawable/rounded_background"
+            android:padding="@dimen/spacing_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/main_card_warmup">
+
+
+            <!-- ********************* Work time ********************* -->
+
+            <TextView
+                android:id="@+id/main_session_header_work_tv"
+                style="@style/workoutSettingHeaderTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Work"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/main_session_time_work_edit"
+                style="@style/editText_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xxsmall"
+                android:background="@null"
+                android:ems="5"
+                android:inputType="time"
+                android:text="01:00"
+                android:textCursorDrawable="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/main_session_header_work_tv"
+                tools:text="05:00" />
+
+            <ImageView
+                android:id="@+id/main_session_work_minus_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:layout_marginRight="@dimen/spacing_small"
+                app:layout_constraintBottom_toBottomOf="@+id/main_session_work_plus_iv"
+                app:layout_constraintEnd_toStartOf="@+id/main_session_work_plus_iv"
+                app:srcCompat="@drawable/ic_remove_circle_black"/>
+
+            <ImageView
+                android:id="@+id/main_session_work_plus_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/main_session_time_work_edit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/main_session_time_work_edit"
+                app:srcCompat="@drawable/ic_add_circle_black" />
+
+
+            <!-- ********************* Rest time ********************* -->
+
+            <TextView
+                android:id="@+id/main_session_header_rest_tv"
+                style="@style/workoutSettingHeaderTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:text="Rest"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/main_session_time_work_edit" />
+
+            <EditText
+                android:id="@+id/main_session_time_rest_edit"
+                style="@style/editText_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xxsmall"
+                android:background="@null"
+                android:ems="5"
+                android:inputType="time"
+                android:text="01:00"
+
+                android:textCursorDrawable="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/main_session_header_rest_tv"
+                tools:text="05:00" />
+
+            <ImageView
+                android:id="@+id/main_session_rest_minus_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:layout_marginRight="@dimen/spacing_small"
+                app:layout_constraintBottom_toBottomOf="@+id/main_session_rest_plus_iv"
+                app:layout_constraintEnd_toStartOf="@+id/main_session_rest_plus_iv"
+                app:srcCompat="@drawable/ic_remove_circle_black"/>
+
+            <ImageView
+                android:id="@+id/main_session_rest_plus_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/main_session_time_rest_edit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/main_session_time_rest_edit"
+                app:srcCompat="@drawable/ic_add_circle_black"  />
+
+
+            <!-- ********************* Rounds ********************* -->
+
+            <TextView
+                android:id="@+id/main_session_header_rounds_tv"
+                style="@style/workoutSettingHeaderTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:text="Rounds"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/main_session_time_rest_edit" />
+
+            <EditText
+                android:id="@+id/main_session_time_rounds_edit"
+                style="@style/editText_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_xsmall"
+                android:layout_marginTop="@dimen/spacing_xxsmall"
+                android:background="@null"
+                android:ems="5"
+                android:inputType="numberSigned"
+                android:text="01:00"
+                android:textCursorDrawable="@null"
+                app:layout_constraintBottom_toTopOf="@+id/main_session_workout_customize_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/main_session_header_rounds_tv"
+                app:layout_constraintVertical_bias="1.0"
+                tools:text="8" />
+
+            <ImageView
+                android:id="@+id/main_session_rounds_minus_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:layout_marginRight="@dimen/spacing_small"
+                app:layout_constraintBottom_toBottomOf="@+id/main_session_rounds_plus_iv"
+                app:layout_constraintEnd_toStartOf="@+id/main_session_rounds_plus_iv"
+                app:srcCompat="@drawable/ic_remove_circle_black"/>
+
+            <ImageView
+                android:id="@+id/main_session_rounds_plus_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/main_session_time_rounds_edit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/main_session_time_rounds_edit"
+                app:srcCompat="@drawable/ic_add_circle_black" />
+
+            <TextView
+                android:id="@+id/main_session_workout_customize_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CUSTOMIZE"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/main_card_cooldown"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:background="@drawable/rounded_background"
+            android:padding="@dimen/spacing_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/main_card_workout">
+
+            <TextView
+                android:id="@+id/main_session_header_cooldown_tv"
+                style="@style/workoutSettingHeaderTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cool Down"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/main_session_time_cooldown_edit"
+                style="@style/editText_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xxsmall"
+                android:background="@null"
+                android:ems="5"
+                android:inputType="time"
+                android:text="01:00"
+                android:textCursorDrawable="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/main_session_header_cooldown_tv"
+                tools:text="05:00" />
+
+            <ImageView
+                android:id="@+id/main_session_cooldown_minus_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:layout_marginRight="@dimen/spacing_small"
+                app:layout_constraintBottom_toBottomOf="@+id/main_session_cooldown_plus_iv"
+                app:layout_constraintEnd_toStartOf="@+id/main_session_cooldown_plus_iv"
+                app:srcCompat="@drawable/ic_remove_circle_black" />
+
+            <ImageView
+                android:id="@+id/main_session_cooldown_plus_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/main_session_time_cooldown_edit"
+                app:srcCompat="@drawable/ic_add_circle_black"  />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/main_dummy_total_time_tv"
+            style="@style/workoutSettingHeaderTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_xsmall"
+            android:layout_marginStart="@dimen/spacing_xsmall"
+            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:text="Total"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_card_cooldown" />
+
+        <TextView
+            android:id="@+id/main_total_time_tv"
+            style="@style/workoutSettingHeaderTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_xxsmall"
+            android:layout_marginStart="@dimen/spacing_xxsmall"
+            android:text="10:25"
+            app:layout_constraintBaseline_toBaselineOf="@id/main_dummy_total_time_tv"
+            app:layout_constraintStart_toEndOf="@+id/main_dummy_total_time_tv" />
+
+
+        <TextView
+            android:id="@+id/main_start_btn"
+            style="?attr/button_accent_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:fontFamily="@font/roboto_condensed_bold"
+            android:paddingBottom="@dimen/spacing_xsmall"
+            android:paddingEnd="@dimen/spacing_large"
+            android:paddingLeft="@dimen/spacing_large"
+            android:paddingRight="@dimen/spacing_large"
+            android:paddingStart="@dimen/spacing_large"
+            android:paddingTop="@dimen/spacing_xsmall"
+            android:text="START"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_card_cooldown" />
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.NestedScrollView>
