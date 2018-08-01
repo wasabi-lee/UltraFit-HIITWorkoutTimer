@@ -30,22 +30,22 @@
         android:padding="@dimen/spacing_normal">
 
         <TextView
+            android:id="@+id/main_bottom_sheet_save_preset_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Save This Setting As a Preset" />
+
+        <TextView
             android:id="@+id/main_bottom_sheet_load_presets_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing_small"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="LOAD PRESETS" />
-
-        <TextView
-            android:id="@+id/main_bottom_sheet_track_progress_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_small"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="TRACK YOUR PROGRESS" />
+            android:text="Load Presets" />
 
         <TextView
             android:id="@+id/main_bottom_sheet_settings_tv"
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="SETTINGS" />
+            android:text="Settings" />
 
     </LinearLayout>
 

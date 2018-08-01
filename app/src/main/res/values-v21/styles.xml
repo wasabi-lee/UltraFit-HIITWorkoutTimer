@@ -21,6 +21,9 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/statusbar_background</item>
         <item name="button_accent_style">@style/button_accent_light</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black</item>
+
     </style>
 
     <style name="AppTheme_dark" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -43,6 +46,9 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/statusbar_background</item>
         <item name="button_accent_style">@style/button_accent_dark</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black</item>
+
     </style>
 
 </resources>
