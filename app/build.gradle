@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -38,6 +40,19 @@ dependencies {
 
     // ui library
     implementation 'com.github.vipulasri:timelineview:1.0.6'
+
+    //dagger 2
+    implementation 'com.google.dagger:dagger:2.16'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.16'
+
+    //to enable DaggerActivity, DaggerBroadcastReceiver, DaggerFragment etc classes
+    implementation 'com.google.dagger:dagger-android:2.16'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.16'
+
+    //support libraries with dagger 2
+    implementation 'com.google.dagger:dagger-android-support:2.16'
+    kapt 'com.google.dagger:dagger-android-processor:2.16'
+    kapt 'com.google.dagger:dagger-compiler:2.16'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
