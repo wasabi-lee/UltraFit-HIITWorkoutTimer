@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Theme">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="pref_key_theme"
+            android:title="Enable Dark Theme" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="Sound">
+
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="Beep Sound"
+            android:entries="@array/pref_list_beep_sound"
+            android:entryValues="@array/pref_list_beep_sound_value"
+            android:key="pref_key_beep_sound"
+            android:summary="%s"
+            android:title="Beep Sound" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="Cue Sound"
+            android:entries="@array/pref_list_cue_sound"
+            android:entryValues="@array/pref_list_cue_sound_value"
+            android:key="pref_key_cue_sound"
+            android:summary="%s"
+            android:title="Cue Second" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="Cue Seconds"
+            android:entries="@array/pref_list_cue_seconds"
+            android:entryValues="@array/pref_list_cue_second_values"
+            android:key="pref_key_cue_seconds"
+            android:summary="%s"
+            android:title="Cue Seconds" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Timer Setup">
+
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="Increment the time by"
+            android:entries="@array/pref_list_time_increment"
+            android:entryValues="@array/pref_list_time_increment_value"
+            android:key="pref_key_increment_seconds"
+            android:summary="%s"
+            android:title="+/-Button Increment" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

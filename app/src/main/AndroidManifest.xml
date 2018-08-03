@@ -25,9 +25,10 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity android:name=".activity.PresetListActivity" />
-        <activity android:name=".activity.CustomizeActivity"></activity>
+        <activity android:name=".activity.CustomizeActivity" />
         <activity android:name=".activity.TimerActivity" />
-        <activity android:name=".activity.SummaryActivity"></activity>
+        <activity android:name=".activity.SummaryActivity" />
+        <activity android:name=".activity.SettingsActivity"></activity>
     </application>
 
 </manifest>

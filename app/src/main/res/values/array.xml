@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ************* Time increment option ************** -->
+
+    <string-array name="pref_list_time_increment">
+        <item>1 Second</item>
+        <item>5 Seconds</item>
+        <item>10 Seconds</item>
+        <item>30 Seconds</item>
+        <item>1 Minute</item>
+    </string-array>
+    <string-array name="pref_list_time_increment_value">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+
+
+    <!-- ************* Beep sound option ************** -->
+
+    <string-array name="pref_list_beep_sound">
+        <item>Basic Beep</item>
+        <item>Whistle</item>
+        <item>Machine Gun</item>
+        <item>Rifle Shot</item>
+        <item>Chime Bell</item>
+        <item>Click</item>
+        <item>Glass Click</item>
+        <item>Home Run</item>
+        <item>Xylophone Beep</item>
+    </string-array>
+    <string-array name="pref_list_beep_sound_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
+
+
+    <!-- ************* Tick increment option ************** -->
+
+    <string-array name="pref_list_cue_sound">
+        <item>Basic Tick</item>
+        <item>Camera Click</item>
+        <item>Hint</item>
+        <item>Pistol</item>
+        <item>Shotgun Pump</item>
+        <item>Temple Block</item>
+        <item>Xylophone Tick</item>
+    </string-array>
+    <string-array name="pref_list_cue_sound_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+
+    <!-- *************Sound option ************* -->
+
+    <string-array name="pref_list_cue_seconds">
+        <item>3 ticks</item>
+        <item>5 ticks</item>
+        <item>10 ticks</item>
+    </string-array>
+    <string-array name="pref_list_cue_second_values">
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+
+
+</resources>

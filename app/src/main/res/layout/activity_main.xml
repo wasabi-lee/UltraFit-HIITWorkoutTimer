@@ -1,41 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/tx_detail_app_bar"
+<layout>
+
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="io.incepted.ultrafittimer.viewmodel.MainViewModel" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:fitsSystemWindows="true"
-        app:elevation="0dp">
+        android:layout_height="match_parent"
+        tools:context=".activity.MainActivity">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/main_toolbar"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/tx_detail_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:padding="@dimen/spacing_xsmall"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="true"
+            app:elevation="0dp">
 
-            <TextView
-                style="@style/toolbarTextStyle"
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/main_toolbar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Timer Setup" />
+                android:layout_gravity="top"
+                android:padding="@dimen/spacing_xsmall"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
+                <TextView
+                    style="@style/toolbarTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Timer Setup" />
 
-    <include layout="@layout/content_main" />
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
 
-    <include
-        android:id="@+id/bottom_sheet_container"
-        layout="@layout/main_bottom_sheet" />
+        <include layout="@layout/content_main"
+            app:viewmodel="@{viewmodel}"/>
 
-</android.support.design.widget.CoordinatorLayout>
+        <include
+            android:id="@+id/bottom_sheet_container"
+            layout="@layout/main_bottom_sheet"
+            app:viewmodel="@{viewmodel}"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>

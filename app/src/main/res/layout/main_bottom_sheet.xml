@@ -1,60 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_bottom_sheet"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="@dimen/bottomsheet_peek_height"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-    android:background="@drawable/top_rounded_background">
+<layout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/bottomsheet_peek_height">
+    <data>
 
-        <ImageView
-            android:id="@+id/main_bottom_sheet_arrow_indicator_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_keyboard_arrow_up_black"
-            android:layout_gravity="center"/>
+        <variable
+            name="viewmodel"
+            type="io.incepted.ultrafittimer.viewmodel.MainViewModel" />
+    </data>
 
-    </FrameLayout>
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/top_rounded_background"
         android:orientation="vertical"
-        android:padding="@dimen/spacing_normal">
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="@dimen/bottomsheet_peek_height"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-        <TextView
-            android:id="@+id/main_bottom_sheet_save_preset_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_small"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Save This Setting As a Preset" />
+        <FrameLayout
+            android:id="@+id/main_bottom_sheet_peek_fl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottomsheet_peek_height"
+            android:onClick="@{() -> viewmodel.toggleBottomSheet()}">
 
-        <TextView
-            android:id="@+id/main_bottom_sheet_load_presets_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_small"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Load Presets" />
+            <ImageView
+                android:id="@+id/main_bottom_sheet_arrow_indicator_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_keyboard_arrow_up_black" />
 
-        <TextView
-            android:id="@+id/main_bottom_sheet_settings_tv"
-            android:layout_width="wrap_content"
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Settings" />
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_normal">
+
+            <TextView
+                android:id="@+id/main_bottom_sheet_save_preset_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Save This Setting As a Preset"
+                android:onClick="@{() -> viewmodel.doToast()}"/>
+
+            <TextView
+                android:id="@+id/main_bottom_sheet_load_presets_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Load Presets"
+                android:onClick="@{() -> viewmodel.openPresetActivity()}"/>
+
+            <TextView
+                android:id="@+id/main_bottom_sheet_settings_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Settings"
+                android:onClick="@{() -> viewmodel.openSettings()}"/>
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</layout>

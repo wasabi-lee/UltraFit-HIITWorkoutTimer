@@ -24,6 +24,9 @@
 
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black</item>
 
+        <item name="preferenceTheme">
+            @style/PreferenceThemeOverlay.v14.Material
+        </item>
     </style>
 
     <style name="AppTheme_dark" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -49,6 +52,9 @@
 
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black</item>
 
+        <item name="preferenceTheme">
+            @style/PreferenceThemeOverlay.v14.Material
+        </item>
     </style>
 
 </resources>

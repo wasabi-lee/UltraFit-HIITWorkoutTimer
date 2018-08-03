@@ -21,6 +21,10 @@
         <item name="button_accent_style">@style/button_accent_light</item>
 
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black</item>
+
+        <item name="preferenceTheme">
+            @style/PreferenceThemeOverlay.v14.Material
+        </item>
     </style>
 
 
@@ -44,17 +48,19 @@
         <item name="button_accent_style">@style/button_accent_dark</item>
 
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white</item>
+
+        <item name="preferenceTheme">
+            @style/PreferenceThemeOverlay.v14.Material
+        </item>
     </style>
-
-
 
 
     <!-- attrs -->
 
-    <attr name="bottomsheet_background_color" format="reference"/>
-    <attr name="transparent_toolbar_style" format="reference"/>
-    <attr name="card_background_color" format="reference"/>
-    <attr name="button_accent_style" format="reference"/>
+    <attr name="bottomsheet_background_color" format="reference" />
+    <attr name="transparent_toolbar_style" format="reference" />
+    <attr name="card_background_color" format="reference" />
+    <attr name="button_accent_style" format="reference" />
 
 
     <!-- Widget styles -->
@@ -67,7 +73,7 @@
 
     </style>
 
-    <style name="button_accent_light" >
+    <style name="button_accent_light">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">20sp</item>
         <item name="android:background">@drawable/rounded_button_accent</item>
@@ -115,10 +121,12 @@
         <item name="android:textSize">32sp</item>
         <item name="android:fontFamily">@font/roboto_bold_italic</item>
     </style>
+
     <style name="timerTimeTextStyle">
         <item name="android:textSize">80sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
+
     <style name="timerRoundsTextStyle">
         <item name="android:textSize">32sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
@@ -129,10 +137,12 @@
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
+
     <style name="SemiBoldXxLargeTextStyle">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
+
     <style name="RegularXxLargeTextStyle">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
@@ -143,10 +153,12 @@
         <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
+
     <style name="SemiBoldXLargeTextStyle">
         <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
+
     <style name="RegularXLargeTextStyle">
         <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
@@ -157,14 +169,17 @@
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
+
     <style name="SemiBoldLargeTextStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
+
     <style name="RegularLargeTextStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
+
     <style name="BoldLargeItalicTextStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/roboto_bold_italic</item>
@@ -175,14 +190,17 @@
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
+
     <style name="SemiBoldMediumTextStyle">
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
+
     <style name="RegularMediumTextStyle">
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
+
     <style name="BoldMediumItalicTextStyle">
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/roboto_bold_italic</item>
@@ -193,27 +211,26 @@
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
+
     <style name="SemiBoldSmallTextStyle">
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
+
     <style name="RegularSmallTextStyle">
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
+
     <style name="BoldSmallItalicTextStyle">
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">@font/roboto_bold_italic</item>
     </style>
 
 
-
     <style name="secondaryMediumRegularTextStyle">
         <item name="android:textColor">@color/secondaryGray</item>
     </style>
-
-
-
 
 
 </resources>
