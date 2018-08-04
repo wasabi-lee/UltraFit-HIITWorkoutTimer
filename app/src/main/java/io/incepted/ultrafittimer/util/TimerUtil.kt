@@ -12,7 +12,7 @@ object TimerUtil {
      *          Returns -1 when the input is not valid or the second representation is over an hour.
      */
 
-    fun convertStringToSeconds(input: String): Int {
+    fun convertStringToSeconds(input: String, offset: Int): Int {
         try {
             val split: List<String> = input.split(":")
             if (split.size >= 3) return -1
@@ -31,7 +31,7 @@ object TimerUtil {
             if (result >= 60 * 60)
                 return -1
 
-            return result
+            return if (result - offset < 0) 0 else result + offset
 
         } catch (ex: Exception) {
             ex.printStackTrace()
@@ -85,8 +85,8 @@ object TimerUtil {
      * Converts user input (i.e. :32, 12:0) into the readable time format (00:32, 12:00)
      */
 
-    fun convertStringToTimeString(input: String) : String {
-        return convertSecondsToTimeString(convertStringToSeconds(input))
+    fun convertStringToTimeString(input: String, offset: Int): String {
+        return convertSecondsToTimeString(convertStringToSeconds(input, offset))
     }
 
 

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Theme">
+    <android.support.v7.preference.PreferenceCategory android:title="Theme"
+        android:layout="@layout/pref_category_view">
 
-        <SwitchPreference
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_key_theme"
             android:title="Enable Dark Theme" />
-    </PreferenceCategory>
+
+    </android.support.v7.preference.PreferenceCategory>
 
 
-    <PreferenceCategory android:title="Sound">
+    <android.support.v7.preference.PreferenceCategory android:title="Sound"
+        android:layout="@layout/pref_category_view">
 
-        <ListPreference
+        <android.support.v7.preference.ListPreference
             android:defaultValue="1"
             android:dialogTitle="Beep Sound"
             android:entries="@array/pref_list_beep_sound"
@@ -21,7 +24,7 @@
             android:summary="%s"
             android:title="Beep Sound" />
 
-        <ListPreference
+        <android.support.v7.preference.ListPreference
             android:defaultValue="1"
             android:dialogTitle="Cue Sound"
             android:entries="@array/pref_list_cue_sound"
@@ -30,19 +33,20 @@
             android:summary="%s"
             android:title="Cue Second" />
 
-        <ListPreference
-            android:defaultValue="1"
+        <android.support.v7.preference.ListPreference
+            android:defaultValue="3"
             android:dialogTitle="Cue Seconds"
             android:entries="@array/pref_list_cue_seconds"
             android:entryValues="@array/pref_list_cue_second_values"
             android:key="pref_key_cue_seconds"
             android:summary="%s"
             android:title="Cue Seconds" />
-    </PreferenceCategory>
+    </android.support.v7.preference.PreferenceCategory>
 
-    <PreferenceCategory android:title="Timer Setup">
+    <android.support.v7.preference.PreferenceCategory android:title="Timer Setup"
+        android:layout="@layout/pref_category_view">
 
-        <ListPreference
+        <android.support.v7.preference.ListPreference
             android:defaultValue="1"
             android:dialogTitle="Increment the time by"
             android:entries="@array/pref_list_time_increment"
@@ -51,5 +55,5 @@
             android:summary="%s"
             android:title="+/-Button Increment" />
 
-    </PreferenceCategory>
-</PreferenceScreen>
+    </android.support.v7.preference.PreferenceCategory>
+</android.support.v7.preference.PreferenceScreen>

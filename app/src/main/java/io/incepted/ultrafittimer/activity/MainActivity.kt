@@ -25,9 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mainViewModel: MainViewModel
 
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -36,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         binding.viewmodel = mainViewModel
 
         initToolbar()
-        initBottomSheet()
         initObservers()
         initActivityTransitionObservers()
 
@@ -47,25 +43,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
-    private fun initBottomSheet() {
-        bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_container)
-        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                /* empty */
-            }
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                main_bottom_sheet_arrow_indicator_iv
-                        .animate()
-                        .setDuration(100)
-                        .rotation(if (newState == BottomSheetBehavior.STATE_EXPANDED) 180F else 0F)
-                        .start()
-            }
-        })
-    }
 
     private fun initObservers() {
-        mainViewModel.bottomSheetToggle.observe(this, Observer { toggleBottomSheet() })
         mainViewModel.snackbarTextRes.observe(this, Observer {
             if (it != null) showSnackBar(resources.getString(it))
         })
@@ -82,15 +61,6 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.toPresetActivity.observe(this, Observer { TODO("placeholder") })
     }
 
-
-    private fun toggleBottomSheet() {
-        bottomSheetBehavior.state =
-                when (bottomSheetBehavior.state) {
-                    BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_COLLAPSED
-                    BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_EXPANDED
-                    else -> bottomSheetBehavior.state
-                }
-    }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -13,9 +13,11 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
 
         <item name="android:windowBackground">@color/windowBackground_light</item>
-        <item name="bottomsheet_background_color">@color/windowBackground_light</item>
-        <item name="card_background_color">@color/cardBackground_light</item>
+        <item name="bottomsheet_background_drawable">@drawable/bottomsheet_background_light</item>
+        <item name="card_background_drawable">@drawable/card_background_light</item>
+
         <item name="android:textColor">@color/textColor_light</item>
+        <item name="header_text_color">@color/colorAccent_header</item>
 
         <item name="transparent_toolbar_style">@style/transparent_toolbar_style_dark</item>
         <item name="button_accent_style">@style/button_accent_light</item>
@@ -40,9 +42,11 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
 
         <item name="android:windowBackground">@color/windowBackground_light</item>
-        <item name="bottomsheet_background_color">@color/windowBackground_dark</item>
-        <item name="card_background_color">@color/cardBackground_dark</item>
+        <item name="bottomsheet_background_drawable">@drawable/bottomsheet_background_dark</item>
+        <item name="card_background_drawable">@drawable/card_background_dark</item>
+
         <item name="android:textColor">@color/textColor_dark</item>
+        <item name="header_text_color">@color/colorAccent</item>
 
         <item name="transparent_toolbar_style">@style/transparent_toolbar_style_dark</item>
         <item name="button_accent_style">@style/button_accent_dark</item>
@@ -57,20 +61,21 @@
 
     <!-- attrs -->
 
-    <attr name="bottomsheet_background_color" format="reference" />
     <attr name="transparent_toolbar_style" format="reference" />
-    <attr name="card_background_color" format="reference" />
     <attr name="button_accent_style" format="reference" />
+
+    <attr name="card_background_drawable" format="reference" />
+    <attr name="bottomsheet_background_drawable" format="reference" />
+
+    <attr name="header_text_color" format="reference" />
 
 
     <!-- Widget styles -->
-
 
     <style name="editText_large" parent="Base.V7.Widget.AppCompat.EditText">
         <item name="android:textSize">18sp</item>
         <item name="android:paddingTop">@dimen/spacing_no_spacing</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
-
     </style>
 
     <style name="button_accent_light">

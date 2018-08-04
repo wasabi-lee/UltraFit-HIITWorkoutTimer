@@ -4,9 +4,9 @@ import java.nio.charset.MalformedInputException
 
 object NumberUtil {
 
-    fun convertToValidRoundNumber(input: String): Int {
+    fun convertToValidRoundNumber(input: String, offset: Int): Int {
         return try {
-            input.toInt()
+            input.toInt() + offset
         } catch (ex: Exception) {
             ex.printStackTrace()
             -1

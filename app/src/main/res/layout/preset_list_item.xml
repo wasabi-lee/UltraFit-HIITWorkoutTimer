@@ -10,7 +10,7 @@
     android:layout_marginRight="@dimen/spacing_normal"
     android:layout_marginStart="@dimen/spacing_normal"
     android:layout_marginTop="@dimen/spacing_xxsmall"
-    android:background="@drawable/rounded_background"
+    android:background="?attr/card_background_drawable"
     android:padding="@dimen/spacing_normal">
 
     <TextView

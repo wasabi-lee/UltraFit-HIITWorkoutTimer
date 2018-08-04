@@ -4,6 +4,7 @@ import android.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceFragment
+import android.view.MenuItem
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.fragment.SettingsFragment
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -29,6 +30,16 @@ class SettingsActivity : AppCompatActivity() {
         setSupportActionBar(settings_toolbar)
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }
