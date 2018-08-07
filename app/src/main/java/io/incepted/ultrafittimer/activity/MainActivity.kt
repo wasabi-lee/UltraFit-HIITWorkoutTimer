@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.ActivityMainBinding
@@ -16,6 +17,7 @@ import io.incepted.ultrafittimer.util.SnackbarUtil
 import io.incepted.ultrafittimer.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_bottom_sheet.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -62,7 +64,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -71,5 +72,19 @@ class MainActivity : AppCompatActivity() {
     private fun showSnackBar(s: String) {
         SnackbarUtil.showSnackBar(findViewById(android.R.id.content), s)
     }
+
+    override fun onResume() {
+        super.onResume()
+        mainViewModel.start()
+    }
+
+    override fun onBackPressed() {
+        if (mainViewModel.isBottomSheetExpanded()) {
+            mainViewModel.toggleBottomSheet()
+            return
+        }
+        super.onBackPressed()
+    }
+
 
 }

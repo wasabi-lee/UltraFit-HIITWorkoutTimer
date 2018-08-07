@@ -347,7 +347,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/spacing_xxsmall"
                 android:layout_marginStart="@dimen/spacing_xxsmall"
-                android:text="10:25"
+                android:text="@{viewmodel.totalSeconds}"
                 app:layout_constraintBaseline_toBaselineOf="@id/main_dummy_total_time_tv"
                 app:layout_constraintStart_toEndOf="@+id/main_dummy_total_time_tv" />
 

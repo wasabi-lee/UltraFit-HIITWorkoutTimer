@@ -5,6 +5,7 @@ import android.app.Application
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import io.incepted.ultrafittimer.di.AppInjector
+import timber.log.Timber
 import javax.inject.Inject
 
 class UltraFitApp : Application(), HasActivityInjector {
@@ -13,6 +14,11 @@ class UltraFitApp : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
+
         AppInjector.init(this)
     }
 
