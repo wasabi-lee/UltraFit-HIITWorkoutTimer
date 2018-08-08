@@ -57,8 +57,9 @@
                     android:ems="5"
                     android:inputType="time"
                     android:maxLength="5"
-                    android:text="@={viewmodel.warmUpSeconds}"
+                    android:text="@={viewmodel.timerSettingObservable.warmupObservable}"
                     android:textCursorDrawable="@null"
+                    android:nextFocusForward="@id/main_session_time_work_edit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/main_session_header_warmup_tv"
                     tools:text="05:00" />
@@ -122,8 +123,9 @@
                     android:ems="5"
                     android:inputType="time"
                     android:maxLength="5"
-                    android:text="@={viewmodel.workSeconds}"
+                    android:text="@={viewmodel.timerSettingObservable.workObservable}"
                     android:textCursorDrawable="@null"
+                    android:nextFocusForward="@id/main_session_time_rest_edit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/main_session_header_work_tv"
                     tools:text="05:00" />
@@ -173,8 +175,9 @@
                     android:background="@null"
                     android:ems="5"
                     android:inputType="time"
+                    android:nextFocusForward="@id/main_session_time_rounds_edit"
                     android:maxLength="5"
-                    android:text="@={viewmodel.restSeconds}"
+                    android:text="@={viewmodel.timerSettingObservable.restObservable}"
                     android:textCursorDrawable="@null"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/main_session_header_rest_tv"
@@ -227,7 +230,8 @@
                     android:ems="5"
                     android:inputType="numberSigned"
                     android:maxLength="5"
-                    android:text="@={viewmodel.roundCount}"
+                    android:nextFocusForward="@id/main_session_time_cooldown_edit"
+                    android:text="@={viewmodel.timerSettingObservable.roundCountObservable}"
                     android:textCursorDrawable="@null"
                     app:layout_constraintBottom_toTopOf="@+id/main_session_workout_customize_tv"
                     app:layout_constraintStart_toStartOf="parent"
@@ -260,8 +264,8 @@
                     android:id="@+id/main_session_workout_customize_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CUSTOMIZE"
-                    android:textSize="12sp"
+                    customized="@{viewmodel.timerSettingObservable.isCustomizedObservable}"
+                    style="@style/SemiBoldSmallTextStyle"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
@@ -297,9 +301,10 @@
                     android:layout_marginTop="@dimen/spacing_xxsmall"
                     android:background="@null"
                     android:ems="5"
+                    android:imeOptions="actionDone"
                     android:inputType="time"
                     android:maxLength="5"
-                    android:text="@={viewmodel.coolDownSeconds}"
+                    android:text="@={viewmodel.timerSettingObservable.cooldownObservable}"
                     android:textCursorDrawable="@null"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/main_session_header_cooldown_tv"
@@ -347,7 +352,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/spacing_xxsmall"
                 android:layout_marginStart="@dimen/spacing_xxsmall"
-                android:text="@{viewmodel.totalSeconds}"
+                android:text="@{viewmodel.timerSettingObservable.totalObservable}"
                 app:layout_constraintBaseline_toBaselineOf="@id/main_dummy_total_time_tv"
                 app:layout_constraintStart_toEndOf="@+id/main_dummy_total_time_tv" />
 
@@ -366,6 +371,7 @@
                 android:paddingStart="@dimen/spacing_large"
                 android:paddingTop="@dimen/spacing_xsmall"
                 android:text="START"
+                android:onClick="@{() -> viewmodel.onTimerStartClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/main_card_cooldown" />
 

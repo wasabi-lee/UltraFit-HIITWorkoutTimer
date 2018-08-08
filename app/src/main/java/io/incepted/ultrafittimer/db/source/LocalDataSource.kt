@@ -107,9 +107,9 @@ interface LocalDataSource {
 
     fun getTimerById(timerId: Int, callback: OnTimerLoadedListener)
 
-    fun saveTimer(newTimer: Preset, callback: OnTimerSavedListener)
+    fun saveTimer(newTimer: TimerSetting, callback: OnTimerSavedListener)
 
-    fun updateTimer(updated: Preset, callback:OnTimerUpdateListener)
+    fun updateTimer(updated: TimerSetting, callback:OnTimerUpdateListener)
 
 
 
@@ -117,7 +117,7 @@ interface LocalDataSource {
 
     fun getWorkoutHistoryById(historyId: Int, callback: OnHistoryLoadedListener)
 
-    fun saveWorkoutHistory(newHistory: Preset, callback: OnHistorySavedListener)
+    fun saveWorkoutHistory(newHistory: WorkoutHistory, callback: OnHistorySavedListener)
 
     fun deleteWorkoutHistory(historyId: Int, callback:OnHistoryDeletedListener)
 

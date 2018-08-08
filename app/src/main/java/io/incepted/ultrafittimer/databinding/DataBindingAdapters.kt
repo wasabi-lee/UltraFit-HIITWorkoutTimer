@@ -1,16 +1,12 @@
 package io.incepted.ultrafittimer.databinding
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.databinding.BindingAdapter
-import android.os.SystemClock
+import android.graphics.Color
 import android.support.design.widget.BottomSheetBehavior
-import android.util.Log
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 
 object DataBindingAdapters {
 
@@ -45,7 +41,12 @@ object DataBindingAdapters {
                 .start()
     }
 
-
-
+    @JvmStatic
+    @BindingAdapter("customized")
+    fun setTextAppearance(v: TextView, isCustomized: Boolean) {
+        v.text = if (isCustomized) "CUSTOMIZED" else "CUSTOMIZE"
+        v.setTextColor(if (isCustomized) Color.GREEN else Color.BLACK)
+    }
 
 }
+

@@ -6,19 +6,22 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
+import android.widget.Toast
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.ActivityMainBinding
 import io.incepted.ultrafittimer.util.SnackbarUtil
 import io.incepted.ultrafittimer.viewmodel.MainViewModel
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.main_bottom_sheet.*
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var mainViewModel: MainViewModel
+
+    private var exit: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,15 +63,33 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         })
 
-        mainViewModel.toCustomizeActivity.observe(this, Observer { TODO("placeholder") })
+        mainViewModel.toCustomizeActivity.observe(this, Observer { Timber.d("to customize activity") })
 
-        mainViewModel.toPresetActivity.observe(this, Observer { TODO("placeholder") })
+        mainViewModel.toPresetActivity.observe(this, Observer { Timber.d("to preset activity") })
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.menu_main_save_preset -> {
+                mainViewModel.saveThisAsPreset()
+                true
+            }
+            R.id.menu_main_load_presets -> {
+                mainViewModel.openPresetActivity()
+                true
+            }
+            R.id.menu_main_settings -> {
+                mainViewModel.openSettings()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun showSnackBar(s: String) {
@@ -79,12 +102,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (mainViewModel.isBottomSheetExpanded()) {
-            mainViewModel.toggleBottomSheet()
-            return
+        if (exit) {
+            super.onBackPressed()
+        } else {
+            Toast.makeText(this, "Press the back button again to exit", Toast.LENGTH_SHORT).show()
+            exit = true
+            Observable.timer(2, TimeUnit.SECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(onComplete = { exit = false })
         }
-        super.onBackPressed()
     }
-
-
 }

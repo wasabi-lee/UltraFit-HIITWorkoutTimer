@@ -13,7 +13,6 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
 
         <item name="android:windowBackground">@color/windowBackground_light</item>
-        <item name="bottomsheet_background_drawable">@drawable/bottomsheet_background_light</item>
         <item name="card_background_drawable">@drawable/card_background_light</item>
 
         <item name="android:textColor">@color/textColor_light</item>
@@ -42,7 +41,6 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
 
         <item name="android:windowBackground">@color/windowBackground_light</item>
-        <item name="bottomsheet_background_drawable">@drawable/bottomsheet_background_dark</item>
         <item name="card_background_drawable">@drawable/card_background_dark</item>
 
         <item name="android:textColor">@color/textColor_dark</item>
@@ -65,7 +63,6 @@
     <attr name="button_accent_style" format="reference" />
 
     <attr name="card_background_drawable" format="reference" />
-    <attr name="bottomsheet_background_drawable" format="reference" />
 
     <attr name="header_text_color" format="reference" />
 

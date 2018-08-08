@@ -9,7 +9,9 @@
             type="io.incepted.ultrafittimer.viewmodel.MainViewModel" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/main_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -38,17 +40,12 @@
                     style="@style/toolbarTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Timer Setup" />
+                    android:text="Timer Setup"/>
 
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
         <include layout="@layout/content_main"
-            app:viewmodel="@{viewmodel}"/>
-
-        <include
-            android:id="@+id/bottom_sheet_container"
-            layout="@layout/main_bottom_sheet"
             app:viewmodel="@{viewmodel}"/>
 
     </android.support.design.widget.CoordinatorLayout>

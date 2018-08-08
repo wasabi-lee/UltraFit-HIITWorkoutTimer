@@ -4,7 +4,7 @@ import java.nio.charset.MalformedInputException
 
 object NumberUtil {
 
-    fun convertToValidRoundNumber(input: String, offset: Int): Int {
+    fun toValidRoundCount(input: String, offset: Int): Int {
         return try {
             input.toInt() + offset
         } catch (ex: Exception) {

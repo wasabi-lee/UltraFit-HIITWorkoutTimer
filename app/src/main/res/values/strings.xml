@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">UltraFit -HIIT Workout Timer</string>
-    <string name="save_this_setting">Save This Setting</string>
 
     <!-- Error messages -->
     <string name="error_invalid_time">Please type a valid time</string>
     <string name="error_invalid_round">Please type a valid number</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save_this_setting">Save This As Preset</string>
+    <string name="load_presets">Load Presets</string>
+    <string name="settings">Settings</string>
 
 </resources>

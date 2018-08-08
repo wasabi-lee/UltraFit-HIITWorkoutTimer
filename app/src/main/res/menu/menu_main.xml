@@ -3,7 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:icon="@drawable/ic_action_add_black"
+        android:id="@+id/menu_main_save_preset"
         android:title="@string/save_this_setting"
-        app:showAsAction="always"/>
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_main_load_presets"
+        android:title="@string/load_presets"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_main_settings"
+        android:title="@string/settings"
+        app:showAsAction="never" />
 </menu>

@@ -4,7 +4,10 @@ import io.incepted.ultrafittimer.db.dao.PresetDao
 import io.incepted.ultrafittimer.db.dao.TimerSettingDao
 import io.incepted.ultrafittimer.db.dao.WorkoutHistoryDao
 import io.incepted.ultrafittimer.db.model.Preset
+import io.incepted.ultrafittimer.db.model.TimerSetting
+import io.incepted.ultrafittimer.db.model.WorkoutHistory
 import io.incepted.ultrafittimer.db.source.LocalDataSource
+import io.reactivex.Completable
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,11 +25,6 @@ class DbRepository @Inject constructor(
     // ---------- Preset operations ----------
 
     override fun getPresets(callback: LocalDataSource.OnPresetsLoadedListener) {
-        Timber.d("checking injection... \n" +
-                "db: ${db.toString()} \n" +
-                "presetDao: ${presetDao.toString()} \n" +
-                "timerSettingDao: ${timerSettingDao.toString()} \n" +
-                "workoutHistoryDao: ${workoutHistoryDao.toString()} \n")
     }
 
     override fun getPresetById(presetId: Int, callback: LocalDataSource.OnPresetLoadedListener) {
@@ -57,11 +55,11 @@ class DbRepository @Inject constructor(
 
     }
 
-    override fun saveTimer(newTimer: Preset, callback: LocalDataSource.OnTimerSavedListener) {
-
+    override fun saveTimer(newTimer: TimerSetting, callback: LocalDataSource.OnTimerSavedListener) {
+        callback.onTimerSaved()
     }
 
-    override fun updateTimer(updated: Preset, callback: LocalDataSource.OnTimerUpdateListener) {
+    override fun updateTimer(updated: TimerSetting, callback: LocalDataSource.OnTimerUpdateListener) {
 
     }
 
@@ -76,7 +74,7 @@ class DbRepository @Inject constructor(
 
     }
 
-    override fun saveWorkoutHistory(newHistory: Preset, callback: LocalDataSource.OnHistorySavedListener) {
+    override fun saveWorkoutHistory(newHistory: WorkoutHistory, callback: LocalDataSource.OnHistorySavedListener) {
 
     }
 
