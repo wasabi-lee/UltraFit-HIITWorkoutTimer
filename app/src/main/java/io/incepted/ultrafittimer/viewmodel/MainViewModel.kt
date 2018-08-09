@@ -23,10 +23,15 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
     // Activity transition LiveData
     val toPresetActivity: MutableLiveData<Void> = MutableLiveData()
-    val toCustomizeActivity: MutableLiveData<Void> = MutableLiveData()
+
+    val toCustomizeActivity: MutableLiveData<ArrayList<String>> = MutableLiveData()
+
     val toSettings: MutableLiveData<Void> = MutableLiveData()
+
     val toTimerActivity: MutableLiveData<Int> = MutableLiveData()
+
     val snackbarTextRes: MutableLiveData<Int> = MutableLiveData()
+
     val focusListener: View.OnFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
         handleFocusChange(v, hasFocus)
     }
@@ -72,7 +77,6 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
     fun onTimerStartClicked() {
         timerSettingObservable.finalizeDetail()
-        // gather observable field data, save to DB, extract the id and move to the next activity.
         if (!fromPreset && !fromTemp) {
             // just save this timer and move on
             repository.saveTimer(timerSettingObservable.getFinalSetting(), this)
@@ -100,7 +104,11 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     }
 
     fun openCustomizeActivity() {
-        toCustomizeActivity.value = null
+        // sending the delimiter separated workout details as extra
+        timerSettingObservable.finalizeDetail()
+        toCustomizeActivity.value = arrayListOf(timerSettingObservable.finalWorkName,
+                timerSettingObservable.finalWorks,
+                timerSettingObservable.finalRests)
     }
 
     fun openSettings() {

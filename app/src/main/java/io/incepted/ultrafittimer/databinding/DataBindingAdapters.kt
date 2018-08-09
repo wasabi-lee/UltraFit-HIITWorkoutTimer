@@ -3,14 +3,15 @@ package io.incepted.ultrafittimer.databinding
 import android.databinding.BindingAdapter
 import android.graphics.Color
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import io.incepted.ultrafittimer.adapter.RoundAdapter
+import io.incepted.ultrafittimer.db.tempmodel.Round
 
 object DataBindingAdapters {
-
-    private val TAG: String = DataBindingAdapters::class.java.simpleName
 
     @JvmStatic
     @BindingAdapter("onFocusChangedListener")
@@ -46,6 +47,13 @@ object DataBindingAdapters {
     fun setTextAppearance(v: TextView, isCustomized: Boolean) {
         v.text = if (isCustomized) "CUSTOMIZED" else "CUSTOMIZE"
         v.setTextColor(if (isCustomized) Color.GREEN else Color.BLACK)
+    }
+
+    @JvmStatic
+    @BindingAdapter("roundItems")
+    fun setRoundItems(v: RecyclerView, items: List<Round>) {
+        val adapter: RoundAdapter = v.adapter as RoundAdapter
+        adapter.replaceData(items)
     }
 
 }

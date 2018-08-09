@@ -264,6 +264,7 @@
                     android:id="@+id/main_session_workout_customize_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewmodel.openCustomizeActivity()}"
                     customized="@{viewmodel.timerSettingObservable.isCustomizedObservable}"
                     style="@style/SemiBoldSmallTextStyle"
                     app:layout_constraintBottom_toBottomOf="parent"

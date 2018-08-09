@@ -165,6 +165,13 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
     }
 
     fun finalizeDetail() {
+
+        handleChange(WorkoutSession.WARMUP, 0)
+        handleChange(WorkoutSession.WORK, 0)
+        handleChange(WorkoutSession.REST, 0)
+        handleChange(WorkoutSession.ROUND, 0)
+        handleChange(WorkoutSession.COOLDOWN, 0)
+
         finalWarmup = TimerUtil.stringToSecond(warmupObservable.get() ?: return, 0)
         finalCooldown = TimerUtil.stringToSecond(cooldownObservable.get() ?: return, 0)
         finalWorkName = mRounds.joinToString(DbDelimiter.DELIMITER) { it.workoutName }

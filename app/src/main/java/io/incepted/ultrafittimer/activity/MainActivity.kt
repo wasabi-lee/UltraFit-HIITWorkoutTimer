@@ -32,12 +32,17 @@ class MainActivity : AppCompatActivity() {
 
     private var exit: Boolean = false
 
+    private val RC_CUSTOMIZED = 1001
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mainViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(MainViewModel::class.java)
         binding.viewmodel = mainViewModel
+
+        if (savedInstanceState == null) mainViewModel.start()
+
 
         initToolbar()
         initObservers()
@@ -63,7 +68,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         })
 
-        mainViewModel.toCustomizeActivity.observe(this, Observer { Timber.d("to customize activity") })
+        mainViewModel.toCustomizeActivity.observe(this, Observer {
+            if (it == null) return@Observer
+            val intent = Intent(this, CustomizeActivity::class.java)
+            intent.putStringArrayListExtra(CustomizeActivity.EXTRA_KEY_WORKOUT_DETAILS, it)
+            startActivityForResult(intent, RC_CUSTOMIZED)
+        })
 
         mainViewModel.toPresetActivity.observe(this, Observer { Timber.d("to preset activity") })
     }
@@ -96,10 +106,6 @@ class MainActivity : AppCompatActivity() {
         SnackbarUtil.showSnackBar(findViewById(android.R.id.content), s)
     }
 
-    override fun onResume() {
-        super.onResume()
-        mainViewModel.start()
-    }
 
     override fun onBackPressed() {
         if (exit) {
