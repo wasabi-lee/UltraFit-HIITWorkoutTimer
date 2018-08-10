@@ -2,6 +2,7 @@ package io.incepted.ultrafittimer
 
 import android.app.Activity
 import android.app.Application
+import com.squareup.leakcanary.LeakCanary
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import io.incepted.ultrafittimer.di.AppInjector
@@ -14,6 +15,12 @@ class UltraFitApp : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return
+        }
+        LeakCanary.install(this)
+
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

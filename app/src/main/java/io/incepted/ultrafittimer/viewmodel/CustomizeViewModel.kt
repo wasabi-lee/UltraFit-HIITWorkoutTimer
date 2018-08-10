@@ -4,15 +4,15 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.content.SharedPreferences
-import android.databinding.ObservableArrayList
-import android.databinding.ObservableList
+import android.os.Bundle
 import android.support.v7.widget.RecyclerView
-import android.view.View
+import io.incepted.ultrafittimer.activity.CustomizeActivity
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.tempmodel.Round
 import io.incepted.ultrafittimer.util.DbDelimiter
+import io.incepted.ultrafittimer.util.RoundUtil
 import io.incepted.ultrafittimer.util.SwipeDeleteCallback
-import timber.log.Timber
+import io.incepted.ultrafittimer.util.TimerSettingChangeChecker
 import javax.inject.Inject
 
 class CustomizeViewModel @Inject constructor(appContext: Application, val repository: DbRepository)
@@ -26,6 +26,8 @@ class CustomizeViewModel @Inject constructor(appContext: Application, val reposi
             removeAt(viewHolder?.adapterPosition)
         }
     }
+
+    val backToMainWithResult = MutableLiveData<Bundle>()
 
     val deletedItemPosition = MutableLiveData<Int>()
 
@@ -53,8 +55,6 @@ class CustomizeViewModel @Inject constructor(appContext: Application, val reposi
                             restSeconds = restSeconds[i].toInt(),
                             offset = offset))
                 }
-        l.add(Round("", 0, 0, offset)) // dummy item for footer layout
-
         return l
     }
 
@@ -63,8 +63,28 @@ class CustomizeViewModel @Inject constructor(appContext: Application, val reposi
         deletedItemPosition.value = position
     }
 
+    fun organizeResult(original: MutableList<Round>, current: MutableList<Round>) {
+        val finalSetting = finalizeDetail(current)
 
+        val result = RoundUtil.joinListToString(finalSetting)
 
+        val bundle = Bundle()
 
+        bundle.putString(CustomizeActivity.RESULT_KEY_WORKOUT_NAMES, result[0])
+        bundle.putString(CustomizeActivity.RESULT_KEY_WORKOUT_WORKS, result[1])
+        bundle.putString(CustomizeActivity.RESULT_KEY_WORKOUT_RESTS, result[2])
+        bundle.putBoolean(CustomizeActivity.RESULT_KEY_WORKOUT_CUSTOMIZED, checkIfModified(original, finalSetting))
+
+        backToMainWithResult.value = bundle
+    }
+
+    private fun finalizeDetail(result: MutableList<Round>): MutableList<Round> {
+        result.forEach { it.trimValues() }
+        return result
+    }
+
+    private fun checkIfModified(original: MutableList<Round>, result: MutableList<Round>): Boolean {
+        return TimerSettingChangeChecker.roundChanged(original, result)
+    }
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -41,7 +41,7 @@
                     style="@style/workoutSettingHeaderTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Warm Up"
+                    android:text="@string/warm_up"
                     android:textAllCaps="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -94,10 +94,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_xsmall"
                 android:background="?attr/card_background_drawable"
-                android:padding="@dimen/spacing_normal"
+                android:paddingTop="@dimen/spacing_normal"
+                android:paddingLeft="@dimen/spacing_normal"
+                android:paddingStart="@dimen/spacing_normal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_card_warmup">
+                app:layout_constraintTop_toBottomOf="@id/main_card_warmup"
+                tools:ignore="RtlSymmetry">
 
 
                 <!-- ********************* Work time ********************* -->
@@ -107,7 +110,7 @@
                     style="@style/workoutSettingHeaderTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Work"
+                    android:text="@string/work"
                     android:textAllCaps="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -145,11 +148,13 @@
                     android:id="@+id/main_session_work_plus_iv"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
                     android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
                     app:layout_constraintBottom_toBottomOf="@+id/main_session_time_work_edit"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/main_session_time_work_edit"
-                    app:srcCompat="@drawable/ic_add_circle_black" />
+                    app:srcCompat="@drawable/ic_add_circle_black"/>
 
 
                 <!-- ********************* Rest time ********************* -->
@@ -160,7 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_small"
-                    android:text="Rest"
+                    android:text="@string/rest"
                     android:textAllCaps="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/main_session_time_work_edit" />
@@ -198,6 +203,8 @@
                     android:id="@+id/main_session_rest_plus_iv"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
                     android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
                     app:layout_constraintBottom_toBottomOf="@+id/main_session_time_rest_edit"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -213,7 +220,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_small"
-                    android:text="Rounds"
+                    android:text="@string/rounds"
                     android:textAllCaps="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/main_session_time_rest_edit" />
@@ -254,6 +261,8 @@
                     android:id="@+id/main_session_rounds_plus_iv"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
                     android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
                     app:layout_constraintBottom_toBottomOf="@+id/main_session_time_rounds_edit"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -267,6 +276,12 @@
                     android:onClick="@{() -> viewmodel.openCustomizeActivity()}"
                     customized="@{viewmodel.timerSettingObservable.isCustomizedObservable}"
                     style="@style/SemiBoldSmallTextStyle"
+                    android:paddingLeft="@dimen/spacing_normal"
+                    android:paddingRight="@dimen/spacing_normal"
+                    android:paddingStart="@dimen/spacing_normal"
+                    android:paddingEnd="@dimen/spacing_normal"
+                    android:paddingTop="@dimen/spacing_xxsmall"
+                    android:paddingBottom="@dimen/spacing_normal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
@@ -288,7 +303,7 @@
                     style="@style/workoutSettingHeaderTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cool Down"
+                    android:text="@string/cool_down"
                     android:textAllCaps="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -342,7 +357,7 @@
                 android:layout_marginLeft="@dimen/spacing_xsmall"
                 android:layout_marginStart="@dimen/spacing_xsmall"
                 android:layout_marginTop="@dimen/spacing_xsmall"
-                android:text="Total"
+                android:text="@string/total"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/main_card_cooldown" />
 
@@ -371,7 +386,7 @@
                 android:paddingRight="@dimen/spacing_large"
                 android:paddingStart="@dimen/spacing_large"
                 android:paddingTop="@dimen/spacing_xsmall"
-                android:text="START"
+                android:text="@string/start_all_caps"
                 android:onClick="@{() -> viewmodel.onTimerStartClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/main_card_cooldown" />

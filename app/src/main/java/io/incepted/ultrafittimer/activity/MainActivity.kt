@@ -32,7 +32,9 @@ class MainActivity : AppCompatActivity() {
 
     private var exit: Boolean = false
 
-    private val RC_CUSTOMIZED = 1001
+    companion object {
+     val RC_CUSTOMIZED = 1001
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,5 +120,11 @@ class MainActivity : AppCompatActivity() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeBy(onComplete = { exit = false })
         }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        mainViewModel.handleActivityResult(requestCode, resultCode, data)
     }
 }

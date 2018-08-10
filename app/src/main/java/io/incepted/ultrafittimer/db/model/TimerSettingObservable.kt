@@ -4,10 +4,7 @@ import android.databinding.BaseObservable
 import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
 import io.incepted.ultrafittimer.db.tempmodel.Round
-import io.incepted.ultrafittimer.util.DbDelimiter
-import io.incepted.ultrafittimer.util.NumberUtil
-import io.incepted.ultrafittimer.util.TimerUtil
-import io.incepted.ultrafittimer.util.WorkoutSession
+import io.incepted.ultrafittimer.util.*
 import timber.log.Timber
 
 class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() {
@@ -22,7 +19,14 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
     val totalObservable: ObservableField<String> = ObservableField()
 
     var mRounds: MutableList<Round> = mutableListOf()
+    set(value) {
+        field = value
+        workObservable.set(TimerUtil.secondsToTimeString(value[0].workSeconds))
+        restObservable.set(TimerUtil.secondsToTimeString(value[0].restSeconds))
+        roundCountObservable.set(value.size.toString())
 
+        printThis()
+    }
 
     var finalWarmup: Int = 0
     var finalWorks: String = ""
@@ -37,7 +41,7 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
                 || timerSetting.workSeconds == "-1"
                 || timerSetting.restSeconds == "-1"
 
-        mRounds = if (isNewTimer) initDefaultRounds() else initRounds(timerSetting)
+        mRounds = if (isNewTimer) RoundUtil.getDefaultRoundList() else RoundUtil.getRoundList(timerSetting)
 
         warmupObservable.set(TimerUtil.secondsToTimeString(timerSetting.warmupSeconds))
         roundCountObservable.set(mRounds.size.toString())
@@ -48,27 +52,6 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
         isCustomizedObservable.set(timerSetting.customized)
 
         calculateTotal()
-    }
-
-
-    private fun initRounds(timerSetting: TimerSetting): MutableList<Round> {
-        val splitWork: List<String> = timerSetting.workSeconds.split(DbDelimiter.DELIMITER)
-        val splitRest: List<String> = timerSetting.restSeconds.split(DbDelimiter.DELIMITER)
-        val splitNames: List<String> = timerSetting.roundNames.split(DbDelimiter.DELIMITER)
-
-        val list: MutableList<Round> = mutableListOf()
-
-        for (i in 0 until splitWork.size)
-            list.add(Round(splitNames[i], splitWork[i].toInt(), splitRest[i].toInt()))
-
-        return list
-    }
-
-    private fun initDefaultRounds(): MutableList<Round> {
-        val list: MutableList<Round> = mutableListOf()
-        for (i in 0 until 8)
-            list.add(Round("Work", 20, 10))
-        return list
     }
 
 
@@ -117,25 +100,6 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
                 round.restSeconds = updatedValue
     }
 
-    fun updateRounds(fieldToUpdate: ObservableField<String>, session: Int, offset: Int) {
-        val updatedValue = TimerUtil.stringToSecondWithOffset(fieldToUpdate.get() ?: return, offset)
-        for (round in mRounds)
-            if (session == WorkoutSession.WORK)
-                round.workSeconds = updatedValue
-            else
-                round.restSeconds = updatedValue
-    }
-
-
-    fun removeRound(index: Int) {
-        mRounds.removeAt(index)
-    }
-
-    fun insertRound(index: Int) {
-        if (mRounds.size != 1)
-            mRounds.add(index, mRounds[index - 1])
-    }
-
     private fun removeLast() {
         if (mRounds.size > 1) {
             mRounds.removeAt(mRounds.size - 1)
@@ -158,7 +122,8 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
         val warmup: Int = TimerUtil.stringToSecondWithOffset(warmupObservable.get() ?: return, 0)
         val work: Int = TimerUtil.stringToSecondWithOffset(workObservable.get() ?: return, 0)
         val rest: Int = TimerUtil.stringToSecondWithOffset(restObservable.get() ?: return, 0)
-        val cooldown: Int = TimerUtil.stringToSecondWithOffset(cooldownObservable.get() ?: return, 0)
+        val cooldown: Int = TimerUtil.stringToSecondWithOffset(cooldownObservable.get()
+                ?: return, 0)
 
         val total: Int = warmup + ((work + rest) * rounds) + cooldown
         totalObservable.set(TimerUtil.secondsToTimeString(total))

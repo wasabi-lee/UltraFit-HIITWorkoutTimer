@@ -48,6 +48,13 @@ class Round(var workoutName: String, var workSeconds: Int, var restSeconds: Int)
     }
 
 
+    fun trimValues() {
+        workoutName = name.get()?.trim() ?: workoutName
+        workSeconds = TimerUtil.stringToSecond(work.get() ?: "0")
+        restSeconds = TimerUtil.stringToSecond(rest.get() ?: "0")
+    }
+
+
     fun printData() {
         Timber.d("Clicked round: ${work.get()} - ${rest.get()}")
     }

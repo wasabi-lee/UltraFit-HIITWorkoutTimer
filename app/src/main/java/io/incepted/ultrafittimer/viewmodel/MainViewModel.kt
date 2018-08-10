@@ -1,16 +1,23 @@
 package io.incepted.ultrafittimer.viewmodel
 
+import android.app.Activity.RESULT_OK
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
+import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Bundle
 import android.view.View
+import io.incepted.ultrafittimer.activity.CustomizeActivity
+import io.incepted.ultrafittimer.activity.MainActivity
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.incepted.ultrafittimer.db.model.TimerSettingObservable
 import io.incepted.ultrafittimer.db.source.LocalDataSource
 import io.incepted.ultrafittimer.db.tempmodel.Round
+import io.incepted.ultrafittimer.util.DbDelimiter
+import io.incepted.ultrafittimer.util.RoundUtil
 import io.incepted.ultrafittimer.util.WorkoutSession
 import timber.log.Timber
 import javax.inject.Inject
@@ -37,14 +44,16 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     }
 
     var fromPreset: Boolean = false
+
     var fromTemp: Boolean = false
 
 
     lateinit var timerSetting: TimerSetting
+
     lateinit var timerSettingObservable: TimerSettingObservable
-    var rounds: MutableList<Round> = mutableListOf()
 
     var offset: Int = 1
+
 
     fun start() {
         offset = sharedPref.getString("pref_key_increment_seconds", "1").toInt()
@@ -69,10 +78,6 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     }
 
 
-    fun doToast() {
-        timerSetting.parseRounds()
-        Timber.d(timerSettingObservable.toString())
-    }
 
 
     fun onTimerStartClicked() {
@@ -119,6 +124,28 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
         toTimerActivity.value = timerId
     }
 
+    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if (data == null) return
+
+        if (requestCode == MainActivity.RC_CUSTOMIZED && resultCode == RESULT_OK) {
+            val result: Bundle = data.extras
+
+            val names = result.getString(CustomizeActivity.RESULT_KEY_WORKOUT_NAMES)
+            val works = result.getString(CustomizeActivity.RESULT_KEY_WORKOUT_WORKS)
+            val rests = result.getString(CustomizeActivity.RESULT_KEY_WORKOUT_RESTS)
+            val customized = result.getBoolean(CustomizeActivity.RESULT_KEY_WORKOUT_CUSTOMIZED)
+
+            if (customized)
+                timerSettingObservable.isCustomizedObservable.set(true)
+
+            timerSettingObservable.mRounds = RoundUtil.getRoundList(names, works, rests)
+
+
+
+        }
+    }
+
     // ------------------ EditText value change handling -----------------
 
     /**
@@ -153,5 +180,7 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     override fun onTimerSaveNotAvailable() {
         Timber.d("failed!")
     }
+
+
 
 }
