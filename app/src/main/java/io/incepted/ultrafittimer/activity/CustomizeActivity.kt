@@ -1,10 +1,12 @@
 package io.incepted.ultrafittimer.activity
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
@@ -12,10 +14,8 @@ import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.adapter.RoundAdapter
 import io.incepted.ultrafittimer.databinding.ActivityCustomizeBinding
 import io.incepted.ultrafittimer.db.tempmodel.Round
-import io.incepted.ultrafittimer.util.DbDelimiter
 import io.incepted.ultrafittimer.viewmodel.CustomizeViewModel
 import kotlinx.android.synthetic.main.activity_customize.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class CustomizeActivity : AppCompatActivity() {
@@ -27,7 +27,22 @@ class CustomizeActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    lateinit var itemAnimator: DefaultItemAnimator
+
+    @Inject
+    lateinit var llm: LinearLayoutManager
+
     lateinit var customizeViewModel: CustomizeViewModel
+
+    var originalList = mutableListOf<Round>()
+
+    var resultList = mutableListOf<Round>()
+
+    lateinit var roundAdapter: RoundAdapter
+
+    lateinit var extra: ArrayList<String>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +52,21 @@ class CustomizeActivity : AppCompatActivity() {
         binding.viewmodel = customizeViewModel
 
 
+        retrieveExtras()
+
         initToolbar()
 
-        val extras: ArrayList<String> = intent.getStringArrayListExtra(EXTRA_KEY_WORKOUT_DETAILS)
-        if (savedInstanceState == null) customizeViewModel.start(extras)
+        startViewModel(savedInstanceState)
 
         initRecyclerView()
 
+        initObservers()
 
+
+    }
+
+    private fun retrieveExtras() {
+        extra = intent.getStringArrayListExtra(EXTRA_KEY_WORKOUT_DETAILS)
     }
 
     private fun initToolbar() {
@@ -53,11 +75,25 @@ class CustomizeActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    private fun startViewModel(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) customizeViewModel.start()
+    }
+
     private fun initRecyclerView() {
-        val roundAdapter = RoundAdapter(arrayListOf(), customizeViewModel)
+
+        originalList = customizeViewModel.initRounds(extra)
+
+        roundAdapter = RoundAdapter(originalList, customizeViewModel)
         customize_recycler_view.setHasFixedSize(true)
-        customize_recycler_view.layoutManager = LinearLayoutManager(this) // TODO Use DI later
+        customize_recycler_view.itemAnimator = itemAnimator
+        customize_recycler_view.layoutManager = llm
         customize_recycler_view.adapter = roundAdapter
+    }
+
+    private fun initObservers() {
+        customizeViewModel.deletedItemPosition.observe(this, Observer {
+            roundAdapter.removeAt(it ?: return@Observer)
+        })
     }
 
 

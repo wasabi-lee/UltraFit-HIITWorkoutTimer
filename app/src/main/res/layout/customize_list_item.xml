@@ -1,131 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="io.incepted.ultrafittimer.util.WorkoutSession" />
+
+        <variable
+            name="viewmodel"
+            type="io.incepted.ultrafittimer.viewmodel.CustomizeViewModel" />
 
         <variable
             name="data"
             type="io.incepted.ultrafittimer.db.tempmodel.Round" />
     </data>
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/customize_list_item_container"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:padding="@dimen/spacing_normal">
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/customize_list_item_container"
+        itemBackground="@{data.workSeconds}"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
 
-<TextView
-    android:id="@+id/customize_round_tv"
-    style="@style/BoldMediumItalicTextStyle"
-    android:layout_width="40dp"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:text="1st."
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/customize_round_tv"
+            style="@style/BoldMediumItalicTextStyle"
+            positionText="@{data.workSeconds}"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-<com.github.vipulasri.timelineview.TimelineView
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toEndOf="@+id/customize_round_tv"
-    app:layout_constraintTop_toTopOf="parent"
-    app:line="@android:color/black"
-    app:lineSize="2dp"
-    app:markerSize="10dp" />
+        <com.github.vipulasri.timelineview.TimelineView
+            android:id="@+id/timelineView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_marginStart="@dimen/spacing_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/customize_round_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:line="@android:color/black"
+            app:lineSize="2dp"
+            app:marker="@drawable/dot"
+            app:markerSize="10dp" />
 
-<TextView
-    android:id="@+id/customize_work_name_tv"
-    style="@style/BoldMediumItalicTextStyle"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="24dp"
-    android:layout_marginStart="24dp"
-    android:text="@{data.workoutName}"
-    app:layout_constraintBottom_toTopOf="@+id/customize_round_tv"
-    app:layout_constraintStart_toEndOf="@+id/customize_round_tv" />
 
-<TextView
-    android:id="@+id/customize_rest_name_tv"
-    style="@style/BoldMediumItalicTextStyle"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="24dp"
-    android:layout_marginStart="24dp"
-    android:text="Rest"
-    app:layout_constraintStart_toEndOf="@+id/customize_round_tv"
-    app:layout_constraintTop_toBottomOf="@+id/customize_round_tv" />
+        <EditText
+            android:id="@+id/customize_work_name_tv"
+            style="@style/editText_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:inputType="text"
+            android:maxLines="1"
+            android:nextFocusForward="@id/customize_work_time_edit"
+            android:tag=""
+            android:text="@={data.name}"
+            android:textCursorDrawable="@drawable/cursor_drawable"
+            app:layout_constraintBottom_toTopOf="@+id/customize_round_tv"
+            app:layout_constraintStart_toEndOf="@id/timelineView" />
 
-<EditText
-    android:id="@+id/customize_work_time_edit"
-    style="@style/SemiBoldSmallTextStyle"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginEnd="16dp"
-    android:layout_marginRight="16dp"
-    android:ems="5"
-    android:gravity="center"
-    android:inputType="time"
-    app:layout_constraintBaseline_toBaselineOf="@+id/customize_work_name_tv"
-    app:layout_constraintEnd_toStartOf="@+id/customize_work_plus_iv" />
+        <TextView
+            android:id="@+id/customize_rest_name_tv"
+            style="@style/BoldMediumItalicTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rest"
+            app:layout_constraintStart_toStartOf="@+id/customize_work_name_tv"
+            app:layout_constraintTop_toBottomOf="@+id/customize_round_tv" />
 
-<ImageView
-    android:id="@+id/customize_work_minus_iv"
-    android:layout_width="14dp"
-    android:layout_height="14dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginRight="16dp"
-    app:layout_constraintBottom_toBottomOf="@+id/customize_work_time_edit"
-    app:layout_constraintEnd_toStartOf="@+id/customize_work_time_edit"
-    app:layout_constraintTop_toTopOf="@+id/customize_work_time_edit"
-    app:srcCompat="@drawable/ic_action_minus_black" />
+        <EditText
+            android:id="@+id/customize_work_time_edit"
+            style="@style/SemiBoldSmallTextStyle"
+            onFocusChangedListener="@{data.focusListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:ems="5"
+            android:gravity="center"
+            android:inputType="time"
+            android:nextFocusForward="@id/customize_rest_time_edit"
+            android:tag="@{WorkoutSession.WORK}"
+            android:text="@={data.work}"
+            app:layout_constraintBaseline_toBaselineOf="@+id/customize_work_name_tv"
+            app:layout_constraintEnd_toStartOf="@+id/customize_work_plus_iv" />
 
-<ImageView
-    android:id="@+id/customize_work_plus_iv"
-    android:layout_width="14dp"
-    android:layout_height="14dp"
-    app:layout_constraintBottom_toBottomOf="@+id/customize_work_time_edit"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/customize_work_time_edit"
-    app:srcCompat="@drawable/ic_action_add_black" />
+        <ImageView
+            android:id="@+id/customize_work_minus_iv"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:onClick="@{(v) -> data.applyOffset((int) v.tag, false)}"
+            android:tag="@{WorkoutSession.WORK}"
+            app:layout_constraintBottom_toBottomOf="@+id/customize_work_time_edit"
+            app:layout_constraintEnd_toStartOf="@+id/customize_work_time_edit"
+            app:layout_constraintTop_toTopOf="@+id/customize_work_time_edit"
+            app:srcCompat="@drawable/ic_action_minus_black" />
 
-<ImageView
-    android:id="@+id/customize_rest_minus_iv"
-    android:layout_width="14dp"
-    android:layout_height="14dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginRight="16dp"
-    app:layout_constraintBottom_toBottomOf="@+id/customize_rest_time_edit"
-    app:layout_constraintEnd_toStartOf="@+id/customize_rest_time_edit"
-    app:layout_constraintTop_toTopOf="@+id/customize_rest_time_edit"
-    app:srcCompat="@drawable/ic_action_minus_black" />
+        <ImageView
+            android:id="@+id/customize_work_plus_iv"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_marginRight="@dimen/spacing_normal"
+            android:onClick="@{(v) -> data.applyOffset((int) v.tag, true)}"
+            android:tag="@{WorkoutSession.WORK}"
+            app:layout_constraintBottom_toBottomOf="@+id/customize_work_time_edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/customize_work_time_edit"
+            app:srcCompat="@drawable/ic_action_add_black" />
 
-<EditText
-    android:id="@+id/customize_rest_time_edit"
-    style="@style/SemiBoldSmallTextStyle"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginEnd="16dp"
-    android:layout_marginRight="16dp"
-    android:ems="5"
-    android:gravity="center"
-    android:inputType="time"
-    app:layout_constraintBaseline_toBaselineOf="@+id/customize_rest_name_tv"
-    app:layout_constraintEnd_toStartOf="@+id/customize_rest_plus_iv" />
+        <ImageView
+            android:id="@+id/customize_rest_minus_iv"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:onClick="@{(v) -> data.applyOffset((int) v.tag, false)}"
+            android:tag="@{WorkoutSession.REST}"
+            app:layout_constraintBottom_toBottomOf="@+id/customize_rest_time_edit"
+            app:layout_constraintEnd_toStartOf="@+id/customize_rest_time_edit"
+            app:layout_constraintTop_toTopOf="@+id/customize_rest_time_edit"
+            app:srcCompat="@drawable/ic_action_minus_black" />
 
-<ImageView
-    android:id="@+id/customize_rest_plus_iv"
-    android:layout_width="14dp"
-    android:layout_height="14dp"
-    app:layout_constraintBottom_toBottomOf="@+id/customize_rest_time_edit"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/customize_rest_time_edit"
-    app:srcCompat="@drawable/ic_action_add_black" />
+        <EditText
+            android:id="@+id/customize_rest_time_edit"
+            style="@style/SemiBoldSmallTextStyle"
+            onFocusChangedListener="@{data.focusListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:ems="5"
+            android:gravity="center"
+            android:inputType="time"
+            android:tag="@{WorkoutSession.REST}"
+            android:text="@={data.rest}"
+            app:layout_constraintBaseline_toBaselineOf="@+id/customize_rest_name_tv"
+            app:layout_constraintEnd_toStartOf="@+id/customize_rest_plus_iv" />
 
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/customize_rest_plus_iv"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_marginRight="@dimen/spacing_normal"
+            android:onClick="@{(v) -> data.applyOffset((int) v.tag, true)}"
+            android:tag="@{WorkoutSession.REST}"
+            app:layout_constraintBottom_toBottomOf="@+id/customize_rest_time_edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/customize_rest_time_edit"
+            app:srcCompat="@drawable/ic_action_add_black" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </layout>

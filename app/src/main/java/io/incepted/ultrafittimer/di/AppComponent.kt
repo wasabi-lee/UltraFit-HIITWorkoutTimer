@@ -1,6 +1,7 @@
 package io.incepted.ultrafittimer.di
 
 import android.app.Application
+import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -17,6 +18,9 @@ interface AppComponent {
     interface Builder {
         @BindsInstance
         fun application(application: Application): Builder
+
+        @BindsInstance
+        fun appContext(appContext: Context): Builder
 
         fun build(): AppComponent
     }

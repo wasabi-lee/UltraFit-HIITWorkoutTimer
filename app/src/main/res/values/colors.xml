@@ -12,6 +12,7 @@
 
     <!-- Light theme -->
     <color name="windowBackground_light">#ffffff</color>
+    <color name="secondaryWindowBackground_light">#f8f7f7</color>
     <color name="textColor_light">#000000</color>
     <color name="cardBackground_light">#f3f3f3</color>
 

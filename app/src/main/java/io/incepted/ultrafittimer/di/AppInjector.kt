@@ -10,6 +10,7 @@ import io.incepted.ultrafittimer.UltraFitApp
 object AppInjector {
     fun init(ultraFitApp: UltraFitApp) {
         DaggerAppComponent.builder().application(ultraFitApp)
+                .appContext(ultraFitApp.applicationContext)
                 .build().inject(ultraFitApp)
 
         ultraFitApp.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {

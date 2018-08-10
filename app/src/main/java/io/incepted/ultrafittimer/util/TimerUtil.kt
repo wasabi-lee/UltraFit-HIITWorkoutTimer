@@ -1,5 +1,6 @@
 package io.incepted.ultrafittimer.util
 
+import android.databinding.InverseMethod
 import java.nio.charset.MalformedInputException
 import java.util.concurrent.TimeUnit
 
@@ -12,7 +13,8 @@ object TimerUtil {
      *          Returns -1 when the input is not valid or the second representation is over an hour.
      */
 
-    fun stringToSecond(input: String, offset: Int): Int {
+    @JvmStatic
+    fun stringToSecondWithOffset(input: String, offset: Int): Int {
         try {
             val split: List<String> = input.split(":")
             if (split.size >= 3) return -1
@@ -46,6 +48,41 @@ object TimerUtil {
         }
     }
 
+    @JvmStatic
+    fun stringToSecond(input: String): Int {
+        try {
+            val split: List<String> = input.split(":")
+            if (split.size >= 3) return -1
+
+            val result = when (split.size) {
+                2 -> {
+                    val rawMin: Long = if (split[0] == "") 0 else split[0].toLong()
+                    val rawSec: Long = if (split[1] == "") 0 else split[1].toLong()
+                    (TimeUnit.MINUTES.toSeconds(rawMin) + rawSec).toInt()
+                }
+                1 -> split[0].toInt()
+                else -> -1
+            }
+
+            // This input is over an hour! Invalid input.
+            if (result >= 60 * 60)
+                return -1
+
+            return result
+
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            when (ex) {
+                is NumberFormatException,
+                is MalformedInputException,
+                is ClassCastException -> {
+                    return -1
+                }
+                else -> throw ex
+            }
+        }
+    }
+
 
     /**
      * Converts the seconds into a readable time format (24) -> (00:24)
@@ -54,7 +91,8 @@ object TimerUtil {
      * @return A String formatted into time form (00:00).
      *          Returns an empty String when the input is invalid.
      */
-
+    @JvmStatic
+    @InverseMethod("stringToSecond")
     fun secondsToTimeString(inputSeconds: Int): String {
         try {
             if (inputSeconds >= 60 * 60) return "-1"
@@ -86,7 +124,7 @@ object TimerUtil {
      */
 
     fun stringToTimeString(input: String, offset: Int): String {
-        return secondsToTimeString(stringToSecond(input, offset))
+        return secondsToTimeString(stringToSecondWithOffset(input, offset))
     }
 
 

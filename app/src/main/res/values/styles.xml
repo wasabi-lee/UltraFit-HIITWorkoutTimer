@@ -69,6 +69,12 @@
 
     <!-- Widget styles -->
 
+    <style name="editText_normal" parent="Base.V7.Widget.AppCompat.EditText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/roboto_bold_italic</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
     <style name="editText_large" parent="Base.V7.Widget.AppCompat.EditText">
         <item name="android:textSize">18sp</item>
         <item name="android:paddingTop">@dimen/spacing_no_spacing</item>
