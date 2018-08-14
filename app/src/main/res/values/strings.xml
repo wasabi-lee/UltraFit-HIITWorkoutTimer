@@ -37,5 +37,9 @@
     <string name="create_a_preset">CREATE A PRESET</string>
     <string name="presets">Presets</string>
 
+    <string name="preset_action_updated">Successfully updated</string>
+    <string name="preset_action_deleted">Successfully deleted</string>
+    <string name="save_all_caps">SAVE</string>
+
 
 </resources>

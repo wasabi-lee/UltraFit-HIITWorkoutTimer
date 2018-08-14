@@ -1,14 +1,14 @@
 package io.incepted.ultrafittimer.activity
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.databinding.DataBindingUtil
-import android.support.v7.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import io.incepted.ultrafittimer.R
@@ -36,10 +36,10 @@ class CustomizeActivity : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    lateinit var itemAnimator: DefaultItemAnimator
+    lateinit var itemAnimator: androidx.recyclerview.widget.DefaultItemAnimator
 
     @Inject
-    lateinit var llm: LinearLayoutManager
+    lateinit var llm: androidx.recyclerview.widget.LinearLayoutManager
 
     lateinit var customizeViewModel: CustomizeViewModel
 

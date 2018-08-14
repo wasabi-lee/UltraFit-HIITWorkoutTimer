@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_main_edit_save"
+        android:icon="@drawable/ic_done_black"
+        android:showAsAction="ifRoom"
+        android:title="@string/save_all_caps" />
+</menu>

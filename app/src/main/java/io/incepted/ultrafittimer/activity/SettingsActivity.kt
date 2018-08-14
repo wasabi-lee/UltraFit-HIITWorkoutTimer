@@ -1,7 +1,7 @@
 package io.incepted.ultrafittimer.activity
 
 import android.app.FragmentTransaction
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import android.view.MenuItem
@@ -20,7 +20,7 @@ class SettingsActivity : AppCompatActivity() {
         // Adding preference fragment
         if (savedInstanceState == null) {
             val prefFragment = SettingsFragment()
-            val ft: android.support.v4.app.FragmentTransaction? = supportFragmentManager.beginTransaction()
+            val ft: androidx.fragment.app.FragmentTransaction? = supportFragmentManager.beginTransaction()
             ft?.add(R.id.settings_frag_container, prefFragment)
             ft?.commit()
         }

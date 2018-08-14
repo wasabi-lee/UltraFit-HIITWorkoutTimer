@@ -1,13 +1,13 @@
 package io.incepted.ultrafittimer.databinding
 
-import android.databinding.BindingAdapter
-import android.databinding.InverseBindingAdapter
+import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
 import android.graphics.Color
 import android.graphics.Paint
-import android.support.constraint.ConstraintLayout
-import android.support.design.widget.BottomSheetBehavior
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -27,7 +27,7 @@ object DataBindingAdapters {
 
     @JvmStatic
     @BindingAdapter("presetData")
-    fun setPrsetListData(v: RecyclerView, data: List<Preset>) {
+    fun setPrsetListData(v: androidx.recyclerview.widget.RecyclerView, data: List<Preset>) {
         val adapter: PresetAdapter = v.adapter as PresetAdapter
         adapter.replaceData(data as MutableList<Preset>)
     }
@@ -52,7 +52,7 @@ object DataBindingAdapters {
 
     @JvmStatic
     @BindingAdapter("swipeDeleteListener")
-    fun setSwipeDeleteListener(v: RecyclerView, listener: SwipeDeleteCallback) {
+    fun setSwipeDeleteListener(v: androidx.recyclerview.widget.RecyclerView, listener: SwipeDeleteCallback) {
         val itemTouchHelper = ItemTouchHelper(listener)
         itemTouchHelper.attachToRecyclerView(v)
     }
@@ -75,7 +75,7 @@ object DataBindingAdapters {
 
     @JvmStatic
     @BindingAdapter("itemBackground")
-    fun setItemBackground(v: ConstraintLayout, dummy: Int) {
+    fun setItemBackground(v: androidx.constraintlayout.widget.ConstraintLayout, dummy: Int) {
         val position: Int? = v.tag as Int?
 
         v.setBackgroundColor(

@@ -1,10 +1,10 @@
 package io.incepted.ultrafittimer.viewmodel
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.MutableLiveData
-import android.databinding.ObservableArrayList
-import android.databinding.ObservableBoolean
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableBoolean
 import android.view.View
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.db.DbRepository
@@ -14,11 +14,14 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class PresetListViewModel @Inject constructor(appContext: Application, val repository: DbRepository)
-    : AndroidViewModel(appContext), LocalDataSource.OnPresetsLoadedListener, LocalDataSource.OnTimersForPresetsLoadedListener {
+    : AndroidViewModel(appContext), LocalDataSource.OnPresetsLoadedListener, LocalDataSource.OnTimersForPresetsLoadedListener,
+        LocalDataSource.OnPresetUpdateListener, LocalDataSource.OnPresetDeletedListener {
 
     val snackbarResource = MutableLiveData<Int>()
 
-    val presetActionEvent = MutableLiveData<Long>()
+    val presetActionEvent = MutableLiveData<Int>()
+
+    val openEditScreen = MutableLiveData<Long>()
 
     var presets = ObservableArrayList<Preset>()
 
@@ -38,9 +41,33 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
         presets.addAll(l)
     }
 
-    fun onLongClick(presetId: Long) {
-        if (presetId == -1L) return
-        presetActionEvent.value = presetId
+    fun showPresetActionDialog(presetPosition: Int) {
+        if (presetPosition == -1) return
+        presetActionEvent.value = presetPosition
+    }
+
+    fun bookmarkItem(presetPosition: Int) {
+        val presetToUpdate = presets[presetPosition]
+        presetToUpdate.bookmarked = !presetToUpdate.bookmarked
+        presets[presetPosition] = presetToUpdate
+        repository.updatePreset(presetToUpdate, this)
+    }
+
+    fun editItem(presetPosition: Int) {
+        openEditScreen.value = presets[presetPosition].id
+    }
+
+    fun showPresetDetail(presetPosition: Int) {
+
+    }
+
+    fun deleteItem(presetPosition: Int) {
+        val presetToDelete = presets.removeAt(presetPosition)
+        repository.deletePreset(presetToDelete.id ?: return, this)
+    }
+
+    fun playPreset(presetPosition: Int) {
+
     }
 
 
@@ -62,6 +89,24 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
     }
 
     override fun onPresetTimerNotAvailable() {
+        snackbarResource.value = R.string.error_unexpected
+    }
+
+    override fun onPresetUpdated() {
+        snackbarResource.value = R.string.preset_action_updated
+        populateList(presets.toList())
+    }
+
+    override fun onPresetUpdateNotAvailable() {
+        snackbarResource.value = R.string.error_unexpected
+    }
+
+    override fun onPresetDeleted() {
+        snackbarResource.value = R.string.preset_action_deleted
+        populateList(presets.toList())
+    }
+
+    override fun onPresetDeletionNotAvailable() {
         snackbarResource.value = R.string.error_unexpected
     }
 

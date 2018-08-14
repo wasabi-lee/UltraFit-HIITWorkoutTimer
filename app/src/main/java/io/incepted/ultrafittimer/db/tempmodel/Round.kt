@@ -1,6 +1,6 @@
 package io.incepted.ultrafittimer.db.tempmodel
 
-import android.databinding.ObservableField
+import androidx.databinding.ObservableField
 import android.view.View
 import io.incepted.ultrafittimer.util.TimerUtil
 import io.incepted.ultrafittimer.util.WorkoutSession

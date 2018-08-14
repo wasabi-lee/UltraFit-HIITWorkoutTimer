@@ -1,6 +1,6 @@
 package io.incepted.ultrafittimer.util
 
-import android.databinding.InverseMethod
+import androidx.databinding.InverseMethod
 import java.nio.charset.MalformedInputException
 import java.util.concurrent.TimeUnit
 

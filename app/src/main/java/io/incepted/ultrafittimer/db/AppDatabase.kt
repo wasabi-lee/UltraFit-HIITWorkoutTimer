@@ -1,7 +1,7 @@
 package io.incepted.ultrafittimer.db
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import io.incepted.ultrafittimer.db.dao.PresetDao
 import io.incepted.ultrafittimer.db.dao.TimerSettingDao
 import io.incepted.ultrafittimer.db.dao.WorkoutHistoryDao

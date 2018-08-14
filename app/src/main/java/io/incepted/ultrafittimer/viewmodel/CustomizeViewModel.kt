@@ -1,11 +1,11 @@
 package io.incepted.ultrafittimer.viewmodel
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import io.incepted.ultrafittimer.activity.CustomizeActivity
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.tempmodel.Round
@@ -22,8 +22,8 @@ class CustomizeViewModel @Inject constructor(appContext: Application, val reposi
     lateinit var sharedPref: SharedPreferences
 
     val swipeHandler: SwipeDeleteCallback = object : SwipeDeleteCallback(appContext) {
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int) {
-            removeAt(viewHolder?.adapterPosition)
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            removeAt(viewHolder.adapterPosition)
         }
     }
 
@@ -36,7 +36,7 @@ class CustomizeViewModel @Inject constructor(appContext: Application, val reposi
     var offset: Int = 1
 
     fun start() {
-        offset = sharedPref.getString("pref_key_increment_seconds", "1").toInt()
+        offset = sharedPref.getString("pref_key_increment_seconds", "1")?.toInt() ?: offset
 
     }
 

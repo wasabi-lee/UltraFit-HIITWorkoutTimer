@@ -1,8 +1,8 @@
 package io.incepted.ultrafittimer.db.model
 
-import android.databinding.BaseObservable
-import android.databinding.ObservableBoolean
-import android.databinding.ObservableField
+import androidx.databinding.BaseObservable
+import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
 import io.incepted.ultrafittimer.db.tempmodel.Round
 import io.incepted.ultrafittimer.util.*
 import timber.log.Timber
@@ -24,6 +24,7 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
             workObservable.set(TimerUtil.secondsToTimeString(value[0].workSeconds))
             restObservable.set(TimerUtil.secondsToTimeString(value[0].restSeconds))
             roundCountObservable.set(value.size.toString())
+            calculateTotal()
         }
 
     var finalWarmup: Int = 0

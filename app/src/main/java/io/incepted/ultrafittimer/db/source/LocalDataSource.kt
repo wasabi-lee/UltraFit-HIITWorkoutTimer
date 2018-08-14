@@ -15,7 +15,7 @@ interface LocalDataSource {
     }
 
     interface OnPresetLoadedListener {
-        fun onPresetLoaded(presets: Preset)
+        fun onPresetLoaded(preset: Preset)
         fun onPresetNotAvailable()
     }
 
@@ -97,13 +97,13 @@ interface LocalDataSource {
 
     fun getPresets(callback: OnPresetsLoadedListener)
 
-    fun getPresetById(presetId: Int, callback: OnPresetLoadedListener)
+    fun getPresetById(presetId: Long, callback: OnPresetLoadedListener)
 
     fun savePreset(newPreset: Preset, callback: OnPresetSavedListener)
 
     fun updatePreset(updated: Preset, callback:OnPresetUpdateListener)
 
-    fun deletePreset(presetId: Int, callback:OnPresetDeletedListener)
+    fun deletePreset(presetId: Long, callback:OnPresetDeletedListener)
 
     fun deleteAllPresets(callback: OnAllPresetDeletedListener)
 

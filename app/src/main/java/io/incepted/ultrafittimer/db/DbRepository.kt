@@ -51,8 +51,22 @@ class DbRepository @Inject constructor(
 
     }
 
-    override fun getPresetById(presetId: Int, callback: LocalDataSource.OnPresetLoadedListener) {
-
+    override fun getPresetById(presetId: Long, callback: LocalDataSource.OnPresetLoadedListener) {
+        try {
+            presetDao.getPresetById(presetId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onSuccess = { callback.onPresetLoaded(it) },
+                            onError = {
+                                it.printStackTrace()
+                                callback.onPresetNotAvailable()
+                            }
+                    )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback.onPresetNotAvailable()
+        }
     }
 
     override fun savePreset(newPreset: Preset, callback: LocalDataSource.OnPresetSavedListener) {
@@ -106,11 +120,40 @@ class DbRepository @Inject constructor(
 
 
     override fun updatePreset(updated: Preset, callback: LocalDataSource.OnPresetUpdateListener) {
+        try {
+            Completable.fromAction { presetDao.updatePreset(updated) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onComplete = { callback.onPresetUpdated() },
+                            onError = {
+                                it.printStackTrace()
+                                callback.onPresetUpdateNotAvailable()
+                            }
+                    )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback.onPresetUpdateNotAvailable()
+        }
 
     }
 
-    override fun deletePreset(presetId: Int, callback: LocalDataSource.OnPresetDeletedListener) {
-
+    override fun deletePreset(presetId: Long, callback: LocalDataSource.OnPresetDeletedListener) {
+        try {
+            Completable.fromAction { presetDao.deletePreset(presetId) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onComplete = { callback.onPresetDeleted() },
+                            onError = {
+                                it.printStackTrace()
+                                callback.onPresetDeletionNotAvailable()
+                            }
+                    )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback.onPresetDeletionNotAvailable()
+        }
     }
 
     override fun deleteAllPresets(callback: LocalDataSource.OnAllPresetDeletedListener) {

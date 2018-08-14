@@ -1,6 +1,6 @@
 package io.incepted.ultrafittimer.db.dao
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.reactivex.Flowable
 import io.reactivex.Maybe

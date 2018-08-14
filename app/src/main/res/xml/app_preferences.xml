@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory android:title="Theme"
+    <androidx.preference.PreferenceCategory android:title="Theme"
         android:layout="@layout/pref_category_view">
 
         <android.support.v7.preference.SwitchPreferenceCompat
@@ -9,10 +9,10 @@
             android:key="pref_key_theme"
             android:title="Enable Dark Theme" />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
 
-    <android.support.v7.preference.PreferenceCategory android:title="Sound"
+    <androidx.preference.PreferenceCategory android:title="Sound"
         android:layout="@layout/pref_category_view">
 
         <android.support.v7.preference.ListPreference
@@ -41,9 +41,9 @@
             android:key="pref_key_cue_seconds"
             android:summary="%s"
             android:title="Cue Seconds" />
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory android:title="Timer Setup"
+    <androidx.preference.PreferenceCategory android:title="Timer Setup"
         android:layout="@layout/pref_category_view">
 
         <android.support.v7.preference.ListPreference
@@ -55,5 +55,5 @@
             android:summary="%s"
             android:title="+/-Button Increment" />
 
-    </android.support.v7.preference.PreferenceCategory>
-</android.support.v7.preference.PreferenceScreen>
+    </androidx.preference.PreferenceCategory>
+</androidx.preference.PreferenceScreen>

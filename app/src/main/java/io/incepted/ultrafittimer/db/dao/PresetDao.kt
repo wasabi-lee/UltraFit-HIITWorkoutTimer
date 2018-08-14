@@ -1,6 +1,6 @@
 package io.incepted.ultrafittimer.db.dao
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import io.incepted.ultrafittimer.db.model.Preset
 import io.reactivex.Flowable
 import io.reactivex.Maybe
@@ -12,7 +12,7 @@ interface PresetDao {
     fun getAllPresets(): Flowable<List<Preset>>
 
     @Query("SELECT * FROM preset WHERE _id = (:presetId)")
-    fun getPresetById(presetId: Int) : Maybe<Preset>
+    fun getPresetById(presetId: Long) : Maybe<Preset>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPreset(newPreset: Preset)
@@ -21,7 +21,7 @@ interface PresetDao {
     fun updatePreset(updatedPreset: Preset)
 
     @Query("DELETE FROM preset WHERE _id = (:presetId)")
-    fun deletePreset(presetId: Int)
+    fun deletePreset(presetId: Long)
 
     @Query("DELETE FROM preset")
     fun deleteAllPresets()

@@ -3,20 +3,24 @@
 <layout xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="io.incepted.ultrafittimer.viewmodel.MainViewModel" />
+
     </data>
 
-    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:fillViewport="true"
         android:isScrollContainer="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -26,7 +30,7 @@
             android:paddingRight="@dimen/spacing_normal"
             android:paddingStart="@dimen/spacing_normal">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/main_card_warmup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -85,10 +89,10 @@
                     app:layout_constraintTop_toTopOf="@+id/main_session_time_warmup_edit"
                     app:srcCompat="@drawable/ic_add_circle_black" />
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/main_card_workout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -285,9 +289,9 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/main_card_cooldown"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -347,7 +351,7 @@
                     app:layout_constraintTop_toTopOf="@+id/main_session_time_cooldown_edit"
                     app:srcCompat="@drawable/ic_add_circle_black" />
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/main_dummy_total_time_tv"
@@ -387,10 +391,11 @@
                 android:paddingStart="@dimen/spacing_large"
                 android:paddingTop="@dimen/spacing_xsmall"
                 android:text="@string/start_all_caps"
+                android:visibility="@{viewmodel.editMode ? View.GONE : View.VISIBLE}"
                 android:onClick="@{() -> viewmodel.onTimerStartClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/main_card_cooldown" />
 
-        </android.support.constraint.ConstraintLayout>
-    </android.support.v4.widget.NestedScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

@@ -16,7 +16,7 @@
             type="io.incepted.ultrafittimer.db.tempmodel.Round" />
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/customize_list_item_container"
         itemBackground="@{data.workSeconds}"
         android:layout_width="match_parent"
@@ -158,6 +158,6 @@
             app:layout_constraintTop_toTopOf="@+id/customize_rest_time_edit"
             app:srcCompat="@drawable/ic_action_add_black" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

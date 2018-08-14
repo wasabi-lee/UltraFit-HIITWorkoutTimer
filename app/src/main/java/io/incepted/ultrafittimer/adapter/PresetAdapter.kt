@@ -1,9 +1,7 @@
 package io.incepted.ultrafittimer.adapter
 
-import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
-import android.support.constraint.ConstraintLayout
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import io.incepted.ultrafittimer.R
@@ -13,11 +11,11 @@ import io.incepted.ultrafittimer.viewmodel.PresetListViewModel
 import kotlinx.android.synthetic.main.preset_list_item.view.*
 
 class PresetAdapter(var data: MutableList<Preset>, val viewModel: PresetListViewModel)
-    : RecyclerView.Adapter<PresetAdapter.ViewHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<PresetAdapter.ViewHolder>() {
 
 
     class ViewHolder(val itemBinding: PresetListItemBinding)
-        : RecyclerView.ViewHolder(itemBinding.root)
+        : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemBinding.root)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,7 +28,7 @@ class PresetAdapter(var data: MutableList<Preset>, val viewModel: PresetListView
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val itemBinding = holder.itemBinding
         itemBinding.root.preset_item_container.setOnLongClickListener {
-            viewModel.onLongClick(data[position].id ?: -1L)
+            viewModel.showPresetActionDialog(position)
             true
         }
         itemBinding.preset = data[position]

@@ -1,8 +1,8 @@
 package io.incepted.ultrafittimer.adapter
 
-import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +15,10 @@ import kotlinx.android.synthetic.main.summary_list_item.view.*
 import timber.log.Timber
 
 class RoundAdapter(var data: MutableList<Round>, val viewModel: CustomizeViewModel)
-    : RecyclerView.Adapter<RoundAdapter.ViewHolder>() {
+    : androidx.recyclerview.widget.RecyclerView.Adapter<RoundAdapter.ViewHolder>() {
 
     class ViewHolder(val itemBinding: CustomizeListItemBinding, viewType: Int)
-        : RecyclerView.ViewHolder(itemBinding.root) {
+        : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemBinding.root) {
 
         init {
             val timelineView: TimelineView = itemBinding.root.findViewById(R.id.timelineView)

@@ -1,13 +1,14 @@
 package io.incepted.ultrafittimer.activity
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.databinding.DataBindingUtil
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import io.incepted.ultrafittimer.R
@@ -25,10 +26,10 @@ class PresetListActivity : AppCompatActivity() {
     lateinit var viewmodelfactory: ViewModelProvider.Factory
 
     @Inject
-    lateinit var itemAnimator: DefaultItemAnimator
+    lateinit var itemAnimator: androidx.recyclerview.widget.DefaultItemAnimator
 
     @Inject
-    lateinit var llm: LinearLayoutManager
+    lateinit var llm: androidx.recyclerview.widget.LinearLayoutManager
 
     private lateinit var presetViewModel: PresetListViewModel
 
@@ -65,6 +66,13 @@ class PresetListActivity : AppCompatActivity() {
         presetViewModel.presetActionEvent.observe(this, Observer {
             launchPresetActionDialog(it)
         })
+
+        presetViewModel.openEditScreen.observe(this, Observer {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra(MainActivity.EXTRA_KEY_EDIT_MODE, true)
+            intent.putExtra(MainActivity.EXTRA_KEY_EDIT_PRESET_ID, it)
+            startActivity(intent)
+        })
     }
 
     private fun initRecyclerView() {
@@ -79,11 +87,31 @@ class PresetListActivity : AppCompatActivity() {
     }
 
 
-    private fun launchPresetActionDialog(presetId: Long?) {
-        if (presetId != null) {
-            val dialogFrag = PresetActionDialogFragment.newInstance(presetId)
+    private fun launchPresetActionDialog(presetPosition: Int?) {
+        if (presetPosition != null) {
+            val dialogFrag = PresetActionDialogFragment.newInstance(presetPosition)
             dialogFrag.show(supportFragmentManager, "preset_action_dialog")
         }
+    }
+
+    fun bookmarkItem(presetPosition: Int) {
+        presetViewModel.bookmarkItem(presetPosition)
+    }
+
+    fun editItem(presetPosition: Int) {
+        presetViewModel.editItem(presetPosition)
+    }
+
+    fun showPresetDetail(presetPosition: Int) {
+        presetViewModel.showPresetDetail(presetPosition)
+    }
+
+    fun deleteItem(presetPosition: Int) {
+        presetViewModel.deleteItem(presetPosition)
+    }
+
+    fun playPreset(presetPosition: Int) {
+        presetViewModel.playPreset(presetPosition)
     }
 
 

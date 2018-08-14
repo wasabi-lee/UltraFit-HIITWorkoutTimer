@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="viewmodel"
             type="io.incepted.ultrafittimer.viewmodel.MainViewModel" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_container"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.MainActivity">
 
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/tx_detail_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,27 +28,42 @@
             android:fitsSystemWindows="true"
             app:elevation="0dp">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="top"
-                android:padding="@dimen/spacing_xsmall"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    style="@style/toolbarTextStyle"
+                    style="@style/BoldLargeTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Timer Setup"/>
+                    android:maxLines="1"
+                    android:text="Timer Setup"
+                    android:visibility="@{viewmodel.editMode ? View.GONE : View.VISIBLE}" />
 
-            </android.support.v7.widget.Toolbar>
-        </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_main"
-            app:viewmodel="@{viewmodel}"/>
+                <EditText
+                    style="@style/editText_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:text="Timer Setup"
+                    android:visibility="@{viewmodel.editMode ? View.VISIBLE : View.GONE}">
 
-    </android.support.design.widget.CoordinatorLayout>
+                    <requestFocus />
+                </EditText>
+            </androidx.appcompat.widget.Toolbar>
 
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <include
+            layout="@layout/content_main"
+            app:viewmodel="@{viewmodel}" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

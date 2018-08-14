@@ -3,11 +3,11 @@ package io.incepted.ultrafittimer.fragment
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.activity.CustomizeActivity
 
-class ExitWarningDialogFragment : DialogFragment() {
+class ExitWarningDialogFragment : androidx.fragment.app.DialogFragment() {
 
     companion object {
         fun newInstance(title: Int): ExitWarningDialogFragment {

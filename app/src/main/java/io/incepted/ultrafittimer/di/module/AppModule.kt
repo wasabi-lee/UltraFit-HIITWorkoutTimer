@@ -1,7 +1,7 @@
 package io.incepted.ultrafittimer.di.module
 
 import android.app.Application
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import dagger.Module

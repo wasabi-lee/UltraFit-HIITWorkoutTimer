@@ -1,8 +1,8 @@
 package io.incepted.ultrafittimer.di.module
 
 import android.content.Context
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.Module
 import dagger.Provides
 import io.incepted.ultrafittimer.util.SwipeDeleteCallback
@@ -11,13 +11,13 @@ import io.incepted.ultrafittimer.util.SwipeDeleteCallback
 class CustomizeActivityModule {
 
     @Provides
-    fun provideItemAnimator(): DefaultItemAnimator {
-        return DefaultItemAnimator()
+    fun provideItemAnimator(): androidx.recyclerview.widget.DefaultItemAnimator {
+        return androidx.recyclerview.widget.DefaultItemAnimator()
     }
 
     @Provides
-    fun provideLinearLayoutManager(context: Context): LinearLayoutManager {
-        return LinearLayoutManager(context)
+    fun provideLinearLayoutManager(context: Context): androidx.recyclerview.widget.LinearLayoutManager {
+        return androidx.recyclerview.widget.LinearLayoutManager(context)
     }
 
 }

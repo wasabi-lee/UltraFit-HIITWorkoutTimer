@@ -1,12 +1,12 @@
 package io.incepted.ultrafittimer.activity
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.*
 import android.widget.Toast
 import io.incepted.ultrafittimer.R
@@ -26,6 +26,7 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -33,8 +34,15 @@ class MainActivity : AppCompatActivity() {
 
     private var exit: Boolean = false
 
+    private var editMode: Boolean = false
+
+    private var editPresetId: Long = -1L
+
     companion object {
-     val RC_CUSTOMIZED = 1001
+        const val RC_CUSTOMIZED = 1001
+        const val EXTRA_KEY_EDIT_MODE = "extra_key_edit_mode"
+        const val EXTRA_KEY_EDIT_PRESET_ID = "extra_key_edit_preset_id"
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +52,9 @@ class MainActivity : AppCompatActivity() {
                 .get(MainViewModel::class.java)
         binding.viewmodel = mainViewModel
 
-        if (savedInstanceState == null) mainViewModel.start()
+        unpackExtra()
+
+        if (savedInstanceState == null) mainViewModel.start(editMode, editPresetId)
 
         initToolbar()
         initObservers()
@@ -52,9 +62,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun unpackExtra() {
+        editMode = intent.getBooleanExtra(EXTRA_KEY_EDIT_MODE, false)
+        editPresetId = intent.getLongExtra(EXTRA_KEY_EDIT_PRESET_ID, -1L)
+    }
+
     private fun initToolbar() {
         setSupportActionBar(main_toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        if (editMode) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
     }
 
 
@@ -66,8 +84,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initActivityTransitionObservers() {
         mainViewModel.toSettings.observe(this, Observer {
+            if (it == false) return@Observer
             val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
+                startActivity(intent)
         })
 
         mainViewModel.toCustomizeActivity.observe(this, Observer {
@@ -78,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         mainViewModel.toPresetActivity.observe(this, Observer {
+            if (it == false) return@Observer
             val intent = Intent(this, PresetListActivity::class.java)
             startActivity(intent)
         })
@@ -85,7 +105,8 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
+        val menuId = if(editMode) R.menu.menu_main_edit else R.menu.menu_main
+        menuInflater.inflate(menuId, menu)
         return true
     }
 
@@ -103,6 +124,13 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.openSettings()
                 true
             }
+            R.id.menu_main_edit_save -> {
+                //TODO Save the changed preset
+                true
+            }
+            android.R.id.home -> {
+                onBackPressed()
+                true            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -124,15 +152,19 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        if (exit) {
-            super.onBackPressed()
+        if (!editMode) {
+            if (!exit) {
+                Toast.makeText(this, "Press the back button again to exit", Toast.LENGTH_SHORT).show()
+                exit = true
+                Observable.timer(2, TimeUnit.SECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeBy(onComplete = { exit = false })
+            } else {
+                super.onBackPressed()
+            }
         } else {
-            Toast.makeText(this, "Press the back button again to exit", Toast.LENGTH_SHORT).show()
-            exit = true
-            Observable.timer(2, TimeUnit.SECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeBy(onComplete = { exit = false })
+            super.onBackPressed()
         }
     }
 
