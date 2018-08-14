@@ -6,7 +6,7 @@ import io.incepted.ultrafittimer.util.TimerUtil
 import io.incepted.ultrafittimer.util.WorkoutSession
 import timber.log.Timber
 
-class Round(var workoutName: String, var workSeconds: Int, var restSeconds: Int) {
+data class Round(var workoutName: String, var workSeconds: Int, var restSeconds: Int) {
 
     var offset: Int = 1
 
@@ -37,7 +37,6 @@ class Round(var workoutName: String, var workSeconds: Int, var restSeconds: Int)
     }
 
     fun applyOffset(session: Int, increment: Boolean) {
-
         adjustChange(session, offset * (if (increment) 1 else -1))
     }
 

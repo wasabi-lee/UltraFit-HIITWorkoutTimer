@@ -2,17 +2,16 @@ package io.incepted.ultrafittimer.fragment
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.activity.CustomizeActivity
 
-class AlertDialogFragment : DialogFragment() {
+class ExitWarningDialogFragment : DialogFragment() {
 
     companion object {
-        fun newInstance(title: Int): AlertDialogFragment {
-            val frag = AlertDialogFragment()
+        fun newInstance(title: Int): ExitWarningDialogFragment {
+            val frag = ExitWarningDialogFragment()
             val args = Bundle()
             args.putInt("title", title)
             frag.arguments = args
@@ -28,7 +27,10 @@ class AlertDialogFragment : DialogFragment() {
                 .setCancelable(false)
                 .setTitle(title ?: R.string.alert_dialog_exit_warning_title)
                 .setMessage(R.string.alert_dialog_exit_warning_message)
-                .setPositiveButton(R.string.alert_dialog_discard) { _, _ -> (activity as CustomizeActivity).onBackPressed() }
+                .setPositiveButton(R.string.alert_dialog_discard) { dialog, _ ->
+                    dialog?.dismiss()
+                    (activity as CustomizeActivity).discardThisSetting()
+                }
                 .setNegativeButton(R.string.alert_dialog_cancel) { dialog, _ -> dialog?.dismiss() }.create()
     }
 }

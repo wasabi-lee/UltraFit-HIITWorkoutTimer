@@ -11,6 +11,7 @@ import android.view.*
 import android.widget.Toast
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.ActivityMainBinding
+import io.incepted.ultrafittimer.fragment.PresetSaveDialogFragment
 import io.incepted.ultrafittimer.util.SnackbarUtil
 import io.incepted.ultrafittimer.viewmodel.MainViewModel
 import io.reactivex.Observable
@@ -45,7 +46,6 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) mainViewModel.start()
 
-
         initToolbar()
         initObservers()
         initActivityTransitionObservers()
@@ -77,7 +77,10 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, RC_CUSTOMIZED)
         })
 
-        mainViewModel.toPresetActivity.observe(this, Observer { Timber.d("to preset activity") })
+        mainViewModel.toPresetActivity.observe(this, Observer {
+            val intent = Intent(this, PresetListActivity::class.java)
+            startActivity(intent)
+        })
     }
 
 
@@ -89,7 +92,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.menu_main_save_preset -> {
-                mainViewModel.saveThisAsPreset()
+                launchSaveDialog()
                 true
             }
             R.id.menu_main_load_presets -> {
@@ -106,6 +109,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun showSnackBar(s: String) {
         SnackbarUtil.showSnackBar(findViewById(android.R.id.content), s)
+    }
+
+
+    private fun launchSaveDialog() {
+        val dialogFrag = PresetSaveDialogFragment.newInstance()
+        dialogFrag.show(supportFragmentManager, "preset_dialog")
+    }
+
+
+    fun savePreset(presetName: String) {
+        mainViewModel.saveThisAsPreset(presetName)
     }
 
 

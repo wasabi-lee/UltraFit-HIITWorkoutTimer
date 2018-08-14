@@ -14,9 +14,11 @@ import io.incepted.ultrafittimer.viewmodel.CustomizeViewModel
 import kotlinx.android.synthetic.main.summary_list_item.view.*
 import timber.log.Timber
 
-class RoundAdapter(var data: MutableList<Round>, val viewModel: CustomizeViewModel) : RecyclerView.Adapter<RoundAdapter.ViewHolder>() {
+class RoundAdapter(var data: MutableList<Round>, val viewModel: CustomizeViewModel)
+    : RecyclerView.Adapter<RoundAdapter.ViewHolder>() {
 
-    class ViewHolder(val itemBinding: CustomizeListItemBinding, viewType: Int) : RecyclerView.ViewHolder(itemBinding.root) {
+    class ViewHolder(val itemBinding: CustomizeListItemBinding, viewType: Int)
+        : RecyclerView.ViewHolder(itemBinding.root) {
 
         init {
             val timelineView: TimelineView = itemBinding.root.findViewById(R.id.timelineView)
@@ -33,7 +35,6 @@ class RoundAdapter(var data: MutableList<Round>, val viewModel: CustomizeViewMod
     override fun onBindViewHolder(holder: RoundAdapter.ViewHolder, position: Int) {
         val itemBinding: CustomizeListItemBinding = holder.itemBinding
         itemBinding.data = data[position]
-//        itemBinding.viewmodel = viewModel
         itemBinding.root.tag = position + 1
         itemBinding.executePendingBindings()
 

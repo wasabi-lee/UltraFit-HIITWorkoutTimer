@@ -19,6 +19,11 @@ interface LocalDataSource {
         fun onPresetNotAvailable()
     }
 
+    interface OnTimersForPresetsLoadedListener {
+        fun onPresetTimerNotAvailable()
+        fun onPresetTimerLoadCompleted(presets: List<Preset>)
+    }
+
     interface OnPresetSavedListener {
         fun onPresetSaved()
         fun onPresetSaveNotAvailable()
@@ -49,7 +54,7 @@ interface LocalDataSource {
     }
 
     interface OnTimerSavedListener {
-        fun onTimerSaved()
+        fun onTimerSaved(id: Long)
         fun onTimerSaveNotAvailable()
     }
 
@@ -105,7 +110,7 @@ interface LocalDataSource {
 
 
 
-    fun getTimerById(timerId: Int, callback: OnTimerLoadedListener)
+    fun getTimerById(timerId: Long, callback: OnTimerLoadedListener)
 
     fun saveTimer(newTimer: TimerSetting, callback: OnTimerSavedListener)
 

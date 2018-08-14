@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.activity.CustomizeActivity
 import io.incepted.ultrafittimer.activity.MainActivity
 import io.incepted.ultrafittimer.db.DbRepository
@@ -23,7 +24,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(val appContext: Application, val repository: DbRepository)
-    : AndroidViewModel(appContext), LocalDataSource.OnTimerSavedListener {
+    : AndroidViewModel(appContext), LocalDataSource.OnTimerSavedListener, LocalDataSource.OnPresetSavedListener {
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -46,6 +47,8 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     var fromPreset: Boolean = false
 
     var fromTemp: Boolean = false
+
+    var presetName: String = "Untitled"
 
 
     lateinit var timerSetting: TimerSetting
@@ -98,9 +101,12 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
         }
     }
 
-    fun saveThisAsPreset() {
+    fun saveThisAsPreset(presetName: String) {
         timerSettingObservable.finalizeDetail()
-        fromPreset = true
+        this.presetName = presetName
+
+        repository.saveTimer(timerSettingObservable.getFinalSetting(), this)
+
         // reinitialize the entries with the retrieved values
     }
 
@@ -173,12 +179,23 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
     // ------------------ Callbacks -----------------
 
-    override fun onTimerSaved() {
-        Timber.d("saved!")
+    override fun onTimerSaved(id: Long) {
+        Timber.d("saved timer with id: $id")
+        val newPreset = Preset(null, false, presetName, id)
+        repository.savePreset(newPreset, this)
     }
 
     override fun onTimerSaveNotAvailable() {
         Timber.d("failed!")
+    }
+
+    override fun onPresetSaved() {
+        snackbarTextRes.value = R.string.preset_save_successful
+        Timber.d("New preset saved")
+    }
+
+    override fun onPresetSaveNotAvailable() {
+        snackbarTextRes.value = R.string.error_unexpected
     }
 
 

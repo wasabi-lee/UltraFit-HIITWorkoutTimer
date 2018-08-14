@@ -5,6 +5,7 @@
     <string name="error_invalid_time">Please type a valid time</string>
     <string name="error_invalid_round">Please type a valid number</string>
 
+    <string name="error_unexpected">Unexpected error occurred. Please try again later!</string>
 
     <string name="save_this_setting">Save This As Preset</string>
     <string name="load_presets">Load Presets</string>
@@ -17,6 +18,11 @@
     <string name="alert_dialog_empty_title"> </string>
     <string name="alert_dialog_exit_warning_title">Are your sure to exit this screen?</string>
     <string name="alert_dialog_exit_warning_message">Your customized detail will be discarded</string>
+
+    <string name="alert_dialog_preset_save_title">Save this preset</string>
+    <string name="alert_dialog_preset_save_edit_hint">Type this preset\'s name</string>
+
+
     <string name="cool_down">Cool Down</string>
     <string name="warm_up">Warm Up</string>
     <string name="work">Work</string>
@@ -24,6 +30,12 @@
     <string name="rounds">Rounds</string>
     <string name="total">Total</string>
     <string name="start_all_caps">START</string>
+
+    <string name="preset_save_successful">Saved as preset</string>
+    <string name="no_preset_message_header">Looks a little empty here...</string>
+    <string name="no_preset_message_body">No worries, Hit the button below to save your workout plans!</string>
+    <string name="create_a_preset">CREATE A PRESET</string>
+    <string name="presets">Presets</string>
 
 
 </resources>

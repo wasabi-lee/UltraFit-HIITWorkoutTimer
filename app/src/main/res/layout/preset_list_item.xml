@@ -1,54 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_xxsmall"
-    android:layout_marginEnd="@dimen/spacing_normal"
-    android:layout_marginLeft="@dimen/spacing_normal"
-    android:layout_marginRight="@dimen/spacing_normal"
-    android:layout_marginStart="@dimen/spacing_normal"
-    android:layout_marginTop="@dimen/spacing_xxsmall"
-    android:background="?attr/card_background_drawable"
-    android:padding="@dimen/spacing_normal">
 
-    <TextView
-        android:id="@+id/preset_list_item_name_tv"
-        style="@style/presetHeaderTextStyle"
-        android:layout_width="wrap_content"
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="io.incepted.ultrafittimer.util.PresetUtil" />
+
+        <variable
+            name="preset"
+            type="io.incepted.ultrafittimer.db.model.Preset" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/preset_item_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lower body hiit routine"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="@dimen/spacing_xxsmall"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:layout_marginLeft="@dimen/spacing_normal"
+        android:layout_marginRight="@dimen/spacing_normal"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_xxsmall"
+        android:background="?attr/card_background_drawable"
+        android:padding="@dimen/spacing_normal">
 
-    <TextView
-        android:id="@+id/preset_list_item_time_summary_tv"
-        style="@style/secondaryMediumRegularTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="WORK 02:00 * REST 1:00 * 8 ROUNDS"
-        app:layout_constraintStart_toStartOf="@+id/preset_list_item_name_tv"
-        app:layout_constraintTop_toBottomOf="@+id/preset_list_item_name_tv" />
+        <TextView
+            android:id="@+id/preset_list_item_name_tv"
+            style="@style/presetHeaderTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{preset.name}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/preset_list_item_workout_detail_tv"
-        style="@style/secondaryMediumRegularTextStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="Jumping squats - Burpees - Lunges - Mountain climbers - Yyayyyayy"
-        app:layout_constraintStart_toStartOf="@+id/preset_list_item_time_summary_tv"
-        app:layout_constraintTop_toBottomOf="@+id/preset_list_item_time_summary_tv" />
+        <TextView
+            android:id="@+id/preset_list_item_time_summary_tv"
+            style="@style/secondaryMediumRegularTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{PresetUtil.workSettingToDisplayFormat(preset.timerSetting.workSeconds, preset.timerSetting.restSeconds)}"
+            app:layout_constraintStart_toStartOf="@+id/preset_list_item_name_tv"
+            app:layout_constraintTop_toBottomOf="@+id/preset_list_item_name_tv" />
 
-    <ImageView
-        android:id="@+id/preset_list_item_bookmark_iv"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_action_star_10_yellow_light" />
+        <TextView
+            android:id="@+id/preset_list_item_workout_detail_tv"
+            style="@style/secondaryMediumRegularTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{PresetUtil.workNamesToDisplayFormat(preset.timerSetting.roundNames)}"
+            app:layout_constraintStart_toStartOf="@+id/preset_list_item_time_summary_tv"
+            app:layout_constraintTop_toBottomOf="@+id/preset_list_item_time_summary_tv" />
 
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/preset_list_item_bookmark_iv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="@{preset.bookmarked ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_action_star_10_yellow_light" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

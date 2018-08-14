@@ -7,7 +7,14 @@ import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.incepted.ultrafittimer.db.model.WorkoutHistory
 import io.incepted.ultrafittimer.db.source.LocalDataSource
-import io.reactivex.Completable
+import io.reactivex.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Action
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Consumer
+import io.reactivex.functions.Function
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,6 +32,23 @@ class DbRepository @Inject constructor(
     // ---------- Preset operations ----------
 
     override fun getPresets(callback: LocalDataSource.OnPresetsLoadedListener) {
+
+        try {
+            presetDao.getAllPresets()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onNext = { callback.onPresetsLoaded(it) },
+                            onError = {
+                                it.printStackTrace()
+                                callback.onPresetsNotAvailable()
+                            }
+                    )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback.onPresetsNotAvailable()
+        }
+
     }
 
     override fun getPresetById(presetId: Int, callback: LocalDataSource.OnPresetLoadedListener) {
@@ -32,8 +56,54 @@ class DbRepository @Inject constructor(
     }
 
     override fun savePreset(newPreset: Preset, callback: LocalDataSource.OnPresetSavedListener) {
-
+        try {
+            Completable.fromAction { presetDao.insertPreset(newPreset) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onComplete = { callback.onPresetSaved() },
+                            onError = {
+                                it.printStackTrace()
+                                callback.onPresetSaveNotAvailable()
+                            }
+                    )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback.onPresetSaveNotAvailable()
+        }
     }
+
+
+    fun getTimerSettingsForPresets(presets: List<Preset>, callback: LocalDataSource.OnTimersForPresetsLoadedListener) {
+
+        val res = mutableListOf<Preset>()
+
+        try {
+            Observable.fromIterable(presets)
+                    .flatMap {
+                        return@flatMap Observable.zip(Observable.just(it),
+                                timerSettingDao.getTimerSettingById(it.timerSettingId).toObservable(),
+                                BiFunction<Preset, TimerSetting, Preset> { preset, timer ->
+                                    preset.timerSetting = timer
+                                    preset
+                                })
+                    }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onNext = { res.add(it) },
+                            onComplete = { callback.onPresetTimerLoadCompleted(res) },
+                            onError = {
+                                it.printStackTrace()
+                                callback.onPresetTimerNotAvailable()
+                            }
+                    )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback.onPresetTimerNotAvailable()
+        }
+    }
+
 
     override fun updatePreset(updated: Preset, callback: LocalDataSource.OnPresetUpdateListener) {
 
@@ -51,13 +121,42 @@ class DbRepository @Inject constructor(
     // ---------- TimerSetting operations ----------
 
 
-    override fun getTimerById(timerId: Int, callback: LocalDataSource.OnTimerLoadedListener) {
-
+    override fun getTimerById(timerId: Long, callback: LocalDataSource.OnTimerLoadedListener) {
+        try {
+            timerSettingDao.getTimerSettingById(timerId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onSuccess = { callback.onTimerLoaded(it) },
+                            onError = {
+                                it.printStackTrace()
+                                callback.onTimerNotAvailable()
+                            }
+                    )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback.onTimerNotAvailable()
+        }
     }
 
     override fun saveTimer(newTimer: TimerSetting, callback: LocalDataSource.OnTimerSavedListener) {
-        callback.onTimerSaved()
+        try {
+            Single.fromCallable { timerSettingDao.insertTimerSetting(newTimer) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onSuccess = { callback.onTimerSaved(it) },
+                            onError = {
+                                it.printStackTrace()
+                                callback.onTimerSaveNotAvailable()
+                            }
+                    )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback.onTimerSaveNotAvailable()
+        }
     }
+
 
     override fun updateTimer(updated: TimerSetting, callback: LocalDataSource.OnTimerUpdateListener) {
 

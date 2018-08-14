@@ -58,6 +58,14 @@ class CustomizeViewModel @Inject constructor(appContext: Application, val reposi
         return l
     }
 
+    fun getCopiedRounds(original: MutableList<Round>): MutableList<Round> {
+        val result = mutableListOf<Round>()
+        original.forEach {
+            result.add(it.copy().also { copied -> copied.offset = offset })
+        }
+        return result
+    }
+
 
     fun removeAt(position: Int?) {
         deletedItemPosition.value = position
@@ -83,7 +91,7 @@ class CustomizeViewModel @Inject constructor(appContext: Application, val reposi
         return result
     }
 
-    private fun checkIfModified(original: MutableList<Round>, result: MutableList<Round>): Boolean {
+    fun checkIfModified(original: MutableList<Round>, result: MutableList<Round>): Boolean {
         return TimerSettingChangeChecker.roundChanged(original, result)
     }
 

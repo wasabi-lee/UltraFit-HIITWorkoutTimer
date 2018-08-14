@@ -1,6 +1,5 @@
 package io.incepted.ultrafittimer.activity
 
-import android.app.DialogFragment
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -16,7 +15,7 @@ import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.adapter.RoundAdapter
 import io.incepted.ultrafittimer.databinding.ActivityCustomizeBinding
 import io.incepted.ultrafittimer.db.tempmodel.Round
-import io.incepted.ultrafittimer.fragment.AlertDialogFragment
+import io.incepted.ultrafittimer.fragment.ExitWarningDialogFragment
 import io.incepted.ultrafittimer.viewmodel.CustomizeViewModel
 import kotlinx.android.synthetic.main.activity_customize.*
 import java.util.*
@@ -51,6 +50,8 @@ class CustomizeActivity : AppCompatActivity() {
     lateinit var roundAdapter: RoundAdapter
 
     lateinit var extra: ArrayList<String>
+
+    var exit = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,8 +92,7 @@ class CustomizeActivity : AppCompatActivity() {
     private fun initRecyclerView() {
 
         originalList = customizeViewModel.initRounds(extra)
-        val rounds = mutableListOf<Round>()
-        rounds.addAll(originalList)
+        val rounds = customizeViewModel.getCopiedRounds(originalList)
 
         roundAdapter = RoundAdapter(rounds, customizeViewModel)
         customize_recycler_view.setHasFixedSize(true)
@@ -135,15 +135,28 @@ class CustomizeActivity : AppCompatActivity() {
                 true
             }
             android.R.id.home -> {
-                launchWarningDialog()
+                onBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
+    fun discardThisSetting() {
+        exit = true
+        onBackPressed()
+    }
+
+    override fun onBackPressed() {
+        if (exit) {
+            super.onBackPressed()
+        } else {
+            launchWarningDialog()
+        }
+    }
+
     private fun launchWarningDialog() {
-        val dialogFrag = AlertDialogFragment.newInstance(R.string.alert_dialog_exit_warning_title)
+        val dialogFrag = ExitWarningDialogFragment.newInstance(R.string.alert_dialog_exit_warning_title)
         dialogFrag.show(supportFragmentManager, "warning_dialog")
     }
 
