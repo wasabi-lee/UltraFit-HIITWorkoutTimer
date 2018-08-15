@@ -16,7 +16,7 @@
         <item name="card_background_drawable">@drawable/card_background_light</item>
 
         <item name="android:textColor">@color/textColor_light</item>
-        <item name="header_text_color">@color/colorAccent_header</item>
+        <item name="header_text_color">@color/colorAccent_header_light</item>
 
         <item name="transparent_toolbar_style">@style/transparent_toolbar_style_light</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

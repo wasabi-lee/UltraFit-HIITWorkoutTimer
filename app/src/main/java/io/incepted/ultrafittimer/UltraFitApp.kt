@@ -5,6 +5,7 @@ import android.app.Application
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import io.incepted.ultrafittimer.di.AppComponent
 import io.incepted.ultrafittimer.di.AppInjector
 import timber.log.Timber
 import javax.inject.Inject
@@ -30,4 +31,9 @@ class UltraFitApp : Application(), HasActivityInjector {
     }
 
     override fun activityInjector() = dispatchingAndroidInjector
+
+    fun getAppComponent(): AppComponent {
+        return AppInjector.appComponent
+    }
+
 }

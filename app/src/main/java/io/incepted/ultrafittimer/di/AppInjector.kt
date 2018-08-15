@@ -8,10 +8,14 @@ import dagger.android.support.HasSupportFragmentInjector
 import io.incepted.ultrafittimer.UltraFitApp
 
 object AppInjector {
+
+    lateinit var appComponent: AppComponent
+
     fun init(ultraFitApp: UltraFitApp) {
-        DaggerAppComponent.builder().application(ultraFitApp)
+        appComponent = DaggerAppComponent.builder().application(ultraFitApp)
                 .appContext(ultraFitApp.applicationContext)
-                .build().inject(ultraFitApp)
+                .build()
+         appComponent.inject(ultraFitApp)
 
         ultraFitApp.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {

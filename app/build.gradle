@@ -53,6 +53,7 @@ dependencies {
     // ui library
     implementation 'com.github.vipulasri:timelineview:1.0.6'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
 
 
     // RxJava 2

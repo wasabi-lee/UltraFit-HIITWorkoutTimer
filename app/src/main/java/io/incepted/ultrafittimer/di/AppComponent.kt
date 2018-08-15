@@ -7,6 +7,7 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import io.incepted.ultrafittimer.UltraFitApp
 import io.incepted.ultrafittimer.di.module.AppModule
+import io.incepted.ultrafittimer.util.CustomPrefCategory
 import javax.inject.Singleton
 
 @Singleton
@@ -26,4 +27,5 @@ interface AppComponent {
     }
 
     fun inject(ultraFitApp: UltraFitApp)
+    fun inject(prefCategory: CustomPrefCategory)
 }

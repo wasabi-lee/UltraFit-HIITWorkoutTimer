@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.preference.PreferenceCategory android:title="Theme"
-        android:layout="@layout/pref_category_view">
+    <io.incepted.ultrafittimer.util.CustomPrefCategory android:title="Theme">
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_key_theme"
             android:title="Enable Dark Theme" />
 
-    </androidx.preference.PreferenceCategory>
+    </io.incepted.ultrafittimer.util.CustomPrefCategory>
 
 
-    <androidx.preference.PreferenceCategory android:title="Sound"
-        android:layout="@layout/pref_category_view">
+    <io.incepted.ultrafittimer.util.CustomPrefCategory android:title="Sound">
 
-        <android.support.v7.preference.ListPreference
+        <androidx.preference.ListPreference
             android:defaultValue="1"
             android:dialogTitle="Beep Sound"
             android:entries="@array/pref_list_beep_sound"
@@ -24,7 +22,7 @@
             android:summary="%s"
             android:title="Beep Sound" />
 
-        <android.support.v7.preference.ListPreference
+        <androidx.preference.ListPreference
             android:defaultValue="1"
             android:dialogTitle="Cue Sound"
             android:entries="@array/pref_list_cue_sound"
@@ -33,7 +31,7 @@
             android:summary="%s"
             android:title="Cue Second" />
 
-        <android.support.v7.preference.ListPreference
+        <androidx.preference.ListPreference
             android:defaultValue="3"
             android:dialogTitle="Cue Seconds"
             android:entries="@array/pref_list_cue_seconds"
@@ -41,12 +39,11 @@
             android:key="pref_key_cue_seconds"
             android:summary="%s"
             android:title="Cue Seconds" />
-    </androidx.preference.PreferenceCategory>
+    </io.incepted.ultrafittimer.util.CustomPrefCategory>
 
-    <androidx.preference.PreferenceCategory android:title="Timer Setup"
-        android:layout="@layout/pref_category_view">
+    <io.incepted.ultrafittimer.util.CustomPrefCategory android:title="Timer Setup">
 
-        <android.support.v7.preference.ListPreference
+        <androidx.preference.ListPreference
             android:defaultValue="1"
             android:dialogTitle="Increment the time by"
             android:entries="@array/pref_list_time_increment"
@@ -55,5 +52,5 @@
             android:summary="%s"
             android:title="+/-Button Increment" />
 
-    </androidx.preference.PreferenceCategory>
+    </io.incepted.ultrafittimer.util.CustomPrefCategory>
 </androidx.preference.PreferenceScreen>

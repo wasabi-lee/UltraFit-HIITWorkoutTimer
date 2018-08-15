@@ -42,6 +42,7 @@
     <string name="preset_action_edited">Successfully edited</string>
     <string name="save_all_caps">SAVE</string>
     <string name="timer_setup">Timer Setup</string>
+    <string name="summary">Summary</string>
 
 
 </resources>

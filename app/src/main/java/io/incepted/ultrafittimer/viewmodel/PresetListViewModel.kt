@@ -27,6 +27,8 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
 
     val openEditScreen = MutableLiveData<Long>()
 
+    val openSummaryActivity = MutableLiveData<Long>()
+
     var presets = ObservableArrayList<Preset>()
 
     var presetsExist = ObservableBoolean(false)
@@ -59,10 +61,13 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
 
     fun editItem(presetPosition: Int) {
         openEditScreen.value = presets[presetPosition].id
+        openEditScreen.value = null
     }
 
     fun showPresetDetail(presetPosition: Int) {
-
+        val presetId: Long = presets[presetPosition].id ?: return
+        openSummaryActivity.value = presetId
+        openSummaryActivity.value = null
     }
 
     fun deleteItem(presetPosition: Int) {
@@ -71,7 +76,6 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
     }
 
     fun playPreset(presetPosition: Int) {
-
     }
 
     fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

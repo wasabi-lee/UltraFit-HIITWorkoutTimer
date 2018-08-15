@@ -78,6 +78,13 @@ class PresetListActivity : AppCompatActivity() {
             intent.putExtra(MainActivity.EXTRA_KEY_EDIT_PRESET_ID, it)
             startActivityForResult(intent, RC_PRESET_EDITED)
         })
+
+        presetViewModel.openSummaryActivity.observe(this, Observer {
+            if (it == null) return@Observer
+            val intent = Intent(this, SummaryActivity::class.java)
+            intent.putExtra(SummaryActivity.EXTRA_KEY_SUMMARY_PRESET_ID, it)
+            startActivity(intent)
+        })
     }
 
     private fun initRecyclerView() {
