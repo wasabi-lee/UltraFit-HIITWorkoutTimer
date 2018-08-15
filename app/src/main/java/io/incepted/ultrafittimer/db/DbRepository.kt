@@ -71,11 +71,11 @@ class DbRepository @Inject constructor(
 
     override fun savePreset(newPreset: Preset, callback: LocalDataSource.OnPresetSavedListener) {
         try {
-            Completable.fromAction { presetDao.insertPreset(newPreset) }
+            Single.fromCallable { presetDao.insertPreset(newPreset) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeBy(
-                            onComplete = { callback.onPresetSaved() },
+                            onSuccess = {callback.onPresetSaved(it)},
                             onError = {
                                 it.printStackTrace()
                                 callback.onPresetSaveNotAvailable()

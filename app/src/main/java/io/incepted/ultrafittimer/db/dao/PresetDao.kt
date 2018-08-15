@@ -15,7 +15,7 @@ interface PresetDao {
     fun getPresetById(presetId: Long) : Maybe<Preset>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPreset(newPreset: Preset)
+    fun insertPreset(newPreset: Preset): Long
 
     @Update
     fun updatePreset(updatedPreset: Preset)

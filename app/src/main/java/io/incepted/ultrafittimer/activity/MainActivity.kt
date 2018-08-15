@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.toSettings.observe(this, Observer {
             if (it == false) return@Observer
             val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
+            startActivity(intent)
         })
 
         mainViewModel.toCustomizeActivity.observe(this, Observer {
@@ -101,11 +101,30 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, PresetListActivity::class.java)
             startActivity(intent)
         })
+
+
+        mainViewModel.toTimerActivity.observe(this, Observer {
+            val frompreset = it.getBoolean(TimerActivity.EXTRA_KEY_FROM_PRESET)
+            val id = it.getLong(TimerActivity.EXTRA_KEY_ID, -1)
+            Timber.d("${if (frompreset) "PRESET ID: " else "TIMER ID: "} $id")
+        })
+
+
+        if (editMode) {
+            mainViewModel.finishActivity.observe(this, Observer {
+                returnToPresetListActivity()
+            })
+        }
+    }
+
+    private fun returnToPresetListActivity() {
+        setResult(RESULT_OK)
+        onBackPressed()
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val menuId = if(editMode) R.menu.menu_main_edit else R.menu.menu_main
+        val menuId = if (editMode) R.menu.menu_main_edit else R.menu.menu_main
         menuInflater.inflate(menuId, menu)
         return true
     }
@@ -125,12 +144,13 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_main_edit_save -> {
-                //TODO Save the changed preset
+                mainViewModel.saveThisAsPreset()
                 true
             }
             android.R.id.home -> {
                 onBackPressed()
-                true            }
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

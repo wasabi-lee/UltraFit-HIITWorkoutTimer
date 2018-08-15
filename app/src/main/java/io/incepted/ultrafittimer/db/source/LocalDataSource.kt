@@ -25,7 +25,7 @@ interface LocalDataSource {
     }
 
     interface OnPresetSavedListener {
-        fun onPresetSaved()
+        fun onPresetSaved(presetId: Long)
         fun onPresetSaveNotAvailable()
     }
 

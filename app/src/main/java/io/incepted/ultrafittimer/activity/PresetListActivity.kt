@@ -33,6 +33,11 @@ class PresetListActivity : AppCompatActivity() {
 
     private lateinit var presetViewModel: PresetListViewModel
 
+    companion object {
+        const val RC_PRESET_EDITED = 4334
+        const val EXTRA_KEY_PRESET_EDITED = "extra_key_preset_edited"
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +76,7 @@ class PresetListActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra(MainActivity.EXTRA_KEY_EDIT_MODE, true)
             intent.putExtra(MainActivity.EXTRA_KEY_EDIT_PRESET_ID, it)
-            startActivity(intent)
+            startActivityForResult(intent, RC_PRESET_EDITED)
         })
     }
 
@@ -112,6 +117,11 @@ class PresetListActivity : AppCompatActivity() {
 
     fun playPreset(presetPosition: Int) {
         presetViewModel.playPreset(presetPosition)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        presetViewModel.handleActivityResult(requestCode, resultCode, data)
     }
 
 

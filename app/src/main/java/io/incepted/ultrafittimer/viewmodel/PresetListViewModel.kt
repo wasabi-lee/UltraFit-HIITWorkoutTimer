@@ -1,12 +1,16 @@
 package io.incepted.ultrafittimer.viewmodel
 
+import android.app.Activity
 import android.app.Application
+import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import android.view.View
 import io.incepted.ultrafittimer.R
+import io.incepted.ultrafittimer.activity.PresetListActivity
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.source.LocalDataSource
@@ -68,6 +72,15 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
 
     fun playPreset(presetPosition: Int) {
 
+    }
+
+    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == PresetListActivity.RC_PRESET_EDITED && resultCode == Activity.RESULT_OK) {
+            // Returning from MainActivity for the preset edit.
+            // Reload the preset list if RESULT_OK is set.
+            snackbarResource.value = R.string.preset_action_edited
+            loadPresets()
+        }
     }
 
 

@@ -13,57 +13,55 @@ import androidx.databinding.ObservableField
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.activity.CustomizeActivity
 import io.incepted.ultrafittimer.activity.MainActivity
+import io.incepted.ultrafittimer.activity.TimerActivity
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.incepted.ultrafittimer.db.model.TimerSettingObservable
 import io.incepted.ultrafittimer.db.source.LocalDataSource
-import io.incepted.ultrafittimer.db.tempmodel.Round
-import io.incepted.ultrafittimer.util.DbDelimiter
 import io.incepted.ultrafittimer.util.RoundUtil
 import io.incepted.ultrafittimer.util.WorkoutSession
-import timber.log.Timber
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(val appContext: Application, val repository: DbRepository)
     : AndroidViewModel(appContext), LocalDataSource.OnTimerSavedListener, LocalDataSource.OnPresetSavedListener,
-        LocalDataSource.OnPresetLoadedListener, LocalDataSource.OnTimerLoadedListener {
+        LocalDataSource.OnPresetLoadedListener, LocalDataSource.OnTimerLoadedListener,
+        LocalDataSource.OnPresetUpdateListener {
 
     @Inject
     lateinit var sharedPref: SharedPreferences
 
     // Activity transition LiveData
     val toPresetActivity: MutableLiveData<Boolean> = MutableLiveData()
-
     val toCustomizeActivity: MutableLiveData<ArrayList<String>> = MutableLiveData()
-
     val toSettings: MutableLiveData<Boolean> = MutableLiveData()
+    val toTimerActivity: MutableLiveData<Bundle> = MutableLiveData()
+    val finishActivity: MutableLiveData<Boolean> = MutableLiveData()
 
-    val toTimerActivity: MutableLiveData<Int> = MutableLiveData()
-
+    // UI listeners & events
+    var presetName = ObservableField<String>("Untitled")
     val snackbarTextRes: MutableLiveData<Int> = MutableLiveData()
-
     val focusListener: View.OnFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
         handleFocusChange(v, hasFocus)
     }
 
-    var editMode = ObservableBoolean(false)
-
-    var fromPreset: Boolean = false
-
-    var fromTemp: Boolean = false
-
-    var presetName: String = "Untitled"
+    // Timer status flags
+    var editMode = ObservableBoolean(false) // Currently modifying an existing preset
+    var fromPreset: Boolean = false // This timer is from an existing preset
+    var fromTemp: Boolean = false // This timer is from a temporarily saved timer
+    var presetSaveInProgress: Boolean = false // Preset is being saved
 
 
-    lateinit var timerSetting: TimerSetting
-
-    var timerSettingObservable = ObservableField<TimerSettingObservable>()
+    // Models
+    lateinit var preset: Preset
+    lateinit var timer: TimerSetting
+    var timerObsvb = ObservableField<TimerSettingObservable>()
 
     var offset: Int = 1
+    private var editPresetId = -1L // The id of the preset we're currently modifying
 
-    var editPresetId = -1L
 
+    // ------------------------------------ Initialization --------------------------------------
 
     fun start(editMode: Boolean, editPresetId: Long) {
         this.editMode.set(editMode)
@@ -72,50 +70,40 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
         initializeRounds()
     }
 
+
     private fun initializeRounds() {
-        if (editMode.get()) {
-            loadPreset(editPresetId)
-            fromPreset = true
-
-        } else {
-            val presetId: Long = sharedPref.getLong("pref_key_last_used_preset_id", -1)
-            val tempTimerId: Long = sharedPref.getLong("pref_key_last_used_timer_id", -1)
-
-            if (presetId != -1L) {
-                loadPreset(presetId)
-                fromPreset = true
-            } else if (tempTimerId != -1L) {
-                loadTimer(tempTimerId)
-                fromTemp = true
-            } else {
-                timerSetting = TimerSetting(180, 180) // default value
-                timerSettingObservable.set(TimerSettingObservable(timerSetting))
-                timerSettingObservable.notifyChange()
-            }
-        }
-
-    }
-
-
-    fun onTimerStartClicked() {
-        val to = timerSettingObservable.get()
-        if (to != null) {
-            to.finalizeDetail()
-            if (!fromPreset && !fromTemp) {
-                // just save this timer and move on
-                repository.saveTimer(to.getFinalSetting(), this)
-            } else {
-                if (to.checkIfEdited()) {
-                    repository.saveTimer(to.getFinalSetting(), this)
-                } else {
-                    if (fromPreset) {
-                        // keep this preset id and pass it as an extra
-                    } else {
-                        // keep this timer id and pass it as an extra
-                    }
+        when (editMode.get()) {
+            true -> initWithPreset(editPresetId)
+            else -> {
+                // When this is not in preset edit mode
+                val presetId: Long = sharedPref.getLong("pref_key_last_used_preset_id", -1)
+                val tempTimerId: Long = sharedPref.getLong("pref_key_last_used_timer_id", -1)
+                when {
+                    presetId != -1L -> initWithPreset(presetId)
+                    tempTimerId != -1L -> initWithExistingTimerSetting(tempTimerId)
+                    else -> initNewTimer()
                 }
             }
         }
+    }
+
+
+    private fun initWithPreset(presetId: Long) {
+        loadPreset(presetId)
+        fromPreset = true
+    }
+
+
+    private fun initWithExistingTimerSetting(timerId: Long) {
+        loadTimer(timerId)
+        fromTemp = true
+    }
+
+
+    private fun initNewTimer() {
+        timer = TimerSetting(180, 180) // default value
+        timerObsvb.set(TimerSettingObservable(timer))
+        timerObsvb.notifyChange()
     }
 
 
@@ -123,31 +111,64 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
         repository.getPresetById(presetId, this)
     }
 
+
     private fun loadTimer(timerId: Long) {
         repository.getTimerById(timerId, this)
     }
 
 
     fun saveThisAsPreset(presetName: String) {
-        val to = timerSettingObservable.get()
-        if (to != null) {
-            to.finalizeDetail()
-            this.presetName = presetName
-
-            repository.saveTimer(to.getFinalSetting(), this)
-        }
-        // reinitialize the entries with the retrieved values
-        fromPreset = true
+        this.presetName.set(presetName)
+        saveThisAsPreset()
     }
+
+
+    // ---------------------------------- User interaction ----------------------------------
+
+
+    fun onTimerStartClicked() {
+        val to = timerObsvb.get() ?: return
+
+        // Finalize the setting before moving to the next activity
+        to.finalizeDetail()
+
+        // just save this timer and go to the next activity
+        if (!fromPreset && !fromTemp)
+            repository.saveTimer(to.getFinalSetting(), this)
+        else {
+            // When anything is edited -> Treat it as a new timer and save it. Pass the id of it as an extra
+            // Nothing has been changed, but the timer is from preset -> Pass the preset id as an extra
+            // Nothing has been changed, but the timer is from temporarily saved timer -> Pass the timer id as an extra
+            when {
+                to.checkIfEdited() -> repository.saveTimer(to.getFinalSetting(), this)
+                fromPreset -> toTimerActivity(preset.id ?: return)
+                else -> toTimerActivity(timer.id ?: return)
+            }
+        }
+    }
+
+
+    fun saveThisAsPreset() {
+        presetSaveInProgress = true
+
+        val to = timerObsvb.get() ?: return
+        to.finalizeDetail()
+        repository.saveTimer(to.getFinalSetting(), this)
+    }
+
+
+    // ---------------------------------- Activity transition ----------------------------------
+
 
     fun openPresetActivity() {
         toPresetActivity.value = true
         toPresetActivity.value = false
     }
 
+
     fun openCustomizeActivity() {
         // sending the delimiter separated workout details as extra
-        val to = timerSettingObservable.get()
+        val to = timerObsvb.get()
         if (to != null) {
             to.finalizeDetail()
             toCustomizeActivity.value = arrayListOf(to.finalWorkName,
@@ -157,77 +178,102 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
         }
     }
 
+
     fun openSettings() {
         toSettings.value = true
         toSettings.value = false
     }
 
-    fun toTimerActivity(timerId: Int) {
-        toTimerActivity.value = timerId
+
+    private fun toTimerActivity(id: Long) {
+        val bundle = Bundle()
+        bundle.putBoolean(TimerActivity.EXTRA_KEY_FROM_PRESET, fromPreset)
+        bundle.putLong(TimerActivity.EXTRA_KEY_ID, id)
+        toTimerActivity.value = bundle
     }
+
+
+    private fun finishActivity() {
+        finishActivity.value = true
+        finishActivity.value = false
+    }
+
 
     fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        if (data == null) return
+        // Handle data from CustomizeActivity. Parsing new data into timerObservable.
 
         if (requestCode == MainActivity.RC_CUSTOMIZED && resultCode == RESULT_OK) {
-            val result: Bundle? = data.extras
+            val result: Bundle = data?.extras ?: return
+            val names = result.getString(CustomizeActivity.RESULT_KEY_WORKOUT_NAMES)
+                    ?: timer.roundNames
+            val works = result.getString(CustomizeActivity.RESULT_KEY_WORKOUT_WORKS)
+                    ?: timer.workSeconds
+            val rests = result.getString(CustomizeActivity.RESULT_KEY_WORKOUT_RESTS)
+                    ?: timer.restSeconds
+            val customized = result.getBoolean(CustomizeActivity.RESULT_KEY_WORKOUT_CUSTOMIZED)
 
-            val names = result?.getString(CustomizeActivity.RESULT_KEY_WORKOUT_NAMES)
-                    ?: timerSetting.roundNames
-            val works = result?.getString(CustomizeActivity.RESULT_KEY_WORKOUT_WORKS)
-                    ?: timerSetting.workSeconds
-            val rests = result?.getString(CustomizeActivity.RESULT_KEY_WORKOUT_RESTS)
-                    ?: timerSetting.restSeconds
-            val customized = result?.getBoolean(CustomizeActivity.RESULT_KEY_WORKOUT_CUSTOMIZED)
-                    ?: false
+            if (customized)
+                timerObsvb.get()?.isCustomizedObservable?.set(true)
 
-                if (customized)
-                    timerSettingObservable.get()?.isCustomizedObservable?.set(true)
-
-                timerSettingObservable.get()?.mRounds = RoundUtil.getRoundList(names, works, rests)
-            }
-
+            timerObsvb.get()?.mRounds = RoundUtil.getRoundList(names, works, rests)
         }
+    }
 
 
-    // ------------------ EditText value change handling -----------------
+    // ------------------------------- EditText value change handling -------------------------------
 
-    /**
-     * Called when the focus is changed in any EditText (when the user finished editing)
-     */
+
+    // Called when the focus is changed in any EditText (when the user finished editing)
+
     private fun handleFocusChange(v: View, hasFocus: Boolean) {
         // Trimming user input after the focus is gone
         if (!hasFocus) {
             val session: Int = WorkoutSession.getSessionById(v.id)
-            timerSettingObservable.get()?.handleChange(session, 0)
+            timerObsvb.get()?.handleChange(session, 0)
         }
     }
 
-    /**
-     * Called when the +/- button is clicked to increment/decrement the time or the number of rounds.
-     * Add/subtract the offset to the current input and trim to user readable string.
-     */
+
+    // Called when the +/- button is clicked to increment/decrement the time or the number of rounds.
+
     fun adjustInput(clickedId: Int, increment: Boolean) {
         val session: Int = WorkoutSession.getSessionById(clickedId)
         offset = if (session == WorkoutSession.ROUND) 1 else offset
-        timerSettingObservable.get()?.handleChange(session, offset * if (increment) 1 else -1)
-        timerSettingObservable.get()?.calculateTotal()
+        timerObsvb.get()?.handleChange(session, offset * if (increment) 1 else -1)
+        timerObsvb.get()?.calculateTotal()
     }
 
 
-    // ------------------ Callbacks -----------------
+    // ----------------------------------------- Callbacks ------------------------------------------
 
     override fun onTimerSaved(id: Long) {
-        val newPreset = Preset(null, false, presetName, id)
-        repository.savePreset(newPreset, this)
+
+        val name = presetName.get() ?: "Untitled"
+
+        if (editMode.get()) {
+            // Update existing preset
+            preset.timerSettingId = id
+            preset.name = name
+            repository.updatePreset(preset, this)
+        } else {
+            // Save a new preset
+            if (presetSaveInProgress) {
+                val newPreset = Preset(null, false, name, id)
+                repository.savePreset(newPreset, this)
+            } else {
+                toTimerActivity(id)
+            }
+        }
+
     }
 
     override fun onTimerSaveNotAvailable() {
         snackbarTextRes.value = R.string.error_unexpected
     }
 
-    override fun onPresetSaved() {
+    override fun onPresetSaved(presetId: Long) {
+        presetSaveInProgress = false
         snackbarTextRes.value = R.string.preset_save_successful
     }
 
@@ -236,6 +282,10 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     }
 
     override fun onPresetLoaded(preset: Preset) {
+        this.preset = preset
+        this.fromPreset = true
+        this.presetName.set(preset.name)
+
         loadTimer(preset.timerSettingId)
     }
 
@@ -244,11 +294,19 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     }
 
     override fun onTimerLoaded(timer: TimerSetting) {
-        timerSettingObservable.set(TimerSettingObservable(timer))
-        timerSettingObservable.notifyChange()
+        timerObsvb.set(TimerSettingObservable(timer))
+        timerObsvb.notifyChange()
     }
 
     override fun onTimerNotAvailable() {
+        snackbarTextRes.value = R.string.error_unexpected
+    }
+
+    override fun onPresetUpdated() {
+        finishActivity()
+    }
+
+    override fun onPresetUpdateNotAvailable() {
         snackbarTextRes.value = R.string.error_unexpected
     }
 

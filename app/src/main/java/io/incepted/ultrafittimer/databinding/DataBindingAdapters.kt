@@ -1,25 +1,15 @@
 package io.incepted.ultrafittimer.databinding
 
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
 import android.graphics.Color
 import android.graphics.Paint
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import io.incepted.ultrafittimer.adapter.PresetAdapter
-import io.incepted.ultrafittimer.adapter.RoundAdapter
 import io.incepted.ultrafittimer.db.model.Preset
-import io.incepted.ultrafittimer.db.tempmodel.Round
-import io.incepted.ultrafittimer.util.NumberUtil
 import io.incepted.ultrafittimer.util.SwipeDeleteCallback
-import io.incepted.ultrafittimer.util.TimerUtil
-import timber.log.Timber
 
 object DataBindingAdapters {
 
