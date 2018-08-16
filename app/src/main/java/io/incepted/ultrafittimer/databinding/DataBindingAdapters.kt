@@ -7,9 +7,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import io.incepted.ultrafittimer.adapter.PresetAdapter
+import io.incepted.ultrafittimer.adapter.SummaryAdapter
 import io.incepted.ultrafittimer.db.model.Preset
+import io.incepted.ultrafittimer.db.tempmodel.Round
 import io.incepted.ultrafittimer.util.SwipeDeleteCallback
+import timber.log.Timber
 
 object DataBindingAdapters {
 
@@ -20,6 +24,14 @@ object DataBindingAdapters {
     fun setPrsetListData(v: androidx.recyclerview.widget.RecyclerView, data: List<Preset>) {
         val adapter: PresetAdapter = v.adapter as PresetAdapter
         adapter.replaceData(data as MutableList<Preset>)
+    }
+
+    @JvmStatic
+    @BindingAdapter("roundData")
+    fun setRoundData(v: RecyclerView, data: List<Round>) {
+        val adapter: SummaryAdapter = v.adapter as SummaryAdapter
+        adapter.replaceData(data as MutableList<Round>)
+        Timber.d("from adapter ${data.size}")
     }
 
 

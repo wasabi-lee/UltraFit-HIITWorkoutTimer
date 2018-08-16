@@ -84,7 +84,7 @@ interface LocalDataSource {
 
     interface OnHistoryDeletedListener {
         fun onHistoryDeleted()
-        fun onHistoryDeletionNotAvailable();
+        fun onHistoryDeletionNotAvailable()
     }
 
     interface OnAllHistoryDeletedListener {
@@ -120,11 +120,11 @@ interface LocalDataSource {
 
     fun getWorkoutHistories(callback: OnHistoryLoadedListener)
 
-    fun getWorkoutHistoryById(historyId: Int, callback: OnHistoryLoadedListener)
+    fun getWorkoutHistoryById(historyId: Long, callback: OnHistoryLoadedListener)
 
     fun saveWorkoutHistory(newHistory: WorkoutHistory, callback: OnHistorySavedListener)
 
-    fun deleteWorkoutHistory(historyId: Int, callback:OnHistoryDeletedListener)
+    fun deleteWorkoutHistory(historyId: Long, callback:OnHistoryDeletedListener)
 
     fun deleteAllWorkoutHistories(callback: OnAllHistoryDeletedListener)
 

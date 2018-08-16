@@ -212,7 +212,7 @@ class DbRepository @Inject constructor(
 
     }
 
-    override fun getWorkoutHistoryById(historyId: Int, callback: LocalDataSource.OnHistoryLoadedListener) {
+    override fun getWorkoutHistoryById(historyId: Long, callback: LocalDataSource.OnHistoryLoadedListener) {
 
     }
 
@@ -220,7 +220,7 @@ class DbRepository @Inject constructor(
 
     }
 
-    override fun deleteWorkoutHistory(historyId: Int, callback: LocalDataSource.OnHistoryDeletedListener) {
+    override fun deleteWorkoutHistory(historyId: Long, callback: LocalDataSource.OnHistoryDeletedListener) {
 
     }
 

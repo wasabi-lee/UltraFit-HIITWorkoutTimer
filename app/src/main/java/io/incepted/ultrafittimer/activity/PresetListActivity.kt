@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.databinding.DataBindingUtil
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import io.incepted.ultrafittimer.R
@@ -73,16 +71,18 @@ class PresetListActivity : AppCompatActivity() {
         })
 
         presetViewModel.openEditScreen.observe(this, Observer {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra(MainActivity.EXTRA_KEY_EDIT_MODE, true)
-            intent.putExtra(MainActivity.EXTRA_KEY_EDIT_PRESET_ID, it)
-            startActivityForResult(intent, RC_PRESET_EDITED)
+            if (it == null) return@Observer
+                val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra(MainActivity.EXTRA_KEY_EDIT_MODE, true)
+                intent.putExtra(MainActivity.EXTRA_KEY_EDIT_PRESET_ID, it)
+                startActivityForResult(intent, RC_PRESET_EDITED)
         })
 
         presetViewModel.openSummaryActivity.observe(this, Observer {
             if (it == null) return@Observer
             val intent = Intent(this, SummaryActivity::class.java)
-            intent.putExtra(SummaryActivity.EXTRA_KEY_SUMMARY_PRESET_ID, it)
+            intent.putExtra(SummaryActivity.EXTRA_KEY_SUMMARY_ID, it)
+            intent.putExtra(SummaryActivity.EXTRA_KEY_SUMMARY_IS_PRESET, true)
             startActivity(intent)
         })
     }
