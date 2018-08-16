@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -26,45 +26,19 @@
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="top"
             android:gravity="center"
-            android:paddingEnd="@dimen/spacing_normal"
-            android:paddingRight="@dimen/spacing_normal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlSymmetry">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    style="@style/BoldLargeTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/summary"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/summary_timestamp_tv"
-                    style="@style/SemiBoldSmallTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="@{viewmodel.showProgress ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textView4"
-                    tools:text="Jul 4th, 6:30 AM" />
-
-                <TextView
-                    android:id="@+id/summary_completion_state_tv"
-                    style="@style/SemiBoldSmallTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="@{viewmodel.showProgress ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView4"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:text="Completed" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                style="@style/BoldLargeTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/summary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -77,7 +51,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/summary_toolbar"
             tools:listitem="@layout/summary_list_item"
-            roundData="@{viewmodel.roundList}"/>
+            roundData="@{viewmodel.roundList}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

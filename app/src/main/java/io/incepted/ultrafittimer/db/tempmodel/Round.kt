@@ -18,6 +18,9 @@ data class Round(var workoutName: String, var workSeconds: Int, var restSeconds:
     var work: ObservableField<String> = ObservableField()
     var rest: ObservableField<String> = ObservableField()
 
+    var isWarmup = false
+    var isCooldown = false
+
     constructor(workoutName: String, workSeconds: Int, restSeconds: Int, offset: Int) : this(workoutName, workSeconds, restSeconds) {
         this.offset = offset
     }

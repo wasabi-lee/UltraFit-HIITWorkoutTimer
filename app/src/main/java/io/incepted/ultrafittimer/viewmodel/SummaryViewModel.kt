@@ -13,6 +13,7 @@ import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.incepted.ultrafittimer.db.model.WorkoutHistory
 import io.incepted.ultrafittimer.db.source.LocalDataSource
 import io.incepted.ultrafittimer.db.tempmodel.Round
+import io.incepted.ultrafittimer.util.RoundUtil
 import javax.inject.Inject
 
 class SummaryViewModel @Inject constructor(val appContext: Application, val repository: DbRepository)
@@ -21,7 +22,7 @@ class SummaryViewModel @Inject constructor(val appContext: Application, val repo
 
     val showProgress = ObservableBoolean(false)
 
-    private val snackbarResource = MutableLiveData<Int>()
+    val snackbarResource = MutableLiveData<Int>()
 
     val roundList = ObservableArrayList<Round>()
 
@@ -53,6 +54,8 @@ class SummaryViewModel @Inject constructor(val appContext: Application, val repo
 
     private fun initRounds(timer: TimerSetting) {
         // init rounds
+        val rounds = RoundUtil.getRoundList(timer, true)
+        populateList(rounds)
     }
 
 

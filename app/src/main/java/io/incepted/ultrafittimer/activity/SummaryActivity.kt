@@ -2,7 +2,9 @@ package io.incepted.ultrafittimer.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import io.incepted.ultrafittimer.R
@@ -32,6 +34,7 @@ class SummaryActivity : AppCompatActivity() {
     private lateinit var summaryViewModel: SummaryViewModel
 
     private var fromPreset = false
+
     private var targetDataId = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +54,13 @@ class SummaryActivity : AppCompatActivity() {
         initRecyclerView()
     }
 
+
     private fun unpackExtra() {
-        fromPreset = intent.getBooleanExtra(EXTRA_KEY_SUMMARY_IS_PRESET, false)
-        targetDataId = intent.getLongExtra(EXTRA_KEY_SUMMARY_IS_PRESET, -1L)
+        val extras = intent.extras ?: return
+        fromPreset = extras.getBoolean(EXTRA_KEY_SUMMARY_IS_PRESET, false)
+        targetDataId = extras.getLong(EXTRA_KEY_SUMMARY_ID, -1L)
     }
+
 
     private fun initToolbar() {
         setSupportActionBar(summary_toolbar)
@@ -62,20 +68,32 @@ class SummaryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private fun initObservers() {
 
+    private fun initObservers() {
+        summaryViewModel.snackbarResource.observe(this, Observer {
+            showSnackbar(resources.getString(it ?: return@Observer))
+        })
     }
 
-    private fun initRecyclerView() {
 
+    private fun initRecyclerView() {
         val summaryAdapter = SummaryAdapter(mutableListOf(), summaryViewModel)
         summary_recycler_view.setHasFixedSize(true)
         summary_recycler_view.itemAnimator = itemAnimator
         summary_recycler_view.layoutManager = llm
         summary_recycler_view.adapter = summaryAdapter
-
     }
 
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
 
     private fun showSnackbar(s: String) {

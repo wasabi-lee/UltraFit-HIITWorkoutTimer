@@ -29,7 +29,7 @@ class TimerSetting(@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id") va
 
     init {
         val isNewTimer = roundNames == "-1" || workSeconds == "-1" || restSeconds == "-1"
-        mRounds = if (isNewTimer) RoundUtil.getDefaultRoundList() else RoundUtil.getRoundList(this)
+        mRounds = if (isNewTimer) RoundUtil.getDefaultRoundList() else RoundUtil.getRoundList(this, false)
     }
 
 

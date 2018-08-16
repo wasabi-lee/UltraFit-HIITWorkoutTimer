@@ -40,7 +40,7 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
                 || timerSetting.workSeconds == "-1"
                 || timerSetting.restSeconds == "-1"
 
-        mRounds = if (isNewTimer) RoundUtil.getDefaultRoundList() else RoundUtil.getRoundList(timerSetting)
+        mRounds = if (isNewTimer) RoundUtil.getDefaultRoundList() else RoundUtil.getRoundList(timerSetting, false)
 
         warmupObservable.set(TimerUtil.secondsToTimeString(timerSetting.warmupSeconds))
         roundCountObservable.set(mRounds.size.toString())

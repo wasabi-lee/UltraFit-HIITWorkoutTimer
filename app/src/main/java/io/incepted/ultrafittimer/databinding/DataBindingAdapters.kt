@@ -63,14 +63,24 @@ object DataBindingAdapters {
     @JvmStatic
     @BindingAdapter("positionText")
     fun setPositionText(v: TextView, dummy: Int) {
-        val position: Int? = (v.parent as View).tag as Int?
-        val suffix: String = when (position?.rem(10)) {
-            1 -> "st."
-            2 -> "nd."
-            3 -> "rd."
-            else -> "th."
+
+        // If the view we're binding's tag is "Warm Up" or "Cool Down", just set that tag as a text of this view.
+        // If the tag is just an Int value, which represents the position of this view in the list,
+        // set that position as the view text with the corresponding suffix.
+
+        val tag = ((v.parent as View).tag).toString()
+        if (tag == "Warm Up" || tag == "Cool Down") {
+            v.text = tag
+            return
         }
-        val result = "$position$suffix"
+
+        val suffix: String = when (tag.toInt().rem(10)) {
+            1 -> "st"
+            2 -> "nd"
+            3 -> "rd"
+            else -> "th"
+        }
+        val result = "$tag$suffix"
         v.text = result
     }
 

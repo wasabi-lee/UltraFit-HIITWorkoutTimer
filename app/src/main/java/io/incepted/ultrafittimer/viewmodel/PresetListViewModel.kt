@@ -11,6 +11,7 @@ import androidx.databinding.ObservableBoolean
 import android.view.View
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.activity.PresetListActivity
+import io.incepted.ultrafittimer.activity.SummaryActivity
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.source.LocalDataSource
@@ -27,7 +28,7 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
 
     val openEditScreen = MutableLiveData<Long>()
 
-    val openSummaryActivity = MutableLiveData<Long>()
+    val openSummaryActivity = MutableLiveData<Bundle>()
 
     var presets = ObservableArrayList<Preset>()
 
@@ -66,7 +67,10 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
 
     fun showPresetDetail(presetPosition: Int) {
         val presetId: Long = presets[presetPosition].id ?: return
-        openSummaryActivity.value = presetId
+        val bundle = Bundle()
+        bundle.putLong(SummaryActivity.EXTRA_KEY_SUMMARY_ID, presetId)
+        bundle.putBoolean(SummaryActivity.EXTRA_KEY_SUMMARY_IS_PRESET, true)
+        openSummaryActivity.value = bundle
         openSummaryActivity.value = null
     }
 

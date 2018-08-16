@@ -2,8 +2,58 @@ package io.incepted.ultrafittimer.util
 
 import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.incepted.ultrafittimer.db.tempmodel.Round
+import kotlin.concurrent.timer
 
 object RoundUtil {
+
+
+    fun getRoundList(timerSetting: TimerSetting, includeWarmupCooldown: Boolean): MutableList<Round> {
+        if (includeWarmupCooldown)
+            return getFullRoundList(timerSetting)
+        return getRoundList(timerSetting.roundNames, timerSetting.workSeconds, timerSetting.restSeconds)
+    }
+
+
+    /**
+     *  Returns the rounds as a list including warmup and cooldown in the first and last position.
+     */
+    private fun getFullRoundList(timerSetting: TimerSetting): MutableList<Round> {
+        val result =
+                getRoundList(timerSetting.roundNames, timerSetting.workSeconds, timerSetting.restSeconds)
+
+        val warmupRound = Round("Warm Up", timerSetting.warmupSeconds, 0)
+        val cooldownRound = Round("Cool Down", timerSetting.cooldownSeconds, 0)
+
+        warmupRound.isWarmup = true
+        cooldownRound.isCooldown = true
+
+        result.add(0, warmupRound)
+        result.add(cooldownRound)
+
+        return result
+    }
+
+
+    /**
+     * Returns the list of rounds from the given String values.
+     * The parameters are String values representing each round's detail,
+     * concatenated with a specified delimiter.
+     */
+    fun getRoundList(names: String, works: String, rests: String): MutableList<Round> {
+
+        val result = mutableListOf<Round>()
+
+        val nameArr = names.split(DbDelimiter.DELIMITER)
+        val workArr = works.split(DbDelimiter.DELIMITER)
+        val restArr = rests.split(DbDelimiter.DELIMITER)
+
+        for (i in 0 until nameArr.size)
+            result.add(Round(nameArr[i], workArr[i].toInt(), restArr[i].toInt()))
+
+        return result
+    }
+
+
 
     fun joinListToString(l: List<Round>): Array<String> {
 
@@ -19,23 +69,7 @@ object RoundUtil {
         return res
     }
 
-    fun getRoundList(timerSetting: TimerSetting): MutableList<Round> {
-        return getRoundList(timerSetting.roundNames, timerSetting.workSeconds, timerSetting.restSeconds)
-    }
 
-    fun getRoundList(names: String, works: String, rests: String): MutableList<Round> {
-
-        val result = mutableListOf<Round>()
-
-        val nameArr = names.split(DbDelimiter.DELIMITER)
-        val workArr = works.split(DbDelimiter.DELIMITER)
-        val restArr = rests.split(DbDelimiter.DELIMITER)
-
-        for (i in 0 until nameArr.size)
-            result.add(Round(nameArr[i], workArr[i].toInt(), restArr[i].toInt()))
-
-        return result
-    }
 
     fun getDefaultRoundList(): MutableList<Round> {
         val list: MutableList<Round> = mutableListOf()

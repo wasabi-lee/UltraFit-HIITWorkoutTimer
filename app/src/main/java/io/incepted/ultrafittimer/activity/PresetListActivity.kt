@@ -81,8 +81,7 @@ class PresetListActivity : AppCompatActivity() {
         presetViewModel.openSummaryActivity.observe(this, Observer {
             if (it == null) return@Observer
             val intent = Intent(this, SummaryActivity::class.java)
-            intent.putExtra(SummaryActivity.EXTRA_KEY_SUMMARY_ID, it)
-            intent.putExtra(SummaryActivity.EXTRA_KEY_SUMMARY_IS_PRESET, true)
+            intent.putExtras(it)
             startActivity(intent)
         })
     }
