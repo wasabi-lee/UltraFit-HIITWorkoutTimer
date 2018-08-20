@@ -1,6 +1,5 @@
-package io.incepted.ultrafittimer.util
+package io.incepted.ultrafittimer.fragment
 
-import androidx.fragment.app.DialogFragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

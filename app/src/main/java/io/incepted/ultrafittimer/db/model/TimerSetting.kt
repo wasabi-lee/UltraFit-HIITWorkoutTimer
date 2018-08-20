@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import io.incepted.ultrafittimer.db.tempmodel.Round
-import io.incepted.ultrafittimer.util.DbDelimiter
 import io.incepted.ultrafittimer.util.RoundUtil
 
 @Entity(tableName = "timer_setting")

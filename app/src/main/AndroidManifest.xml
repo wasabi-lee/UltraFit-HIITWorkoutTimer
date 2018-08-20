@@ -29,6 +29,9 @@
         <activity android:name=".activity.TimerActivity" />
         <activity android:name=".activity.SummaryActivity" />
         <activity android:name=".activity.SettingsActivity"></activity>
+
+        <service android:name=".timer.TimerService"
+            android:exported="false"/>
     </application>
 
 </manifest>

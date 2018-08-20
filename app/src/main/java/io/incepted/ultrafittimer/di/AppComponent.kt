@@ -7,7 +7,8 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import io.incepted.ultrafittimer.UltraFitApp
 import io.incepted.ultrafittimer.di.module.AppModule
-import io.incepted.ultrafittimer.util.CustomPrefCategory
+import io.incepted.ultrafittimer.timer.TimerService
+import io.incepted.ultrafittimer.view.CustomPrefCategory
 import javax.inject.Singleton
 
 @Singleton
@@ -28,4 +29,5 @@ interface AppComponent {
 
     fun inject(ultraFitApp: UltraFitApp)
     fun inject(prefCategory: CustomPrefCategory)
+    fun inject(timerService: TimerService)
 }

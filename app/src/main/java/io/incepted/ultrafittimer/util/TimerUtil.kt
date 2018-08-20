@@ -33,7 +33,7 @@ object TimerUtil {
             if (result >= 60 * 60)
                 return -1
 
-            return if (result - offset < 0) 0 else result + offset
+            return if (result + offset < 0) 0 else result + offset
 
         } catch (ex: Exception) {
             ex.printStackTrace()

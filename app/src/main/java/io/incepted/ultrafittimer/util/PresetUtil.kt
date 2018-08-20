@@ -1,5 +1,7 @@
 package io.incepted.ultrafittimer.util
 
+import io.incepted.ultrafittimer.db.DbDelimiter
+
 object PresetUtil {
 
     /**

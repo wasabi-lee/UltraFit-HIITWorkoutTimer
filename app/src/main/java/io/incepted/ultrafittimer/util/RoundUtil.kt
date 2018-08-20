@@ -1,8 +1,8 @@
 package io.incepted.ultrafittimer.util
 
+import io.incepted.ultrafittimer.db.DbDelimiter
 import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.incepted.ultrafittimer.db.tempmodel.Round
-import kotlin.concurrent.timer
 
 object RoundUtil {
 
@@ -74,7 +74,7 @@ object RoundUtil {
     fun getDefaultRoundList(): MutableList<Round> {
         val list: MutableList<Round> = mutableListOf()
         for (i in 0 until 8)
-            list.add(Round("Work", 20, 10))
+            list.add(Round("Work", 3, 2))
         return list
     }
 

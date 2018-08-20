@@ -78,9 +78,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initObservers() {
         mainViewModel.snackbarTextRes.observe(this, Observer {
-            if (it != null) showSnackBar(resources.getString(it))
+            showSnackBar(resources.getString(it?: return@Observer))
         })
     }
+
 
     private fun initActivityTransitionObservers() {
         mainViewModel.toSettings.observe(this, Observer {
@@ -89,12 +90,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         })
 
+
         mainViewModel.toCustomizeActivity.observe(this, Observer {
             if (it == null) return@Observer
             val intent = Intent(this, CustomizeActivity::class.java)
             intent.putStringArrayListExtra(CustomizeActivity.EXTRA_KEY_WORKOUT_DETAILS, it)
             startActivityForResult(intent, RC_CUSTOMIZED)
         })
+
 
         mainViewModel.toPresetActivity.observe(this, Observer {
             if (it == false) return@Observer
@@ -104,9 +107,10 @@ class MainActivity : AppCompatActivity() {
 
 
         mainViewModel.toTimerActivity.observe(this, Observer {
-            val frompreset = it.getBoolean(TimerActivity.EXTRA_KEY_FROM_PRESET)
-            val id = it.getLong(TimerActivity.EXTRA_KEY_ID, -1)
-            Timber.d("${if (frompreset) "PRESET ID: " else "TIMER ID: "} $id")
+            if (it == null) return@Observer
+            val intent = Intent(this, TimerActivity::class.java)
+            intent.putExtras(it)
+            startActivity(intent)
         })
 
 
@@ -116,6 +120,7 @@ class MainActivity : AppCompatActivity() {
             })
         }
     }
+
 
     private fun returnToPresetListActivity() {
         setResult(RESULT_OK)
@@ -172,7 +177,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        if (!editMode) {
+        if (!editMode)
             if (!exit) {
                 Toast.makeText(this, "Press the back button again to exit", Toast.LENGTH_SHORT).show()
                 exit = true
@@ -183,7 +188,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 super.onBackPressed()
             }
-        } else {
+         else {
             super.onBackPressed()
         }
     }

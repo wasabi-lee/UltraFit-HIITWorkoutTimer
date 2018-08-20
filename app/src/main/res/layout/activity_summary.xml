@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,9 +15,7 @@
     </data>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.SummaryActivity">
@@ -27,6 +27,7 @@
             android:layout_gravity="top"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlSymmetry">
@@ -42,16 +43,44 @@
 
         </androidx.appcompat.widget.Toolbar>
 
+        <TextView
+            android:id="@+id/summary_date_tv"
+            style="@style/SemiBoldMediumTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_marginTop="8dp"
+            tools:text="Jul 4, 2018"
+            android:visibility="@{viewmodel.fromPreset ? View.GONE: View.VISIBLE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/summary_toolbar" />
+
+        <TextView
+            android:id="@+id/summary_status_tv"
+            style="@style/SemiBoldMediumTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_marginRight="@dimen/spacing_normal"
+            tools:text="Completed"
+            android:textColor="@color/status_completed"
+            android:visibility="@{viewmodel.fromPreset ? View.GONE: View.VISIBLE}"
+            app:layout_constraintBaseline_toBaselineOf="@+id/summary_date_tv"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/summary_recycler_view"
+            roundData="@{viewmodel.roundList}"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/summary_toolbar"
-            tools:listitem="@layout/summary_list_item"
-            roundData="@{viewmodel.roundList}" />
+            app:layout_constraintTop_toBottomOf="@+id/summary_date_tv"
+            tools:listitem="@layout/summary_list_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

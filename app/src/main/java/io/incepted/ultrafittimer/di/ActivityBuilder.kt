@@ -22,4 +22,8 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = [SummaryActivityModule::class])
     abstract fun contributeSummaryActivity(): SummaryActivity
+
+    @ContributesAndroidInjector(modules = [TimerActivityModule::class])
+    abstract fun contributeTimerActivity(): TimerActivity
+
 }

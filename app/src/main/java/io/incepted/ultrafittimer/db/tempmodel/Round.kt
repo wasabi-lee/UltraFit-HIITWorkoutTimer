@@ -45,7 +45,8 @@ data class Round(var workoutName: String, var workSeconds: Int, var restSeconds:
 
     private fun adjustChange(session: Int, offset: Int) {
         val fieldToUpdate = if (session == WorkoutSession.WORK) work else rest
-        val trimmed: String = TimerUtil.stringToTimeString(fieldToUpdate.get() ?: return, offset)
+        var trimmed: String = TimerUtil.stringToTimeString(fieldToUpdate.get() ?: return, offset)
+        trimmed = if (trimmed == "00:00" && session == WorkoutSession.WORK) "00:01" else trimmed
         fieldToUpdate.set(trimmed)
     }
 

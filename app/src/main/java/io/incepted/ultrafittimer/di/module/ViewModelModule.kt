@@ -7,10 +7,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import io.incepted.ultrafittimer.di.ViewModelKey
 import io.incepted.ultrafittimer.util.ViewModelFactory
-import io.incepted.ultrafittimer.viewmodel.CustomizeViewModel
-import io.incepted.ultrafittimer.viewmodel.MainViewModel
-import io.incepted.ultrafittimer.viewmodel.PresetListViewModel
-import io.incepted.ultrafittimer.viewmodel.SummaryViewModel
+import io.incepted.ultrafittimer.viewmodel.*
 
 @Suppress("unused")
 @Module
@@ -38,6 +35,12 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SummaryViewModel::class)
     abstract fun bindSummaryViewModel(summaryViewModel: SummaryViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TimerViewModel::class)
+    abstract fun bindTimerViewModel(timerViewModel: TimerViewModel): ViewModel
 
 
     @Binds

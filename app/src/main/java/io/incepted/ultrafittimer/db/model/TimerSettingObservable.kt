@@ -57,17 +57,17 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
     fun handleChange(session: Int, offset: Int) {
         when (session) {
             WorkoutSession.WARMUP ->
-                updateTimeField(warmupObservable, offset)
+                updateTimeField(session, warmupObservable, offset)
             WorkoutSession.WORK -> {
-                updateTimeField(workObservable, offset)
+                updateTimeField(session, workObservable, offset)
                 updateRounds(workObservable, session)
             }
             WorkoutSession.REST -> {
-                updateTimeField(restObservable, offset)
+                updateTimeField(session, restObservable, offset)
                 updateRounds(restObservable, session)
             }
             WorkoutSession.COOLDOWN ->
-                updateTimeField(cooldownObservable, offset)
+                updateTimeField(session, cooldownObservable, offset)
             WorkoutSession.ROUND ->
                 trimRoundCount(offset)
         }
@@ -75,10 +75,15 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
     }
 
 
-    private fun updateTimeField(fieldToUpdate: ObservableField<String>, offset: Int) {
+    private fun updateTimeField(session: Int, fieldToUpdate: ObservableField<String>, offset: Int) {
+
         val valueToUpdate: String = fieldToUpdate.get() ?: return
         var updatedValue: Int = TimerUtil.stringToSecondWithOffset(valueToUpdate, offset)
-        updatedValue = if (updatedValue < 0) 0 else updatedValue
+
+        updatedValue = if (updatedValue <= 0) {
+            if (session == WorkoutSession.WORK) 1 else 0
+        } else updatedValue
+
         fieldToUpdate.set(TimerUtil.secondsToTimeString(updatedValue))
     }
 

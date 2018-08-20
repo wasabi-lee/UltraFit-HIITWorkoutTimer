@@ -1,4 +1,4 @@
-package io.incepted.ultrafittimer.util
+package io.incepted.ultrafittimer.view
 
 import android.content.Context
 import android.content.SharedPreferences

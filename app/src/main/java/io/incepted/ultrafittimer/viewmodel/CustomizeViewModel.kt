@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.incepted.ultrafittimer.activity.CustomizeActivity
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.tempmodel.Round
-import io.incepted.ultrafittimer.util.DbDelimiter
+import io.incepted.ultrafittimer.db.DbDelimiter
 import io.incepted.ultrafittimer.util.RoundUtil
 import io.incepted.ultrafittimer.util.SwipeDeleteCallback
 import io.incepted.ultrafittimer.util.TimerSettingChangeChecker

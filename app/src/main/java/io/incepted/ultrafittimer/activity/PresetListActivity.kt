@@ -12,7 +12,7 @@ import android.view.MenuItem
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.adapter.PresetAdapter
 import io.incepted.ultrafittimer.databinding.ActivityPresetListBinding
-import io.incepted.ultrafittimer.util.PresetActionDialogFragment
+import io.incepted.ultrafittimer.fragment.PresetActionDialogFragment
 import io.incepted.ultrafittimer.util.SnackbarUtil
 import io.incepted.ultrafittimer.viewmodel.PresetListViewModel
 import kotlinx.android.synthetic.main.activity_preset_list.*

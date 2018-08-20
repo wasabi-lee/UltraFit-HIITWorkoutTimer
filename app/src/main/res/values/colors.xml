@@ -24,5 +24,8 @@
     <color name="textColor_dark">#ffffff</color>
     <color name="cardBackground_dark">#2c2c2c</color>
 
+    <color name="status_completed">#009641</color>
+    <color name="status_tried">#ceb200</color>
+
 
 </resources>
