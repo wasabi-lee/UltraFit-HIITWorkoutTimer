@@ -37,7 +37,7 @@ tools:context=".activity.TimerActivity">
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:srcCompat="@drawable/ic_arrow_back_black"
-    android:onClick="@{() -> viewmodel.terminateTimer()}"/>
+    android:onClick="@{() -> viewmodel.exitTimer()}"/>
 
 <ImageView
     android:id="@+id/timer_resume_pause_iv"

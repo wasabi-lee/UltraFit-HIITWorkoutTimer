@@ -19,6 +19,9 @@
     <string name="alert_dialog_exit_warning_title">Are your sure to exit this screen?</string>
     <string name="alert_dialog_exit_warning_message">Your customized detail will be discarded</string>
 
+    <string name="alert_dialog_timer_exit_warning_title">Are your sure to exit?</string>
+    <string name="alert_dialog_timer_exit_warning_message">The current timer will be discarded</string>
+
     <string name="alert_dialog_preset_save_title">Save this preset</string>
     <string name="alert_dialog_preset_save_edit_hint">Type this preset\'s name</string>
 
@@ -43,6 +46,10 @@
     <string name="save_all_caps">SAVE</string>
     <string name="timer_setup">Timer Setup</string>
     <string name="summary">Summary</string>
+
+
+    <string name="pref_key_last_used_preset_id">pref_key_last_used_preset_id</string>
+    <string name="pref_key_last_used_timer_id">pref_key_last_used_timer_id</string>
 
 
 </resources>

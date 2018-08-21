@@ -75,7 +75,7 @@ class DbRepository @Inject constructor(
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeBy(
-                            onSuccess = {callback.onPresetSaved(it)},
+                            onSuccess = { callback.onPresetSaved(it) },
                             onError = {
                                 it.printStackTrace()
                                 callback.onPresetSaveNotAvailable()
@@ -217,7 +217,21 @@ class DbRepository @Inject constructor(
     }
 
     override fun saveWorkoutHistory(newHistory: WorkoutHistory, callback: LocalDataSource.OnHistorySavedListener) {
-
+        try {
+            Single.fromCallable { workoutHistoryDao.insertWorkoutHistory(newHistory) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onSuccess = { callback.onHistorySaved(it) },
+                            onError = {
+                                it.printStackTrace()
+                                callback.onHistorySaveNotAvailable()
+                            }
+                    )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback.onHistorySaveNotAvailable()
+        }
     }
 
     override fun deleteWorkoutHistory(historyId: Long, callback: LocalDataSource.OnHistoryDeletedListener) {

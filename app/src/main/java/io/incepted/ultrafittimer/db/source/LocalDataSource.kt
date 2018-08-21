@@ -78,7 +78,7 @@ interface LocalDataSource {
     }
 
     interface OnHistorySavedListener {
-        fun onHistorySaved()
+        fun onHistorySaved(id: Long)
         fun onHistorySaveNotAvailable()
     }
 

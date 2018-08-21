@@ -15,7 +15,7 @@ interface WorkoutHistoryDao {
     fun getWorkoutHistoryById(workoutHistoryId: Int) : Maybe<WorkoutHistory>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertWorkoutHistory(newWorkoutHistory: WorkoutHistory)
+    fun insertWorkoutHistory(newWorkoutHistory: WorkoutHistory): Long
 
     @Update
     fun updateWorkoutHistory(updatedWorkoutHistory: WorkoutHistory)

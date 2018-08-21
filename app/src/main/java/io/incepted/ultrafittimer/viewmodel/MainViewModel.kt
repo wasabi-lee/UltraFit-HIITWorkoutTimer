@@ -76,8 +76,12 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
             true -> initWithPreset(editPresetId)
             else -> {
                 // When this is not in preset edit mode
-                val presetId: Long = sharedPref.getLong("pref_key_last_used_preset_id", -1)
-                val tempTimerId: Long = sharedPref.getLong("pref_key_last_used_timer_id", -1)
+                val presetId: Long = sharedPref
+                        .getLong(appContext.resources
+                                .getString(R.string.pref_key_last_used_preset_id), -1)
+                val tempTimerId: Long = sharedPref
+                        .getLong(appContext.resources
+                                .getString(R.string.pref_key_last_used_timer_id), -1)
                 when {
                     presetId != -1L -> initWithPreset(presetId)
                     tempTimerId != -1L -> initWithExistingTimerSetting(tempTimerId)
@@ -240,8 +244,8 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
     fun adjustInput(clickedId: Int, increment: Boolean) {
         val session: Int = WorkoutSession.getSessionById(clickedId)
-        offset = if (session == WorkoutSession.ROUND) 1 else offset
-        timerObsvb.get()?.handleChange(session, offset * if (increment) 1 else -1)
+        val curOffset = if (session == WorkoutSession.ROUND) 1 else offset
+        timerObsvb.get()?.handleChange(session, curOffset * if (increment) 1 else -1)
         timerObsvb.get()?.calculateTotal()
     }
 
@@ -273,14 +277,17 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
         snackbarTextRes.value = R.string.error_unexpected
     }
 
+
     override fun onPresetSaved(presetId: Long) {
         presetSaveInProgress = false
         snackbarTextRes.value = R.string.preset_save_successful
     }
 
+
     override fun onPresetSaveNotAvailable() {
         snackbarTextRes.value = R.string.error_unexpected
     }
+
 
     override fun onPresetLoaded(preset: Preset) {
         this.preset = preset
@@ -290,22 +297,28 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
         loadTimer(preset.timerSettingId)
     }
 
+
     override fun onPresetNotAvailable() {
         snackbarTextRes.value = R.string.error_unexpected
     }
 
+
     override fun onTimerLoaded(timer: TimerSetting) {
+        this.timer = timer
         timerObsvb.set(TimerSettingObservable(timer))
         timerObsvb.notifyChange()
     }
+
 
     override fun onTimerNotAvailable() {
         snackbarTextRes.value = R.string.error_unexpected
     }
 
+
     override fun onPresetUpdated() {
         finishActivity()
     }
+
 
     override fun onPresetUpdateNotAvailable() {
         snackbarTextRes.value = R.string.error_unexpected

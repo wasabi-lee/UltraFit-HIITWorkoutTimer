@@ -7,7 +7,13 @@ import android.content.SharedPreferences
 import android.os.Binder
 import android.os.IBinder
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.UltraFitApp
+import io.incepted.ultrafittimer.db.DbRepository
+import io.incepted.ultrafittimer.db.model.Preset
+import io.incepted.ultrafittimer.db.model.TimerSetting
+import io.incepted.ultrafittimer.db.model.WorkoutHistory
+import io.incepted.ultrafittimer.db.source.LocalDataSource
 import io.incepted.ultrafittimer.db.tempmodel.Round
 import io.incepted.ultrafittimer.util.NotificationUtil
 import io.incepted.ultrafittimer.util.RoundUtil
@@ -17,9 +23,33 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
-class TimerService : Service() {
+class TimerService : Service(),
+        LocalDataSource.OnPresetLoadedListener, LocalDataSource.OnTimerLoadedListener,
+        LocalDataSource.OnHistorySavedListener {
+
+    companion object {
+
+        const val TIMER_NOTIFICATION_ID = 4343122
+
+        // Intent bundle content keys
+        const val BUNDLE_KEY_IS_PRESET = "bundle_key_warmup_time"
+        const val BUNDLE_KEY_TARGET_ID = "bundle_key_work_name"
+
+        // Broadcast receiver extra keys
+        const val BR_ACTION_TIMER_TICK_RESULT = "io.incepted.ultrafittimer.timer.TIMER_RESULT"
+        const val BR_ACTION_TIMER_COMPLETED_RESULT = "io.incepted.ultrafittimer.timer.COMPLETED_RESULT"
+        const val BR_ACTION_TIMER_ERROR = "io.incepted.ultrafittimer.timer.TIMER_ERROR"
+
+        const val BR_EXTRA_KEY_SESSION_NAME = "io.incepted.ultrafittimer.timer.SESSION_NAME"
+        const val BR_EXTRA_KEY_SESSION_REMAINING_SECS = "io.incepted.ultrafittimer.timer.SESSION_REMAINING_SEC"
+        const val BR_EXTRA_KEY_SESSION_SESSION = "io.incepted.ultrafittimer.timer.SESSION_SESSION"
+        const val BR_EXTRA_KEY_SESSION_ROUND_COUNT = "io.incepted.ultrafittimer.timer.SESSION_COUNT"
+        const val BR_EXTRA_KEY_SESSION_TOTAL_ROUND = "io.incepted.ultrafittimer.timer.TOTAL_ROUND"
+    }
+
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -30,34 +60,28 @@ class TimerService : Service() {
     @Inject
     lateinit var broadcaster: LocalBroadcastManager
 
+    @Inject
+    lateinit var repository: DbRepository
+
     private val binder = TimerServiceBinder()
 
-    companion object {
-        const val BUNDLE_KEY_WARMUP_TIME = "bundle_key_warmup_time"
-        const val BUNDLE_KEY_WORK_NAMES = "bundle_key_work_name"
-        const val BUNDLE_KEY_WORK_TIME = "bundle_key_work_time"
-        const val BUNDLE_KEY_REST_TIME = "bundle_key_rest_time"
-        const val BUNDLE_KEY_COOLDOWN_TIME = "bundle_key_cooldown_time"
+    private var cueSeconds = 3
 
-        const val TIMER_NOTIFICATION_ID = 4343122
+    private var fromPreset = false
 
-        const val BR_ACTION_TIMER_RESULT = "io.incepted.ultrafittimer.timer.TIMER_RESULT"
-        const val BR_EXTRA_KEY_SESSION_NAME = "io.incepted.ultrafittimer.timer.SESSION_NAME"
-        const val BR_EXTRA_KEY_SESSION_REMAINING_SECS = "io.incepted.ultrafittimer.timer.SESSION_REMAINING_SEC"
-        const val BR_EXTRA_KEY_SESSION_SESSION = "io.incepted.ultrafittimer.timer.SESSION_SESSION"
-        const val BR_EXTRA_KEY_SESSION_ROUND_COUNT = "io.incepted.ultrafittimer.timer.SESSION_COUNT"
-    }
+    private var targetId = -1L
 
+    private var presetId = -1L
 
-    private var warmup = 0
-
-    private var cooldown = 0
-
-    private var mRounds = ArrayList<Round>()
+    private var timer: TimerSetting? = null
 
     private var timerHelper: TimerHelper? = null
 
     private var disposable: Disposable? = null
+
+    var timerCompleted = false
+
+    private var lastTick: TickInfo? = null
 
 
     inner class TimerServiceBinder : Binder() {
@@ -72,6 +96,8 @@ class TimerService : Service() {
 
         (application as UltraFitApp).getAppComponent().inject(this)
 
+        cueSeconds = sharedPref.getString("pref_key_cue_seconds", cueSeconds.toString())?.toInt() ?: cueSeconds
+
         val notif: Notification = notificationUtil.getTimerNotification().build()
         startForeground(TIMER_NOTIFICATION_ID, notif)
     }
@@ -79,34 +105,54 @@ class TimerService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         unpackExtra(intent)
-        startTimer()
+        loadTimer(fromPreset, targetId)
         return super.onStartCommand(intent, flags, startId)
     }
 
 
     private fun unpackExtra(intent: Intent?) {
         if (intent != null && intent.extras != null) {
-            warmup = intent.extras!!.getInt(BUNDLE_KEY_WARMUP_TIME)
-            cooldown = intent.extras!!.getInt(BUNDLE_KEY_COOLDOWN_TIME)
-
-            val roundNames = intent.extras!!.getString(BUNDLE_KEY_WORK_NAMES) ?: "-"
-            val workSeconds = intent.extras!!.getString(BUNDLE_KEY_WORK_TIME) ?: "0"
-            val restSeconds = intent.extras!!.getString(BUNDLE_KEY_REST_TIME) ?: "0"
-            mRounds = RoundUtil.getRoundList(roundNames, workSeconds, restSeconds) as ArrayList<Round>
+            fromPreset = intent.getBooleanExtra(BUNDLE_KEY_IS_PRESET, false)
+            targetId = intent.getLongExtra(BUNDLE_KEY_TARGET_ID, 0L)
         }
     }
 
 
-    private fun startTimer() {
-        if (timerHelper == null) timerHelper = TimerHelper(warmup, cooldown, mRounds)
+    private fun loadTimer(fromPreset: Boolean, targetId: Long) {
+        if (fromPreset) repository.getPresetById(targetId, this)
+        else repository.getTimerById(targetId, this)
+    }
 
-        disposable = Observable.create<RoundInfo> { it -> timerHelper?.startTimer(it) }
+
+    private fun startTimer(timer: TimerSetting) {
+
+        if (timerHelper == null)
+            timerHelper = TimerHelper(warmupTime = timer.warmupSeconds,
+                    cooldownTime = timer.cooldownSeconds,
+                    rounds = (RoundUtil.getRoundList(timer, false)) as ArrayList<Round>)
+
+        disposable = Observable.create<TickInfo> { it -> timerHelper?.startTimer(it) }
                 .doOnDispose { Timber.d("disposed!") }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy {
-                    sendTick(it)
-                }
+                .subscribeBy(
+                        onNext = {
+                            lastTick = it
+                            sendTick(it)
+
+                            if (it.switched) {
+                                Timber.d("Switched!")
+                            }
+                            if (it.remianingSecs <= cueSeconds) {
+                                Timber.d("Tick!")
+                            }
+                        },
+                        onComplete = {
+                            timerCompleted = true
+                            sendFinished()
+                        },
+                        onError = { it.printStackTrace() }
+                )
     }
 
 
@@ -118,20 +164,30 @@ class TimerService : Service() {
     fun terminateTimer() {
         timerHelper?.terminateTimer()
         disposable?.dispose()
-        stopForeground(true)
-        stopSelf()
+        saveLastUsedTimer(fromPreset, targetId)
+        saveHistory(timerCompleted, lastTick)
     }
 
 
-    fun sendTick(tick: RoundInfo?) {
+    private fun sendTick(tick: TickInfo?) {
         if (tick != null) {
-            val intent = Intent(BR_ACTION_TIMER_RESULT)
+            val intent = Intent(BR_ACTION_TIMER_TICK_RESULT)
             intent.putExtra(BR_EXTRA_KEY_SESSION_SESSION, tick.session)
             intent.putExtra(BR_EXTRA_KEY_SESSION_NAME, tick.workoutName)
             intent.putExtra(BR_EXTRA_KEY_SESSION_REMAINING_SECS, tick.remianingSecs)
             intent.putExtra(BR_EXTRA_KEY_SESSION_ROUND_COUNT, tick.roundCount)
+            intent.putExtra(BR_EXTRA_KEY_SESSION_TOTAL_ROUND, tick.totalRounds)
             broadcaster.sendBroadcast(intent)
         }
+    }
+
+    private fun sendFinished() {
+        broadcaster.sendBroadcast(Intent(BR_ACTION_TIMER_COMPLETED_RESULT))
+    }
+
+
+    private fun sendError() {
+        broadcaster.sendBroadcast(Intent(BR_ACTION_TIMER_ERROR))
     }
 
 
@@ -139,5 +195,71 @@ class TimerService : Service() {
         return binder
     }
 
+
+    private fun saveHistory(completed: Boolean, tickInfo: TickInfo?) {
+        val newHistory: WorkoutHistory = getWorkoutHistory(completed, tickInfo)
+        repository.saveWorkoutHistory(newHistory, this)
+    }
+
+
+    private fun saveLastUsedTimer(fromPreset: Boolean, targetId: Long) {
+        val editor = sharedPref.edit()
+        val prefKey =
+                resources.getString(if (fromPreset) R.string.pref_key_last_used_preset_id
+                else R.string.pref_key_last_used_timer_id)
+        editor.putLong(prefKey, targetId)
+        editor.apply()
+    }
+
+
+    private fun getWorkoutHistory(completed: Boolean, tickInfo: TickInfo?): WorkoutHistory {
+        return if (completed)
+            WorkoutHistory(timestamp = Date().time,
+                    presetId = if (fromPreset) targetId else null,
+                    timer_id = if (fromPreset) null else targetId)
+        else
+            WorkoutHistory(timestamp = Date().time,
+                    presetId = if (fromPreset) targetId else null,
+                    timer_id = if (fromPreset) null else targetId,
+                    stoppedRound = tickInfo?.roundCount,
+                    stoppedSecond = tickInfo?.remianingSecs?.toInt(),
+                    stoppedSession = tickInfo?.session)
+    }
+
+
+    fun finish() {
+        stopForeground(true)
+        stopSelf()
+    }
+
+    // ------------------------------------ Callbacks ---------------------------------------
+
+    override fun onTimerLoaded(timer: TimerSetting) {
+        this.timer = timer
+        startTimer(timer)
+    }
+
+    override fun onTimerNotAvailable() {
+        sendError()
+    }
+
+    override fun onPresetLoaded(preset: Preset) {
+        presetId = preset.id ?: presetId
+        repository.getTimerById(preset.timerSettingId, this)
+    }
+
+    override fun onPresetNotAvailable() {
+        sendError()
+    }
+
+    override fun onHistorySaved(id: Long) {
+        Timber.d("Workout history id #$id saved!")
+        stopForeground(true)
+        stopSelf()
+    }
+
+    override fun onHistorySaveNotAvailable() {
+        sendError()
+    }
 
 }

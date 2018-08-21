@@ -2,26 +2,22 @@ package io.incepted.ultrafittimer.viewmodel
 
 import android.app.Application
 import android.content.Intent
-import android.os.Bundle
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.model.TimerSetting
-import io.incepted.ultrafittimer.db.source.LocalDataSource
 import io.incepted.ultrafittimer.timer.TimerService
 import io.incepted.ultrafittimer.util.SingleLiveEvent
 import io.incepted.ultrafittimer.util.TimerUtil
+import io.incepted.ultrafittimer.util.WorkoutSession
 import timber.log.Timber
 import javax.inject.Inject
 
 class TimerViewModel @Inject constructor(val appContext: Application, val repository: DbRepository)
-    : AndroidViewModel(appContext), LocalDataSource.OnTimerLoadedListener, LocalDataSource.OnPresetLoadedListener {
+    : AndroidViewModel(appContext) {
 
-
-    val onTimerReady = SingleLiveEvent<Bundle>()
 
     val snackbarResource = SingleLiveEvent<Int>()
 
@@ -31,7 +27,9 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     val resumePause = SingleLiveEvent<Void>()
 
-    val terminateTimer = SingleLiveEvent<Void>()
+    val exitTimer = SingleLiveEvent<Void>()
+
+    val completeTimer = SingleLiveEvent<Void>()
 
 
     // ----------------------- UI field -------------------------
@@ -45,49 +43,26 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
     val roundCount = ObservableField<String>()
 
 
-    fun start(isPreset: Boolean, targetId: Long) {
+    fun start() {
         Timber.d("Started")
-
-        loadTimer(isPreset, targetId)
     }
-
-
-    private fun loadTimer(isPreset: Boolean, targetId: Long) {
-        if (isPreset) repository.getPresetById(targetId, this)
-        else repository.getTimerById(targetId, this)
-    }
-
-
-    private fun createTimerInfoBundle(timer: TimerSetting): Bundle {
-        val timerInfo = Bundle()
-        timerInfo.putInt(TimerService.BUNDLE_KEY_WARMUP_TIME, timer.warmupSeconds)
-        timerInfo.putString(TimerService.BUNDLE_KEY_WORK_NAMES, timer.roundNames)
-        timerInfo.putString(TimerService.BUNDLE_KEY_WORK_TIME, timer.workSeconds)
-        timerInfo.putString(TimerService.BUNDLE_KEY_REST_TIME, timer.restSeconds)
-        timerInfo.putInt(TimerService.BUNDLE_KEY_COOLDOWN_TIME, timer.cooldownSeconds)
-        return timerInfo
-    }
-
 
 
     // ------------------------------------------ User Interaction -------------------------------------
 
 
-    fun updateTime(intent: Intent?) {
+    fun handleBroadcastResult(intent: Intent?) {
         if (intent == null) return
-        val sess = intent.getIntExtra(TimerService.BR_EXTRA_KEY_SESSION_SESSION, 0)
-        val name = intent.getStringExtra(TimerService.BR_EXTRA_KEY_SESSION_NAME) ?: ""
-        val remaining = intent.getLongExtra(TimerService.BR_EXTRA_KEY_SESSION_REMAINING_SECS, 0L)
-        val round = intent.getIntExtra(TimerService.BR_EXTRA_KEY_SESSION_ROUND_COUNT, 0)
-
-        workoutName.set(name)
-        remainingTime.set(TimerUtil.secondsToTimeString(remaining.toInt()))
-        roundCount.set("Round $round")
-
+        when (intent.action) {
+            TimerService.BR_ACTION_TIMER_TICK_RESULT -> updateTime(intent)
+            TimerService.BR_ACTION_TIMER_COMPLETED_RESULT -> completeTimer.value = null
+            TimerService.BR_ACTION_TIMER_ERROR -> handleError()
+        }
     }
 
-    fun terminateTimer() {
-        terminateTimer.value = null
+
+    fun exitTimer() {
+        exitTimer.value = null
     }
 
 
@@ -96,29 +71,29 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
     }
 
 
-
-    // ------------------------------------------ Callbacks -----------------------------------------
-
-    override fun onTimerLoaded(timer: TimerSetting) {
-        this.timer = timer
-        onTimerReady.value = createTimerInfoBundle(timer)
-    }
-
-
-    override fun onTimerNotAvailable() {
+    private fun handleError() {
         snackbarResource.value = R.string.error_unexpected
+        exitTimer.value = null
     }
 
 
-    override fun onPresetLoaded(preset: Preset) {
-        this.preset = preset
-        repository.getTimerById(preset.timerSettingId, this)
+    private fun updateTime(intent: Intent) {
+        val sess = intent.getIntExtra(TimerService.BR_EXTRA_KEY_SESSION_SESSION, 0)
+        val name = intent.getStringExtra(TimerService.BR_EXTRA_KEY_SESSION_NAME) ?: ""
+        val remaining = intent.getLongExtra(TimerService.BR_EXTRA_KEY_SESSION_REMAINING_SECS, 0L)
+        val round = intent.getIntExtra(TimerService.BR_EXTRA_KEY_SESSION_ROUND_COUNT, 0)
+        val totalRounds = intent.getIntExtra(TimerService.BR_EXTRA_KEY_SESSION_TOTAL_ROUND, 0)
+
+        val roundStr = when (sess) {
+            WorkoutSession.WARMUP -> "0/$totalRounds"
+            WorkoutSession.COOLDOWN -> "$totalRounds/$totalRounds"
+            else -> "$round/$totalRounds"
+        }
+
+        workoutName.set(name)
+        remainingTime.set(TimerUtil.secondsToTimeString(remaining.toInt()))
+        roundCount.set(roundStr)
+
     }
-
-
-    override fun onPresetNotAvailable() {
-        snackbarResource.value = R.string.error_unexpected
-    }
-
 
 }

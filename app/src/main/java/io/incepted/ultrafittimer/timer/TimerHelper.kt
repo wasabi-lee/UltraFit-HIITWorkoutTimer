@@ -20,70 +20,90 @@ import java.util.concurrent.atomic.AtomicLong
 
 class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayList<Round>) {
 
+    // Used for resume / pause
     var resumed = AtomicBoolean(true)
 
+    // Used for terminating timer in the middle
     var stopped = AtomicBoolean(false)
 
+    // Used to normally complete the timer (after the timer runs through all cycle)
+    private var completed = AtomicBoolean(false)
+
+    private var switched = AtomicBoolean(false)
+
+    // current position in rounds(ArrayList<Round>)
     var pos = AtomicInteger(0)
 
+    // Session identifier flag (Warm Up? Work? Rest? Cooldown?)
     var curSession = AtomicInteger(0)
 
     var elapsed = AtomicLong(0)
 
     var disposable: Disposable? = null
 
+    var totalRounds = 0
+
+
     init {
         curSession.set(if (warmupTime != 0) WorkoutSession.WARMUP else WorkoutSession.WORK)
+        totalRounds = rounds.size
     }
 
 
-    fun startTimer(emitter: ObservableEmitter<RoundInfo>) {
+    fun startTimer(emitter: ObservableEmitter<TickInfo>) {
 
         disposable = Observable.interval(1000, TimeUnit.MILLISECONDS)
+                .startWith(0L)
                 .takeWhile { !stopped.get() }
                 .filter { resumed.get() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
 
-                    val session = curSession
-                    val sessionName = getCurrentSessionName(session.get())
-                    val sessionTime = getCurrentSessionTime(session.get())
-                    val roundCount = getRoundCount(session.get())
-
-                    // Send the tick info
-                    emitter.onNext(RoundInfo(session.get(), sessionName, sessionTime - elapsed.get(), roundCount))
-
                     // check for session switch
-                    if (!shouldSwitchSession(sessionTime)) {
-                        elapsed.getAndAdd(1)
+                    val currentSessionTime = getCurrentSessionTime(curSession.get())
 
-                    } else {
-                        // reset elapsed time.
-                        elapsed.set(0)
-
-                        // switch the round. dispose this observable if the timer reached the end.
+                    if (shouldSwitchSession(currentSessionTime)) {
+                        // Switching to the next session
+                        switched.set(true)
                         when (curSession.get()) {
                             WorkoutSession.WARMUP -> curSession.set(WorkoutSession.WORK)
-                            WorkoutSession.COOLDOWN -> {
-                                emitter.onComplete()
-                                disposable?.dispose()
-                                return@subscribeBy
-                            }
+                            WorkoutSession.COOLDOWN -> completed.set(true) // flag for finishing the timer
                             else ->
                                 if (!isLastRound())
                                 // switch session between work - rest
                                     switchWorkRest()
                                 else
                                 // Last round! Finish the timer if the cooldown time is 0
-                                    if (cooldownTime == 0) {
-                                        emitter.onComplete()
-                                        disposable?.dispose()
-                                        return@subscribeBy
-                                    } else
-                                        curSession.set(WorkoutSession.COOLDOWN)
+                                    if (cooldownTime == 0) completed.set(true) // flag for finishing the timer
+                                    else curSession.set(WorkoutSession.COOLDOWN)
                         }
+
+                        // reset the elapsed time because we switched to the next session
+                        if (!completed.get()) elapsed.set(0)
                     }
+
+
+                    // Send the tick info
+                    val session = curSession.get()
+                    emitter.onNext(TickInfo(
+                            session = session,
+                            workoutName = getCurrentSessionName(session),
+                            remianingSecs = (getCurrentSessionTime(session) - elapsed.get()),
+                            roundCount = getRoundCount(session),
+                            totalRounds = totalRounds,
+                            switched = switched.get()))
+
+                    // completing the timer after sending the last tick
+                    if (completed.get()) {
+                        emitter.onComplete()
+                        terminateTimer()
+                        return@subscribeBy
+                    }
+
+                    // After everything is done, increment elapsed time to move on to the next tick
+                    elapsed.getAndAdd(1)
+                    switched.set(false)
                 }
     }
 
@@ -121,7 +141,7 @@ class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayL
 
 
     private fun shouldSwitchSession(sessionTime: Int): Boolean {
-        return elapsed.get() == (sessionTime.toLong() - 1L)
+        return elapsed.get() == (sessionTime.toLong())
     }
 
 
@@ -150,12 +170,18 @@ class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayL
     }
 
 
+    fun setCompletedFlag() {
+        completed.set(true)
+    }
+
+
     fun pauseResumeTimer() {
         resumed.set(!resumed.get())
     }
 
     fun terminateTimer() {
         stopped.set(true)
+        if (disposable?.isDisposed == true) disposable?.dispose()
     }
 
 

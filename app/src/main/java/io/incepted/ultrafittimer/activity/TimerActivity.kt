@@ -4,6 +4,7 @@ import android.content.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.ActivityTimerBinding
+import io.incepted.ultrafittimer.fragment.TimerExitDialogFragment
 import io.incepted.ultrafittimer.timer.TimerService
 import io.incepted.ultrafittimer.util.SnackbarUtil
 import io.incepted.ultrafittimer.viewmodel.TimerViewModel
@@ -35,6 +37,7 @@ class TimerActivity : AppCompatActivity() {
 
     private var timerService: TimerService? = null
 
+
     private var timerIntent: Intent? = null
 
     private var configChanged = false
@@ -55,7 +58,7 @@ class TimerActivity : AppCompatActivity() {
 
         unpackExtra()
 
-        if (savedInstanceState == null) timerViewModel.start(fromPreset, targetId)
+        if (savedInstanceState == null) timerViewModel.start()
         else configChanged = true
 
         initReceiver()
@@ -67,8 +70,19 @@ class TimerActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Timber.d("trker: onStart")
-        initService(null)
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, IntentFilter(TimerService.BR_ACTION_TIMER_RESULT))
+
+        initService()
+
+        registerLocalBroadcastReceiver()
+    }
+
+    private fun registerLocalBroadcastReceiver() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(TimerService.BR_ACTION_TIMER_TICK_RESULT)
+        intentFilter.addAction(TimerService.BR_ACTION_TIMER_COMPLETED_RESULT)
+        LocalBroadcastManager
+                .getInstance(this)
+                .registerReceiver(receiver, intentFilter)
     }
 
 
@@ -78,9 +92,9 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun initReceiver() {
-        receiver = object: BroadcastReceiver() {
+        receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                timerViewModel.updateTime(intent)
+                timerViewModel.handleBroadcastResult(intent)
             }
         }
     }
@@ -92,17 +106,17 @@ class TimerActivity : AppCompatActivity() {
             showSnackBar(resources.getString(it))
         })
 
-        timerViewModel.onTimerReady.observe(this, Observer {
-            initService(it)
-        })
-
         timerViewModel.resumePause.observe(this, Observer {
             timerService?.resumePauseTimer()
         })
 
-        timerViewModel.terminateTimer.observe(this, Observer {
+        timerViewModel.exitTimer.observe(this, Observer {
+            onBackPressed()
+        })
+
+        timerViewModel.completeTimer.observe(this, Observer {
+            Toast.makeText(this, "Nya", Toast.LENGTH_SHORT).show()
             timerService?.terminateTimer()
-            finish()
         })
     }
 
@@ -113,14 +127,41 @@ class TimerActivity : AppCompatActivity() {
     }
 
 
-    private fun initService(bundle: Bundle?) {
+    fun exitTimer() {
+        timerService?.terminateTimer()
+        finish()
+    }
+
+    private fun finishService() {
+        timerService?.finish()
+    }
+
+
+    private fun showWarningDialog() {
+        val dialogFrag = TimerExitDialogFragment.newInstance()
+        dialogFrag.show(supportFragmentManager, "timer_exit_dialog")
+    }
+
+
+    override fun onBackPressed() {
+        if (timerService?.timerCompleted == false) showWarningDialog()
+        else {
+            finishService()
+            this.finish()
+        }
+    }
+
+
+    private fun initService() {
         // Check if the param bundle and viewmodel bundle are all null.
         // If true, return. If false, init service with the bundle.
-        val extras: Bundle = (bundle ?: timerViewModel.onTimerReady.value) ?: return
+        val bundle = Bundle()
+        bundle.putBoolean(TimerService.BUNDLE_KEY_IS_PRESET, fromPreset)
+        bundle.putLong(TimerService.BUNDLE_KEY_TARGET_ID, targetId)
 
         if (timerIntent == null) {
             timerIntent = Intent(this, TimerService::class.java)
-            timerIntent?.putExtras(extras)
+            timerIntent?.putExtras(bundle)
         }
 
         bindService(timerIntent, serviceConn, Context.BIND_AUTO_CREATE)
