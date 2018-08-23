@@ -4,11 +4,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.graphics.Color
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.*
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.ActivityMainBinding
 import io.incepted.ultrafittimer.fragment.PresetSaveDialogFragment
@@ -19,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_timer.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -54,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         unpackExtra()
 
         if (savedInstanceState == null) mainViewModel.start(editMode, editPresetId)
+
 
         initToolbar()
         initObservers()

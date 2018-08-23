@@ -16,6 +16,16 @@
         android:layout_height="match_parent"
         tools:context=".activity.TimerActivity">
 
+        <com.gelitenight.waveview.library.WaveView
+            android:id="@+id/timer_wave"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
         <ImageView
             android:id="@+id/timer_lock_iv"
             android:layout_width="wrap_content"
@@ -23,10 +33,10 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
+            android:onClick="@{() -> viewmodel.toggleScreenInteraction()}"
             android:src="@{viewmodel.locked ? @drawable/ic_lock_black : @drawable/ic_lock_open_black}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{() -> viewmodel.toggleScreenInteraction()}"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/timer_back_iv"
@@ -36,8 +46,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:alpha="@{viewmodel.locked ? 0.5f : 1f}"
-            android:onClick="@{() -> viewmodel.exitTimer()}"
             android:clickable="@{!viewmodel.locked}"
+            android:onClick="@{() -> viewmodel.exitTimer()}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_back_black" />
@@ -46,8 +56,8 @@
             android:id="@+id/timer_resume_pause_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="@{!viewmodel.locked}"
             android:alpha="@{viewmodel.locked ? 0.5f : 1f}"
+            android:clickable="@{!viewmodel.locked}"
             android:onClick="@{() -> viewmodel.resumePauseTimer()}"
             android:src="@{viewmodel.paused ? @drawable/ic_play_circle_outline_48_black : @drawable/ic_pause_circle_outline_black}"
             app:layout_constraintBottom_toBottomOf="parent"

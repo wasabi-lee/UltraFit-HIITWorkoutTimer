@@ -52,6 +52,10 @@ class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayL
 
     fun startTimer(emitter: ObservableEmitter<TickInfo>) {
 
+        // Start the initial tick to notify the activity the timer's starting session
+        // (The activity should know if we are starting from Warmup or Work for the view animation)
+        emitter.onNext(TickInfo(curSession.get(), getCurrentSessionTime(curSession.get()).toLong(), true))
+
         disposable = Observable.interval(1000, TimeUnit.MILLISECONDS)
                 .startWith(0L)
                 .takeWhile { !stopped.get() }
@@ -90,9 +94,10 @@ class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayL
                             session = session,
                             workoutName = getCurrentSessionName(session),
                             remianingSecs = (getCurrentSessionTime(session) - elapsed.get()),
+                            roundTotalSecs = getCurrentSessionTime(session).toLong(),
                             roundCount = getRoundCount(session),
                             totalRounds = totalRounds,
-                            switched = switched.get()))
+                            switched = if (completed.get()) false else switched.get()))
 
                     // completing the timer after sending the last tick
                     if (completed.get()) {

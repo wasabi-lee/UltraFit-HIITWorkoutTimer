@@ -1,8 +1,10 @@
 package io.incepted.ultrafittimer.util
 
 import android.content.Context
+import android.graphics.Color
 import androidx.core.content.ContextCompat
 import io.incepted.ultrafittimer.R
+import timber.log.Timber
 
 object WorkoutSession {
     const val WARMUP = 0
@@ -16,6 +18,11 @@ object WorkoutSession {
     var SESSION_COLOR_WORK: Int? = null
     var SESSION_COLOR_REST: Int? = null
     var SESSION_COLOR_COOLDOWN: Int? = null
+
+    var SESSION_COLOR_WARMUP_SECONDARY: Int? = null
+    var SESSION_COLOR_WORK_SECONDARY: Int? = null
+    var SESSION_COLOR_REST_SECONDARY: Int? = null
+    var SESSION_COLOR_COOLDOWN_SECONDARY: Int? = null
 
 
     fun getSessionById(viewId: Int): Int {
@@ -45,9 +52,35 @@ object WorkoutSession {
             WARMUP -> SESSION_COLOR_WARMUP ?: ContextCompat.getColor(context, R.color.state_warmup)
             WORK -> SESSION_COLOR_WORK ?: ContextCompat.getColor(context, R.color.state_work)
             REST -> SESSION_COLOR_REST ?: ContextCompat.getColor(context, R.color.state_rest)
-            COOLDOWN -> SESSION_COLOR_COOLDOWN ?: ContextCompat.getColor(context, R.color.state_cooldown)
+            COOLDOWN -> SESSION_COLOR_COOLDOWN
+                    ?: ContextCompat.getColor(context, R.color.state_cooldown)
             else -> android.R.color.transparent
         }
 
     }
+
+
+
+    fun getSecondarySessionColor(context: Context, session: Int): Int {
+
+        if (SESSION_COLOR_WARMUP == null) SESSION_COLOR_WARMUP_SECONDARY = ContextCompat.getColor(context, R.color.state_warmup_secondary)
+        if (SESSION_COLOR_WORK == null) SESSION_COLOR_WORK_SECONDARY = ContextCompat.getColor(context, R.color.state_work_secondary)
+        if (SESSION_COLOR_REST == null) SESSION_COLOR_REST_SECONDARY = ContextCompat.getColor(context, R.color.state_rest_secondary)
+        if (SESSION_COLOR_COOLDOWN == null) SESSION_COLOR_COOLDOWN_SECONDARY = ContextCompat.getColor(context, R.color.state_cooldown_secondary)
+
+        return when (session) {
+            WARMUP -> SESSION_COLOR_WARMUP_SECONDARY ?: ContextCompat.getColor(context, R.color.state_warmup_secondary)
+            WORK -> SESSION_COLOR_WORK_SECONDARY ?: ContextCompat.getColor(context, R.color.state_work_secondary)
+            REST -> SESSION_COLOR_REST_SECONDARY ?: ContextCompat.getColor(context, R.color.state_rest_secondary)
+            COOLDOWN -> SESSION_COLOR_COOLDOWN_SECONDARY
+                    ?: ContextCompat.getColor(context, R.color.state_cooldown_secondary)
+            else -> android.R.color.transparent
+        }
+
+    }
+
+
+
+
+
 }

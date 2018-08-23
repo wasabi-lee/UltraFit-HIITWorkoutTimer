@@ -33,5 +33,10 @@
     <color name="state_rest">#00d761</color>
     <color name="state_cooldown">#00d0ff</color>
 
+    <color name="state_warmup_secondary">#3dc9fd14</color>
+    <color name="state_work_secondary">#33ff3320</color>
+    <color name="state_rest_secondary">#3e00d761</color>
+    <color name="state_cooldown_secondary">#2e00d0ff</color>
+
 
 </resources>

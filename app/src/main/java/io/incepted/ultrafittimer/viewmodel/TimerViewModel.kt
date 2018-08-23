@@ -35,6 +35,10 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     val finishActivity = SingleLiveEvent<Void>()
 
+    val animateWave = SingleLiveEvent<TickInfo>()
+
+    val resumePauseWave = SingleLiveEvent<Boolean>()
+
 
     // ----------------------- UI field -------------------------
 
@@ -67,6 +71,12 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
             TimerService.BR_ACTION_TIMER_RESUME_PAUSE_STATE -> {
                 val state = intent.getBooleanExtra(TimerService.BR_EXTRA_KEY_RESUME_PAUSE_STATE, false)
                 paused.set(state)
+                resumePauseWave.value = state
+            }
+            TimerService.BR_ACTION_TIMER_SESSION_SWITCH -> {
+                val sess = intent.getIntExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_SESSION, 0)
+                val roundTotal = intent.getLongExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, 0L)
+                animateWave.value = TickInfo(sess, roundTotal)
             }
             TimerService.BR_ACTION_TIMER_TERMINATED -> finishActivity.value = null
             TimerService.BR_ACTION_TIMER_ERROR -> handleError()
@@ -110,6 +120,7 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
         val sess = intent.getIntExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_SESSION, 0)
         val name = intent.getStringExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_NAME) ?: ""
         val remaining = intent.getLongExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_REMAINING_SECS, 0L)
+        val roundTotal = intent.getLongExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, 0L)
         val round = intent.getIntExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_ROUND_COUNT, 0)
         val totalRounds = intent.getIntExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_TOTAL_ROUND, 0)
 
@@ -118,6 +129,7 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
         workoutName.set(name)
         remainingTime.set(TimerUtil.secondsToTimeString(remaining.toInt()))
         roundCount.set(roundStr)
+
 
     }
 

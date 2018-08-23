@@ -41,6 +41,7 @@ class TimerService : Service(),
         // Broadcast receiver extra keys for Service-Activity communication
         const val BR_ACTION_TIMER_TICK_RESULT = "io.incepted.ultrafittimer.timer.TIMER_TICK"
         const val BR_ACTION_TIMER_COMPLETED_RESULT = "io.incepted.ultrafittimer.timer.TIMER_COMPLETED"
+        const val BR_ACTION_TIMER_SESSION_SWITCH = "io.incepted.ultrafittimer.timer.TIMER_SESSION_SWITCH"
         const val BR_ACTION_TIMER_RESUME_PAUSE_STATE = "io.incepted.ultrafittimer.timer.TIMER_RESUME_PAUSE_STATE"
         const val BR_ACTION_TIMER_TERMINATED = "io.incepted.ultrafittimer.timer.TIMER_TERMINATED"
         const val BR_ACTION_TIMER_ERROR = "io.incepted.ultrafittimer.timer.TIMER_ERROR"
@@ -48,12 +49,14 @@ class TimerService : Service(),
         // Tick info extras
         const val BR_EXTRA_KEY_TICK_SESSION_NAME = "io.incepted.ultrafittimer.timer.EXTRA_KEY_SESSION_NAME"
         const val BR_EXTRA_KEY_TICK_SESSION_REMAINING_SECS = "io.incepted.ultrafittimer.timer.EXTRA_KEY_SESSION_REMAINING_SEC"
+        const val BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS = "io.incepted.ultrafittimer.timer.EXTRA_KEY_SESSION_ROUND_TOTAL_SECS"
         const val BR_EXTRA_KEY_TICK_SESSION_SESSION = "io.incepted.ultrafittimer.timer.EXTRA_KEY_SESSION_SESSION"
         const val BR_EXTRA_KEY_TICK_SESSION_ROUND_COUNT = "io.incepted.ultrafittimer.timer.EXTRA_KEY_SESSION_COUNT"
         const val BR_EXTRA_KEY_TICK_SESSION_TOTAL_ROUND = "io.incepted.ultrafittimer.timer.EXTRA_KEY_TOTAL_ROUND"
 
         // Resume pause state extra
         const val BR_EXTRA_KEY_RESUME_PAUSE_STATE = "io.incepted.ultrafittimer.timer.EXTRA_KEY_RESUME_PAUSE_STATE"
+
 
         var SERVICE_STARTED = false
     }
@@ -191,8 +194,11 @@ class TimerService : Service(),
                             sendTick(it)
 
                             if (it.switched) {
+                                sendSessionSwitch(it)
                             }
+
                             if (it.remianingSecs <= cueSeconds) {
+                                // fire tick
                             }
 
                             updateNotification(it)
@@ -248,6 +254,7 @@ class TimerService : Service(),
             intent.putExtra(BR_EXTRA_KEY_TICK_SESSION_SESSION, tick.session)
             intent.putExtra(BR_EXTRA_KEY_TICK_SESSION_NAME, tick.workoutName)
             intent.putExtra(BR_EXTRA_KEY_TICK_SESSION_REMAINING_SECS, tick.remianingSecs)
+            intent.putExtra(BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, tick.roundTotalSecs)
             intent.putExtra(BR_EXTRA_KEY_TICK_SESSION_ROUND_COUNT, tick.roundCount)
             intent.putExtra(BR_EXTRA_KEY_TICK_SESSION_TOTAL_ROUND, tick.totalRounds)
             broadcaster.sendBroadcast(intent)
@@ -272,11 +279,22 @@ class TimerService : Service(),
     }
 
 
+    private fun sendSessionSwitch(tickInfo: TickInfo?) {
+        if (tickInfo != null) {
+            val intent = Intent(BR_ACTION_TIMER_SESSION_SWITCH)
+            intent.putExtra(BR_EXTRA_KEY_TICK_SESSION_SESSION, tickInfo.session)
+            intent.putExtra(BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, tickInfo.roundTotalSecs)
+            broadcaster.sendBroadcast(intent)
+        }
+    }
+
+
     private fun sendResumePasueState() {
         val intent = Intent(BR_ACTION_TIMER_RESUME_PAUSE_STATE)
         intent.putExtra(BR_EXTRA_KEY_RESUME_PAUSE_STATE, isTimerPaused())
         broadcaster.sendBroadcast(intent)
     }
+
 
     private fun sendTerminated() {
         broadcaster.sendBroadcast(Intent(BR_ACTION_TIMER_TERMINATED))

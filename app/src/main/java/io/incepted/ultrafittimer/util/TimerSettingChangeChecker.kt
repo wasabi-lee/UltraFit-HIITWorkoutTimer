@@ -8,9 +8,9 @@ object TimerSettingChangeChecker {
                             originalCooldown: Int, resultCooldown: Int,
                             originalRound: List<Round>, resultRound: List<Round>): Boolean {
 
-        return roundChanged(originalRound, resultRound) &&
-                originalWarmup == resultWarmup &&
-                originalCooldown == resultCooldown
+        return roundChanged(originalRound, resultRound) ||
+                originalWarmup != resultWarmup ||
+                originalCooldown != resultCooldown
     }
 
     fun roundChanged(original: List<Round>, result: List<Round>): Boolean {

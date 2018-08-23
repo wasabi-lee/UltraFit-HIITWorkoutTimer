@@ -1,21 +1,26 @@
 package io.incepted.ultrafittimer.activity
 
 import android.content.*
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.gelitenight.waveview.library.WaveView
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.ActivityTimerBinding
 import io.incepted.ultrafittimer.fragment.TimerExitDialogFragment
 import io.incepted.ultrafittimer.timer.TimerService
 import io.incepted.ultrafittimer.util.SnackbarUtil
+import io.incepted.ultrafittimer.view.WaveHelper
 import io.incepted.ultrafittimer.viewmodel.TimerViewModel
+import kotlinx.android.synthetic.main.activity_timer.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -48,6 +53,9 @@ class TimerActivity : AppCompatActivity() {
 
     lateinit var receiver: BroadcastReceiver
 
+    lateinit var waveHelper: WaveHelper
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +65,10 @@ class TimerActivity : AppCompatActivity() {
         binding.viewmodel = timerViewModel
 
         unpackExtra()
+
+        waveHelper = WaveHelper(timer_wave)
+        timer_wave.waterLevelRatio = 0.0f
+        timer_wave.setShapeType(WaveView.ShapeType.SQUARE)
 
         if (savedInstanceState == null) timerViewModel.start()
         else configChanged = true
@@ -76,12 +88,23 @@ class TimerActivity : AppCompatActivity() {
         registerLocalBroadcastReceiver()
     }
 
+    override fun onResume() {
+        super.onResume()
+        waveHelper.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        waveHelper.cancel()
+    }
+
     private fun registerLocalBroadcastReceiver() {
         val intentFilter = IntentFilter()
         intentFilter.addAction(TimerService.BR_ACTION_TIMER_TICK_RESULT)
         intentFilter.addAction(TimerService.BR_ACTION_TIMER_COMPLETED_RESULT)
         intentFilter.addAction(TimerService.BR_ACTION_TIMER_RESUME_PAUSE_STATE)
         intentFilter.addAction(TimerService.BR_ACTION_TIMER_TERMINATED)
+        intentFilter.addAction(TimerService.BR_ACTION_TIMER_SESSION_SWITCH)
         intentFilter.addAction(TimerService.BR_ACTION_TIMER_ERROR)
         LocalBroadcastManager
                 .getInstance(this)
@@ -123,6 +146,15 @@ class TimerActivity : AppCompatActivity() {
 
         timerViewModel.finishActivity.observe(this, Observer {
             finish()
+        })
+
+        timerViewModel.animateWave.observe(this, Observer {
+            waveHelper.liftWave(it)
+        })
+
+        timerViewModel.resumePauseWave.observe(this, Observer {
+            if (it) waveHelper.pauseWave()
+            else waveHelper.resumeWave()
         })
     }
 
