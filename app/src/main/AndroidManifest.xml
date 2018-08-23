@@ -34,18 +34,6 @@
         <service android:name=".timer.TimerService"
             android:exported="false"/>
 
-        <receiver android:name=".timer.TimerService$TimerActionReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action
-                    android:name="io.incepted.ultrafittimer.ACTION_RESUME"/>
-                <action
-                    android:name="io.incepted.ultrafittimer.ACTION_PAUSE"/>
-                <action
-                    android:name="io.incepted.ultrafittimer.ACTION_DISMISS"/>
-            </intent-filter>
-        </receiver>
 
     </application>
 

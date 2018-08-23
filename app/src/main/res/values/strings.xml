@@ -51,5 +51,11 @@
     <string name="pref_key_last_used_preset_id">pref_key_last_used_preset_id</string>
     <string name="pref_key_last_used_timer_id">pref_key_last_used_timer_id</string>
 
+    <string name="pref_key_theme">pref_key_theme</string>
+    <string name="pref_key_beep_sound">pref_key_beep_sound</string>
+    <string name="pref_key_cue_sound">pref_key_cue_sound</string>
+    <string name="pref_key_cue_seconds">pref_key_cue_seconds</string>
+    <string name="pref_key_increment_seconds">pref_key_increment_seconds</string>
+
 
 </resources>

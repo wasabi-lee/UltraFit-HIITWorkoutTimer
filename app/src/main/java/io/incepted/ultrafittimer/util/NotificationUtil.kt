@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.activity.TimerActivity
 import io.incepted.ultrafittimer.timer.TickInfo
+import io.incepted.ultrafittimer.timer.TimerService
 
 class NotificationUtil(val context: Context) : ContextWrapper(context) {
 
@@ -36,23 +37,37 @@ class NotificationUtil(val context: Context) : ContextWrapper(context) {
     private var timerPendingIntent: PendingIntent = PendingIntent.getActivity(context, 0,
             Intent(context, TimerActivity::class.java), 0)
 
-    private var resumeIntent = PendingIntent.getBroadcast(context, 0,
-            Intent(ACTION_LABEL_TIMER_RESUME), PendingIntent.FLAG_CANCEL_CURRENT)
-    private var pauseIntent = PendingIntent.getBroadcast(context, 0,
-            Intent(ACTION_LABEL_TIMER_PAUSE), PendingIntent.FLAG_CANCEL_CURRENT)
-    private var dismissIntent = PendingIntent.getBroadcast(context, 0,
-            Intent(ACTION_LABEL_TIMER_DISMISS), PendingIntent.FLAG_CANCEL_CURRENT)
+    private var resumeIntent: PendingIntent
+    private var pauseIntent: PendingIntent
+    private var dismissIntent: PendingIntent
 
     private var workoutNotifBuilder: NotificationCompat.Builder
 
     init {
+
+
+        resumeIntent = PendingIntent.getBroadcast(context, 4,
+                Intent(ACTION_INTENT_FILTER_RESUME),
+                PendingIntent.FLAG_CANCEL_CURRENT)
+
+        pauseIntent = PendingIntent.getBroadcast(context, 5,
+                Intent(ACTION_INTENT_FILTER_PAUSE),
+                PendingIntent.FLAG_CANCEL_CURRENT)
+
+
+        dismissIntent = PendingIntent.getBroadcast(context, 6,
+                Intent(ACTION_INTENT_FILTER_DISMISS),
+                PendingIntent.FLAG_CANCEL_CURRENT)
+
         workoutNotifBuilder = NotificationCompat.Builder(context, CHANNEL_ID_TIMER)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setAutoCancel(false)
                 .addAction(getDismissAction())
+                .addAction(getResumePauseAction(false))
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(timerPendingIntent)
+
 
         createChannels()
     }
@@ -78,27 +93,24 @@ class NotificationUtil(val context: Context) : ContextWrapper(context) {
                 .setContentTitle("Workout Completed")
                 .setContentText("Workout Completed")
 
-        workoutNotifBuilder.mActions = arrayListOf()
-
         return workoutNotifBuilder.build()
     }
 
 
-    fun getTimerNotification(tickInfo: TickInfo?, paused: Boolean): Notification {
+    fun getTimerNotificationToggleResumePause(paused: Boolean): Notification {
+        workoutNotifBuilder.mActions[1] = getResumePauseAction(paused)
+        return workoutNotifBuilder.build()
+    }
 
+
+    fun getTimerNotification(tickInfo: TickInfo?): Notification {
         if (tickInfo != null) {
-
             val notifTitle = "${tickInfo.workoutName} - ${tickInfo.roundCount}/${tickInfo.totalRounds}"
             val notifText = TimerUtil.secondsToTimeString(tickInfo.remianingSecs.toInt())
-
             workoutNotifBuilder
                     .setContentTitle(notifTitle)
                     .setContentText(notifText)
-
-            workoutNotifBuilder.mActions =
-                    arrayListOf(getResumePauseAction(paused), getDismissAction())
         }
-
         return workoutNotifBuilder.build()
     }
 
@@ -114,15 +126,15 @@ class NotificationUtil(val context: Context) : ContextWrapper(context) {
         } else {
             label = ACTION_LABEL_TIMER_PAUSE
             icon = R.drawable.ic_pause_36_black
-            intent = dismissIntent
+            intent = pauseIntent
         }
-        return NotificationCompat.Action(icon, label, intent)
+        return NotificationCompat.Action.Builder(icon, label, intent).build()
     }
 
 
     private fun getDismissAction(): NotificationCompat.Action {
-        return NotificationCompat.Action(R.drawable.ic_close_36_black,
-                ACTION_LABEL_TIMER_DISMISS, dismissIntent)
+        return NotificationCompat.Action.Builder(R.drawable.ic_close_36_black,
+                ACTION_LABEL_TIMER_DISMISS, dismissIntent).build()
     }
 
 

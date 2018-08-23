@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
+import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.activity.CustomizeActivity
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.tempmodel.Round
@@ -15,7 +16,7 @@ import io.incepted.ultrafittimer.util.SwipeDeleteCallback
 import io.incepted.ultrafittimer.util.TimerSettingChangeChecker
 import javax.inject.Inject
 
-class CustomizeViewModel @Inject constructor(appContext: Application, val repository: DbRepository)
+class CustomizeViewModel @Inject constructor(val appContext: Application, val repository: DbRepository)
     : AndroidViewModel(appContext) {
 
     @Inject
@@ -36,7 +37,10 @@ class CustomizeViewModel @Inject constructor(appContext: Application, val reposi
     var offset: Int = 1
 
     fun start() {
-        offset = sharedPref.getString("pref_key_increment_seconds", "1")?.toInt() ?: offset
+        offset = sharedPref
+                .getString(appContext
+                        .resources
+                        .getString(R.string.pref_key_increment_seconds), "1")?.toInt() ?: offset
 
     }
 

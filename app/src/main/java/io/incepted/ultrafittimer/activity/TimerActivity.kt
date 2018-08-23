@@ -80,6 +80,9 @@ class TimerActivity : AppCompatActivity() {
         val intentFilter = IntentFilter()
         intentFilter.addAction(TimerService.BR_ACTION_TIMER_TICK_RESULT)
         intentFilter.addAction(TimerService.BR_ACTION_TIMER_COMPLETED_RESULT)
+        intentFilter.addAction(TimerService.BR_ACTION_TIMER_RESUME_PAUSE_STATE)
+        intentFilter.addAction(TimerService.BR_ACTION_TIMER_TERMINATED)
+        intentFilter.addAction(TimerService.BR_ACTION_TIMER_ERROR)
         LocalBroadcastManager
                 .getInstance(this)
                 .registerReceiver(receiver, intentFilter)
@@ -116,6 +119,10 @@ class TimerActivity : AppCompatActivity() {
 
         timerViewModel.completeTimer.observe(this, Observer {
             Toast.makeText(this, "Workout Completed", Toast.LENGTH_SHORT).show()
+        })
+
+        timerViewModel.finishActivity.observe(this, Observer {
+            finish()
         })
     }
 
@@ -179,6 +186,8 @@ class TimerActivity : AppCompatActivity() {
             val binder = p1 as TimerService.TimerServiceBinder
             timerService = binder.getService()
             serviceBound = true
+
+            timerViewModel.setInitialValues(timerService?.lastTick, timerService?.isTimerPaused())
         }
     }
 

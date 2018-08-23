@@ -72,7 +72,11 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
         this.editMode.set(editMode)
         this.editPresetId = editPresetId
-        this.offset = sharedPref.getString("pref_key_increment_seconds", "1")?.toInt() ?: offset
+        this.offset = sharedPref
+                .getString(appContext
+                        .resources
+                        .getString(R.string.pref_key_increment_seconds), "1")?.toInt() ?: offset
+
         initializeRounds()
     }
 
