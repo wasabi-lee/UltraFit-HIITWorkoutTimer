@@ -1,6 +1,7 @@
 package io.incepted.ultrafittimer.util
 
 import io.incepted.ultrafittimer.db.DbDelimiter
+import timber.log.Timber
 
 object PresetUtil {
 

@@ -170,11 +170,6 @@ class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayL
     }
 
 
-    fun setCompletedFlag() {
-        completed.set(true)
-    }
-
-
     fun pauseResumeTimer() {
         resumed.set(!resumed.get())
     }

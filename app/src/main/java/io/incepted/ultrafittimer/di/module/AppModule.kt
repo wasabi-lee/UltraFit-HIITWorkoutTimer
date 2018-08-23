@@ -1,6 +1,8 @@
 package io.incepted.ultrafittimer.di.module
 
 import android.app.Application
+import android.app.NotificationManager
+import android.content.Context
 import androidx.room.Room
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
@@ -60,6 +62,12 @@ class AppModule {
     @Provides
     fun provideLocalBroadcastManager(app: Application): LocalBroadcastManager {
         return LocalBroadcastManager.getInstance(app.applicationContext)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNotificationManager(app: Application): NotificationManager {
+        return app.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
 }

@@ -28,4 +28,10 @@
     <color name="status_tried">#ceb200</color>
 
 
+    <color name="state_warmup">@color/colorAccent</color>
+    <color name="state_work">#ff3320</color>
+    <color name="state_rest">#00d761</color>
+    <color name="state_cooldown">#00d0ff</color>
+
+
 </resources>

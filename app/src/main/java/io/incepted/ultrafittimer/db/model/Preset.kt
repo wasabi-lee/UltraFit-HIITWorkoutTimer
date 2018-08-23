@@ -14,15 +14,6 @@ class Preset(@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id") var id: 
 
     @Ignore
     var timerSetting: TimerSetting = TimerSetting(0, 0)
-    set(value) {
-        field = value
-        printThis()
-    }
-
-
-    fun printThis() {
-        Timber.d("$timerSetting")
-    }
 
 
 

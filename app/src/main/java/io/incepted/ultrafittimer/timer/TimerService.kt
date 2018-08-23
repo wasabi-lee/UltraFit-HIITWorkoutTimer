@@ -1,9 +1,9 @@
 package io.incepted.ultrafittimer.timer
 
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.Service
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.os.Binder
 import android.os.IBinder
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -48,11 +48,17 @@ class TimerService : Service(),
         const val BR_EXTRA_KEY_SESSION_SESSION = "io.incepted.ultrafittimer.timer.SESSION_SESSION"
         const val BR_EXTRA_KEY_SESSION_ROUND_COUNT = "io.incepted.ultrafittimer.timer.SESSION_COUNT"
         const val BR_EXTRA_KEY_SESSION_TOTAL_ROUND = "io.incepted.ultrafittimer.timer.TOTAL_ROUND"
+
+        var SERVICE_STARTED = false
     }
 
+    // Injection fields
 
     @Inject
     lateinit var sharedPref: SharedPreferences
+
+    @Inject
+    lateinit var notifManager: NotificationManager
 
     @Inject
     lateinit var notificationUtil: NotificationUtil
@@ -63,9 +69,13 @@ class TimerService : Service(),
     @Inject
     lateinit var repository: DbRepository
 
+    private var mReceiver = TimerActionReceiver()
+
+
     private val binder = TimerServiceBinder()
 
-    private var cueSeconds = 3
+
+    // Timer properties
 
     private var fromPreset = false
 
@@ -73,21 +83,30 @@ class TimerService : Service(),
 
     private var presetId = -1L
 
+    private var cueSeconds = 3
+
     private var timer: TimerSetting? = null
 
     private var timerHelper: TimerHelper? = null
 
-    private var disposable: Disposable? = null
-
     var timerCompleted = false
 
     private var lastTick: TickInfo? = null
+
+    private var disposable: Disposable? = null
 
 
     inner class TimerServiceBinder : Binder() {
         fun getService(): TimerService {
             return this@TimerService
         }
+    }
+
+
+    // ---------------------------------------- Initialization --------------------------------------
+
+    override fun onBind(p0: Intent?): IBinder {
+        return binder
     }
 
 
@@ -98,15 +117,36 @@ class TimerService : Service(),
 
         cueSeconds = sharedPref.getString("pref_key_cue_seconds", cueSeconds.toString())?.toInt() ?: cueSeconds
 
-        val notif: Notification = notificationUtil.getTimerNotification().build()
+        val notif: Notification = notificationUtil.getTimerNotification(null, isTimerPaused())
         startForeground(TIMER_NOTIFICATION_ID, notif)
+
+        registerReceiver(mReceiver, getTimerActionIntentFilter())
+
     }
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         unpackExtra(intent)
+
+        SERVICE_STARTED = true
+
         loadTimer(fromPreset, targetId)
         return super.onStartCommand(intent, flags, startId)
+    }
+
+
+    override fun onDestroy() {
+        unregisterReceiver(mReceiver)
+        super.onDestroy()
+    }
+
+
+    private fun getTimerActionIntentFilter(): IntentFilter {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(NotificationUtil.ACTION_INTENT_FILTER_PAUSE)
+        intentFilter.addAction(NotificationUtil.ACTION_INTENT_FILTER_RESUME)
+        intentFilter.addAction(NotificationUtil.ACTION_INTENT_FILTER_DISMISS)
+        return intentFilter
     }
 
 
@@ -146,15 +186,38 @@ class TimerService : Service(),
                             if (it.remianingSecs <= cueSeconds) {
                                 Timber.d("Tick!")
                             }
+
+                            updateNotification(it, isTimerPaused())
                         },
                         onComplete = {
                             timerCompleted = true
                             sendFinished()
+                            terminateTimer()
+                            completeNotification()
                         },
                         onError = { it.printStackTrace() }
                 )
     }
 
+
+    // ------------------------------------------ Update UI -----------------------------------------
+
+
+    private fun updateNotification(tickInfo: TickInfo?, paused: Boolean) {
+        val notif = notificationUtil.getTimerNotification(tickInfo, paused)
+        notif.flags = Notification.FLAG_ONGOING_EVENT
+        notifManager.notify(TIMER_NOTIFICATION_ID, notif)
+    }
+
+
+    private fun completeNotification() {
+        val notif = notificationUtil.getCompleteNotification()
+        notif.flags = Notification.FLAG_ONGOING_EVENT
+        notifManager.notify(TIMER_NOTIFICATION_ID, notif)
+    }
+
+
+    // ------------------------------------------ User Interaction ------------------------------------
 
     fun resumePauseTimer() {
         timerHelper?.pauseResumeTimer()
@@ -181,6 +244,20 @@ class TimerService : Service(),
         }
     }
 
+
+    private fun handleUserAction(context: Context?, intent: Intent?) {
+        when (intent?.action) {
+            NotificationUtil.ACTION_INTENT_FILTER_DISMISS -> terminateTimer()
+            NotificationUtil.ACTION_INTENT_FILTER_RESUME -> resumePauseTimer()
+            NotificationUtil.ACTION_LABEL_TIMER_PAUSE -> resumePauseTimer()
+        }
+    }
+
+
+    private fun isTimerPaused(): Boolean {
+        return timerHelper?.resumed?.get() == false
+    }
+
     private fun sendFinished() {
         broadcaster.sendBroadcast(Intent(BR_ACTION_TIMER_COMPLETED_RESULT))
     }
@@ -189,12 +266,6 @@ class TimerService : Service(),
     private fun sendError() {
         broadcaster.sendBroadcast(Intent(BR_ACTION_TIMER_ERROR))
     }
-
-
-    override fun onBind(p0: Intent?): IBinder {
-        return binder
-    }
-
 
     private fun saveHistory(completed: Boolean, tickInfo: TickInfo?) {
         val newHistory: WorkoutHistory = getWorkoutHistory(completed, tickInfo)
@@ -228,9 +299,13 @@ class TimerService : Service(),
 
 
     fun finish() {
+        SERVICE_STARTED = false
         stopForeground(true)
         stopSelf()
     }
+
+
+
 
     // ------------------------------------ Callbacks ---------------------------------------
 
@@ -254,12 +329,20 @@ class TimerService : Service(),
 
     override fun onHistorySaved(id: Long) {
         Timber.d("Workout history id #$id saved!")
-        stopForeground(true)
-        stopSelf()
+        finish()
     }
 
     override fun onHistorySaveNotAvailable() {
         sendError()
     }
+
+
+
+    inner class TimerActionReceiver: BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            handleUserAction(p0, p1)
+        }
+    }
+
 
 }

@@ -3,7 +3,6 @@ package io.incepted.ultrafittimer.viewmodel
 import android.app.Activity.RESULT_OK
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -19,7 +18,9 @@ import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.incepted.ultrafittimer.db.model.TimerSettingObservable
 import io.incepted.ultrafittimer.db.source.LocalDataSource
+import io.incepted.ultrafittimer.timer.TimerService
 import io.incepted.ultrafittimer.util.RoundUtil
+import io.incepted.ultrafittimer.util.SingleLiveEvent
 import io.incepted.ultrafittimer.util.WorkoutSession
 import javax.inject.Inject
 
@@ -32,15 +33,15 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     lateinit var sharedPref: SharedPreferences
 
     // Activity transition LiveData
-    val toPresetActivity: MutableLiveData<Boolean> = MutableLiveData()
-    val toCustomizeActivity: MutableLiveData<ArrayList<String>> = MutableLiveData()
-    val toSettings: MutableLiveData<Boolean> = MutableLiveData()
-    val toTimerActivity: MutableLiveData<Bundle> = MutableLiveData()
-    val finishActivity: MutableLiveData<Boolean> = MutableLiveData()
+    val toPresetActivity: SingleLiveEvent<Void> = SingleLiveEvent()
+    val toCustomizeActivity: SingleLiveEvent<ArrayList<String>> = SingleLiveEvent()
+    val toSettings: SingleLiveEvent<Void> = SingleLiveEvent()
+    val toTimerActivity: SingleLiveEvent<Bundle> = SingleLiveEvent()
+    val finishActivity: SingleLiveEvent<Void> = SingleLiveEvent()
 
     // UI listeners & events
     var presetName = ObservableField<String>("Untitled")
-    val snackbarTextRes: MutableLiveData<Int> = MutableLiveData()
+    val snackbarTextRes:SingleLiveEvent<Int> = SingleLiveEvent()
     val focusListener: View.OnFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
         handleFocusChange(v, hasFocus)
     }
@@ -64,10 +65,20 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     // ------------------------------------ Initialization --------------------------------------
 
     fun start(editMode: Boolean, editPresetId: Long) {
+
+        if (checkIfTimerServiceRunning()) {
+            toTimerActivity.value = null
+        }
+
         this.editMode.set(editMode)
         this.editPresetId = editPresetId
         this.offset = sharedPref.getString("pref_key_increment_seconds", "1")?.toInt() ?: offset
         initializeRounds()
+    }
+
+
+    private fun checkIfTimerServiceRunning(): Boolean {
+        return TimerService.SERVICE_STARTED
     }
 
 
@@ -165,8 +176,7 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
 
     fun openPresetActivity() {
-        toPresetActivity.value = true
-        toPresetActivity.value = false
+        toPresetActivity.value = null
     }
 
 
@@ -178,14 +188,12 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
             toCustomizeActivity.value = arrayListOf(to.finalWorkName,
                     to.finalWorks,
                     to.finalRests)
-            toCustomizeActivity.value = null
         }
     }
 
 
     fun openSettings() {
-        toSettings.value = true
-        toSettings.value = false
+        toSettings.value = null
     }
 
 
@@ -194,13 +202,10 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
         bundle.putBoolean(TimerActivity.EXTRA_KEY_FROM_PRESET, fromPreset)
         bundle.putLong(TimerActivity.EXTRA_KEY_ID, id)
         toTimerActivity.value = bundle
-        toTimerActivity.value = null
     }
 
 
     private fun finishActivity() {
-        finishActivity.value = true
-        finishActivity.value = false
     }
 
 

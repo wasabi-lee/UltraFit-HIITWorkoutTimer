@@ -115,15 +115,8 @@ class TimerActivity : AppCompatActivity() {
         })
 
         timerViewModel.completeTimer.observe(this, Observer {
-            Toast.makeText(this, "Nya", Toast.LENGTH_SHORT).show()
-            timerService?.terminateTimer()
+            Toast.makeText(this, "Workout Completed", Toast.LENGTH_SHORT).show()
         })
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        Timber.d("trker: OnResume")
     }
 
 
@@ -166,11 +159,12 @@ class TimerActivity : AppCompatActivity() {
 
         bindService(timerIntent, serviceConn, Context.BIND_AUTO_CREATE)
 
-        if (!configChanged && !serviceStarted) {
+        if (!configChanged && !TimerService.SERVICE_STARTED) {
             serviceStarted = true
             Timber.d("Start service!")
             startService(timerIntent)
         }
+
     }
 
 

@@ -19,7 +19,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -85,14 +84,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun initActivityTransitionObservers() {
         mainViewModel.toSettings.observe(this, Observer {
-            if (it == false) return@Observer
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         })
 
 
         mainViewModel.toCustomizeActivity.observe(this, Observer {
-            if (it == null) return@Observer
             val intent = Intent(this, CustomizeActivity::class.java)
             intent.putStringArrayListExtra(CustomizeActivity.EXTRA_KEY_WORKOUT_DETAILS, it)
             startActivityForResult(intent, RC_CUSTOMIZED)
@@ -100,17 +97,14 @@ class MainActivity : AppCompatActivity() {
 
 
         mainViewModel.toPresetActivity.observe(this, Observer {
-            if (it == false) return@Observer
             val intent = Intent(this, PresetListActivity::class.java)
             startActivity(intent)
         })
 
 
         mainViewModel.toTimerActivity.observe(this, Observer {
-            if (it == null) return@Observer
-            val intent = Intent(this, TimerActivity::class.java)
-            intent.putExtras(it)
-            startActivity(intent)
+            if (it != null) startTimerActivity(it)
+            else startTimerActivityUponStartup()
         })
 
 
@@ -119,6 +113,21 @@ class MainActivity : AppCompatActivity() {
                 returnToPresetListActivity()
             })
         }
+    }
+
+
+    private fun startTimerActivity(extras: Bundle) {
+        val intent = Intent(this, TimerActivity::class.java)
+        intent.putExtras(extras)
+        startActivity(intent)
+    }
+
+    private fun startTimerActivityUponStartup() {
+        // App is re launched after getting closed, but the timer service is still running.
+        // Start the TimerActivity alone and finish this activity.
+        val intent = Intent(this, TimerActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
 
