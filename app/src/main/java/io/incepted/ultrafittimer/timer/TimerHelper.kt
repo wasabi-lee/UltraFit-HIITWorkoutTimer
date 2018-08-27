@@ -8,7 +8,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -52,9 +51,9 @@ class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayL
 
     fun startTimer(emitter: ObservableEmitter<TickInfo>) {
 
-        // Start the initial tick to notify the activity the timer's starting session
+        // Start the initial tick to firstTick the activity the timer's starting session
         // (The activity should know if we are starting from Warmup or Work for the view animation)
-        emitter.onNext(TickInfo(curSession.get(), getCurrentSessionTime(curSession.get()).toLong(), true))
+        emitter.onNext(TickInfo(curSession.get(), getCurrentSessionTime(curSession.get()).toLong(), true, true))
 
         disposable = Observable.interval(1000, TimeUnit.MILLISECONDS)
                 .startWith(0L)
@@ -97,7 +96,8 @@ class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayL
                             roundTotalSecs = getCurrentSessionTime(session).toLong(),
                             roundCount = getRoundCount(session),
                             totalRounds = totalRounds,
-                            switched = if (completed.get()) false else switched.get()))
+                            switched = if (completed.get()) false else switched.get(),
+                            firstTick = false))
 
                     // completing the timer after sending the last tick
                     if (completed.get()) {

@@ -13,7 +13,10 @@ import io.incepted.ultrafittimer.db.AppDatabase
 import io.incepted.ultrafittimer.db.dao.PresetDao
 import io.incepted.ultrafittimer.db.dao.TimerSettingDao
 import io.incepted.ultrafittimer.db.dao.WorkoutHistoryDao
+import io.incepted.ultrafittimer.timer.BeepHelper
+import io.incepted.ultrafittimer.timer.SoundResSwitcher
 import io.incepted.ultrafittimer.util.NotificationUtil
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module(includes = [ViewModelModule::class])
@@ -69,5 +72,15 @@ class AppModule {
     fun provideNotificationManager(app: Application): NotificationManager {
         return app.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
+
+    @Singleton
+    @Provides
+    fun provideBeepHelper(app: Application,
+                          sharedPref: SharedPreferences)
+            : BeepHelper {
+        return BeepHelper(app.applicationContext, sharedPref)
+
+    }
+
 
 }

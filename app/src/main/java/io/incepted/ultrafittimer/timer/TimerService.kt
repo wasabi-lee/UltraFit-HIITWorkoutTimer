@@ -24,7 +24,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.util.*
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class TimerService : Service(),
@@ -56,6 +55,8 @@ class TimerService : Service(),
     @Inject
     lateinit var notificationUtil: NotificationUtil
 
+    lateinit var beepHelper: BeepHelper
+
     private lateinit var mReceiver: TimerActionReceiver
 
     private val binder = TimerServiceBinder()
@@ -74,7 +75,6 @@ class TimerService : Service(),
     private var timer: TimerSetting? = null
 
     private var timerHelper: TimerHelper? = null
-
 
 
     // Timer is completed normally (not by stopping or any interruption)
@@ -104,6 +104,7 @@ class TimerService : Service(),
     override fun onCreate() {
         super.onCreate()
         Timber.d("Service created")
+
         (application as UltraFitApp).getAppComponent().inject(this)
 
         cueSeconds = sharedPref.getString(resources.getString(R.string.pref_key_cue_seconds),
@@ -113,6 +114,8 @@ class TimerService : Service(),
         startForeground(TimerCommunication.TIMER_NOTIFICATION_ID, notif)
 
         mReceiver = TimerActionReceiver()
+        beepHelper = BeepHelper(this, sharedPref)
+        beepHelper.init()
 
         this.registerReceiver(mReceiver, getTimerActionIntentFilter())
 
@@ -176,19 +179,25 @@ class TimerService : Service(),
                             lastTick = it
                             sendTick(it)
 
-                            if (it.switched) {
-                                sendSessionSwitch(it)
+                            when {
+                                it.switched -> {
+                                    printThis(it, "first")
+                                    sendSessionSwitch(it)
+                                    if (!it.firstTick) beepHelper.requestFire(BeepHelper.FLAG_BEEP)
+                                }
+                                it.remianingSecs in 1..cueSeconds -> {
+                                    printThis(it, "second")
+                                    beepHelper.requestFire(BeepHelper.FLAG_CUE)
+                                }
                             }
 
-                            if (it.remianingSecs <= cueSeconds) {
-                                // fire tick
-                            }
 
                             updateNotification(it)
                         },
                         onComplete = {
                             timerCompleted = true
                             timerTerminated = true
+                            beepHelper.requestFire(BeepHelper.FLAG_FINISH)
                             sendCompleted()
                             terminateTimer()
                             completeNotification()
@@ -196,6 +205,13 @@ class TimerService : Service(),
                         onError = { it.printStackTrace() }
                 )
 
+    }
+
+    private fun printThis(tickInfo: TickInfo?, block: String) {
+        Timber.d("""remaining: ${tickInfo?.remianingSecs}
+            switched: ${tickInfo?.switched}
+            currentBlock: $block
+        """.trimMargin())
     }
 
 
@@ -329,6 +345,7 @@ class TimerService : Service(),
 
     private fun finish() {
         Timber.d("Finish called")
+        beepHelper.release()
         SERVICE_STARTED = false
         stopSelf()
     }
