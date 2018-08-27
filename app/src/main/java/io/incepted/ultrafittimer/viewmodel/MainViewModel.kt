@@ -202,6 +202,7 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
 
     private fun toTimerActivity(id: Long) {
+
         val bundle = Bundle()
         bundle.putBoolean(TimerActivity.EXTRA_KEY_FROM_PRESET, fromPreset)
         bundle.putLong(TimerActivity.EXTRA_KEY_ID, id)
@@ -210,6 +211,7 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
 
     private fun finishActivity() {
+        finishActivity.value = null
     }
 
 

@@ -8,6 +8,7 @@ import android.view.animation.LinearInterpolator
 import com.gelitenight.waveview.library.WaveView
 import io.incepted.ultrafittimer.timer.TickInfo
 import io.incepted.ultrafittimer.util.WorkoutSession
+import timber.log.Timber
 
 
 class WaveHelper(private val mWaveView: WaveView) {
@@ -18,9 +19,21 @@ class WaveHelper(private val mWaveView: WaveView) {
 
     private var pausedTime: Long = 0L
 
+
+    private var lastWaterLevel = 0f
+    private var currentMaxWaterLevel = 0f
+    private var currentSession = 0
+    private var paused = false
+
+
     init {
+        initState()
         initAnimation()
     }
+
+
+
+
 
     fun start() {
         mWaveView.isShowWave = true
@@ -28,6 +41,13 @@ class WaveHelper(private val mWaveView: WaveView) {
             mAnimatorSet!!.start()
         }
     }
+
+
+    private fun initState() {
+        mWaveView.waterLevelRatio = 0.0f
+        mWaveView.setShapeType(WaveView.ShapeType.SQUARE)
+    }
+
 
     private fun initAnimation() {
         val animators = arrayListOf<Animator>()
@@ -60,35 +80,65 @@ class WaveHelper(private val mWaveView: WaveView) {
 
         val session = tickInfo.session
         val max = tickInfo.roundTotalSecs
+        liftWave(session, max, 0, false)
+
+    }
+
+
+    private fun liftWave(session: Int, max: Long, progress: Long, paused: Boolean) {
+
+        val startingWaterLevel = progress.toFloat() / max.toFloat()
+        val duration = (max - progress) * 1000
+
+        mWaveView.waterLevelRatio = startingWaterLevel
 
         mWaveView.setWaveColor(WorkoutSession.getSessionColor(mWaveView.context, session),
                 WorkoutSession.getSecondarySessionColor(mWaveView.context, session))
 
         waterLevelAnim = ObjectAnimator.ofFloat(
-                mWaveView, "waterLevelRatio", 0f, 1f)
+                mWaveView, "waterLevelRatio", startingWaterLevel, 1f)
 
-        waterLevelAnim?.duration = max * 1000
+        waterLevelAnim?.duration = duration
         waterLevelAnim?.interpolator = LinearInterpolator()
-        waterLevelAnim?.start()
 
+        if (!paused)
+            waterLevelAnim?.start()
+
+
+    }
+
+
+    fun setAnimState(tickInfo: TickInfo?, paused: Boolean?) {
+        if (tickInfo != null && paused != null) {
+
+            val session = tickInfo.session
+            val max = tickInfo.roundTotalSecs
+            val progress = (max - tickInfo.remianingSecs)
+
+            liftWave(session, max, progress, paused)
+        }
     }
 
 
     fun resumeWave() {
         waterLevelAnim?.start()
         waterLevelAnim?.currentPlayTime = pausedTime
+        paused = false
     }
 
     fun pauseWave() {
         pausedTime = waterLevelAnim?.currentPlayTime ?: 0L
         waterLevelAnim?.cancel()
+        paused = true
+        lastWaterLevel = mWaveView.waterLevelRatio
     }
 
 
     fun cancel() {
-        if (mAnimatorSet != null) {
+        if (mAnimatorSet != null && waterLevelAnim != null) {
             //            mAnimatorSet.cancel();
             mAnimatorSet!!.end()
+            pauseWave()
         }
     }
 }

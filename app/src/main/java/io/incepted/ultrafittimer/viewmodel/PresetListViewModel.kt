@@ -12,9 +12,11 @@ import android.view.View
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.activity.PresetListActivity
 import io.incepted.ultrafittimer.activity.SummaryActivity
+import io.incepted.ultrafittimer.activity.TimerActivity
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.source.LocalDataSource
+import io.incepted.ultrafittimer.util.SingleLiveEvent
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,13 +24,17 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
     : AndroidViewModel(appContext), LocalDataSource.OnPresetsLoadedListener, LocalDataSource.OnTimersForPresetsLoadedListener,
         LocalDataSource.OnPresetUpdateListener, LocalDataSource.OnPresetDeletedListener {
 
-    val snackbarResource = MutableLiveData<Int>()
+    val snackbarResource = SingleLiveEvent<Int>()
 
-    val presetActionEvent = MutableLiveData<Int>()
+    val presetActionEvent = SingleLiveEvent<Int>()
 
-    val openEditScreen = MutableLiveData<Long>()
+    val openEditScreen = SingleLiveEvent<Long>()
 
-    val openSummaryActivity = MutableLiveData<Bundle>()
+    val openSummaryActivity = SingleLiveEvent<Bundle>()
+
+    val finishActivity = SingleLiveEvent<Void>()
+
+    val openTimerActivity = SingleLiveEvent<Bundle>()
 
     var presets = ObservableArrayList<Preset>()
 
@@ -80,6 +86,22 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
     }
 
     fun playPreset(presetPosition: Int) {
+        val bundle = Bundle()
+        bundle.putBoolean(TimerActivity.EXTRA_KEY_FROM_PRESET, true)
+        bundle.putLong(TimerActivity.EXTRA_KEY_ID, presets[presetPosition].id ?: return) // TODO Handle error
+        openTimerActivity.value = bundle
+    }
+
+    fun playPreset(presetId: Long?) {
+        val bundle = Bundle()
+        bundle.putBoolean(TimerActivity.EXTRA_KEY_FROM_PRESET, true)
+        bundle.putLong(TimerActivity.EXTRA_KEY_ID, presetId ?: return) // TODO Handle error
+        openTimerActivity.value = bundle
+    }
+
+
+    fun finishActivity() {
+        finishActivity.value = null
     }
 
     fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

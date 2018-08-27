@@ -5,11 +5,13 @@ import android.content.Intent
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.incepted.ultrafittimer.timer.TickInfo
+import io.incepted.ultrafittimer.timer.TimerCommunication
 import io.incepted.ultrafittimer.timer.TimerService
 import io.incepted.ultrafittimer.util.SingleLiveEvent
 import io.incepted.ultrafittimer.util.TimerUtil
@@ -33,6 +35,7 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     val completeTimer = SingleLiveEvent<Void>()
 
+    // Default MutableLiveData because we need to keep the
     val finishActivity = SingleLiveEvent<Void>()
 
     val animateWave = SingleLiveEvent<TickInfo>()
@@ -54,6 +57,8 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     val locked = ObservableBoolean(false)
 
+    var completedWhileBound = false
+
 
     fun start() {
         Timber.d("Started")
@@ -66,20 +71,20 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
     fun handleBroadcastResult(intent: Intent?) {
         if (intent == null) return
         when (intent.action) {
-            TimerService.BR_ACTION_TIMER_TICK_RESULT -> updateTime(intent)
-            TimerService.BR_ACTION_TIMER_COMPLETED_RESULT -> completeTimer.value = null
-            TimerService.BR_ACTION_TIMER_RESUME_PAUSE_STATE -> {
-                val state = intent.getBooleanExtra(TimerService.BR_EXTRA_KEY_RESUME_PAUSE_STATE, false)
+            TimerCommunication.BR_ACTION_TIMER_TICK_RESULT -> updateTime(intent)
+            TimerCommunication.BR_ACTION_TIMER_COMPLETED_RESULT -> completeTimer.value = null
+            TimerCommunication.BR_ACTION_TIMER_RESUME_PAUSE_STATE -> {
+                val state = intent.getBooleanExtra(TimerCommunication.BR_EXTRA_KEY_RESUME_PAUSE_STATE, false)
                 paused.set(state)
                 resumePauseWave.value = state
             }
-            TimerService.BR_ACTION_TIMER_SESSION_SWITCH -> {
-                val sess = intent.getIntExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_SESSION, 0)
-                val roundTotal = intent.getLongExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, 0L)
+            TimerCommunication.BR_ACTION_TIMER_SESSION_SWITCH -> {
+                val sess = intent.getIntExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_SESSION, 0)
+                val roundTotal = intent.getLongExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, 0L)
                 animateWave.value = TickInfo(sess, roundTotal)
             }
-            TimerService.BR_ACTION_TIMER_TERMINATED -> finishActivity.value = null
-            TimerService.BR_ACTION_TIMER_ERROR -> handleError()
+            TimerCommunication.BR_ACTION_TIMER_TERMINATED -> finishActivity.value = null
+            TimerCommunication.BR_ACTION_TIMER_ERROR -> handleError()
         }
     }
 
@@ -112,17 +117,16 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     private fun handleError() {
         snackbarResource.value = R.string.error_unexpected
-        exitTimer.value = null
+        finishActivity.value = null
     }
 
 
     private fun updateTime(intent: Intent) {
-        val sess = intent.getIntExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_SESSION, 0)
-        val name = intent.getStringExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_NAME) ?: ""
-        val remaining = intent.getLongExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_REMAINING_SECS, 0L)
-        val roundTotal = intent.getLongExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, 0L)
-        val round = intent.getIntExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_ROUND_COUNT, 0)
-        val totalRounds = intent.getIntExtra(TimerService.BR_EXTRA_KEY_TICK_SESSION_TOTAL_ROUND, 0)
+        val sess = intent.getIntExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_SESSION, 0)
+        val name = intent.getStringExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_NAME) ?: ""
+        val remaining = intent.getLongExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_REMAINING_SECS, 0L)
+        val round = intent.getIntExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_ROUND_COUNT, 0)
+        val totalRounds = intent.getIntExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_TOTAL_ROUND, 0)
 
         val roundStr = getRoundDisplayValue(sess, round, totalRounds)
 
@@ -130,8 +134,8 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
         remainingTime.set(TimerUtil.secondsToTimeString(remaining.toInt()))
         roundCount.set(roundStr)
 
-
     }
+
 
     private fun getRoundDisplayValue(session: Int, currentRound: Int, totalRounds: Int): String {
         return when (session) {

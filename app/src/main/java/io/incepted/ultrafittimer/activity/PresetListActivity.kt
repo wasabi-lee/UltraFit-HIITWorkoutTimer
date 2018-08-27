@@ -71,16 +71,24 @@ class PresetListActivity : AppCompatActivity() {
         })
 
         presetViewModel.openEditScreen.observe(this, Observer {
-            if (it == null) return@Observer
-                val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra(MainActivity.EXTRA_KEY_EDIT_MODE, true)
-                intent.putExtra(MainActivity.EXTRA_KEY_EDIT_PRESET_ID, it)
-                startActivityForResult(intent, RC_PRESET_EDITED)
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra(MainActivity.EXTRA_KEY_EDIT_MODE, true)
+            intent.putExtra(MainActivity.EXTRA_KEY_EDIT_PRESET_ID, it)
+            startActivityForResult(intent, RC_PRESET_EDITED)
         })
 
         presetViewModel.openSummaryActivity.observe(this, Observer {
-            if (it == null) return@Observer
             val intent = Intent(this, SummaryActivity::class.java)
+            intent.putExtras(it)
+            startActivity(intent)
+        })
+
+        presetViewModel.finishActivity.observe(this, Observer {
+            finish()
+        })
+
+        presetViewModel.openTimerActivity.observe(this, Observer {
+            val intent = Intent(this, TimerActivity::class.java)
             intent.putExtras(it)
             startActivity(intent)
         })

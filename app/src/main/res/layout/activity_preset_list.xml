@@ -90,6 +90,7 @@
                 android:paddingRight="@dimen/spacing_xlarge"
                 android:paddingStart="@dimen/spacing_xlarge"
                 android:paddingTop="@dimen/spacing_xsmall"
+                android:onClick="@{() -> viewmodel.finishActivity()}"
                 android:text="@string/create_a_preset"
                 android:textSize="16sp" />
 

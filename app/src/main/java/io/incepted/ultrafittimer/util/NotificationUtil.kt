@@ -12,6 +12,7 @@ import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import io.incepted.ultrafittimer.R
+import io.incepted.ultrafittimer.activity.MainActivity
 import io.incepted.ultrafittimer.activity.TimerActivity
 import io.incepted.ultrafittimer.timer.TickInfo
 import io.incepted.ultrafittimer.timer.TimerService
@@ -89,11 +90,17 @@ class NotificationUtil(val context: Context) : ContextWrapper(context) {
 
     fun getCompleteNotification(): Notification {
 
-        workoutNotifBuilder
-                .setContentTitle("Workout Completed")
-                .setContentText("Workout Completed")
+        val contentIntent = PendingIntent.getActivity(context, 1, Intent(context, TimerActivity::class.java), 0)
 
-        return workoutNotifBuilder.build()
+        val completeNotifBuilder = NotificationCompat.Builder(context, CHANNEL_ID_TIMER)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setContentTitle("All Done!")
+                .setContentText("Workout Complete")
+                .setContentIntent(contentIntent)
+
+        return completeNotifBuilder.build()
     }
 
 

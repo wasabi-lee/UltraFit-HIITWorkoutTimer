@@ -6,17 +6,22 @@
 
         <import type="android.view.View" />
 
+
         <import type="io.incepted.ultrafittimer.util.PresetUtil" />
 
         <variable
             name="preset"
             type="io.incepted.ultrafittimer.db.model.Preset" />
+
+        <variable
+            name="viewmodel"
+            type="io.incepted.ultrafittimer.viewmodel.PresetListViewModel" />
+
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/preset_item_container"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/preset_item_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/spacing_xxsmall"
@@ -26,6 +31,7 @@
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginTop="@dimen/spacing_xxsmall"
         android:background="?attr/card_background_drawable"
+        android:onClick="@{() -> viewmodel.playPreset(preset.id)}"
         android:padding="@dimen/spacing_normal">
 
         <TextView

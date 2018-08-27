@@ -1,21 +1,19 @@
 package io.incepted.ultrafittimer.activity
 
 import android.content.*
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.gelitenight.waveview.library.WaveView
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.ActivityTimerBinding
 import io.incepted.ultrafittimer.fragment.TimerExitDialogFragment
+import io.incepted.ultrafittimer.timer.TimerCommunication
 import io.incepted.ultrafittimer.timer.TimerService
 import io.incepted.ultrafittimer.util.SnackbarUtil
 import io.incepted.ultrafittimer.view.WaveHelper
@@ -42,19 +40,18 @@ class TimerActivity : AppCompatActivity() {
 
     private var timerService: TimerService? = null
 
-
     private var timerIntent: Intent? = null
-
-    private var configChanged = false
 
     private var serviceBound = false
 
-    private var serviceStarted = false
-
-    lateinit var receiver: BroadcastReceiver
+    private lateinit var receiver: BroadcastReceiver
 
     lateinit var waveHelper: WaveHelper
 
+
+
+
+    // ---------------------------------------------- Lifecycle --------------------------------------
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,58 +61,76 @@ class TimerActivity : AppCompatActivity() {
                 .get(TimerViewModel::class.java)
         binding.viewmodel = timerViewModel
 
+
         unpackExtra()
 
-        waveHelper = WaveHelper(timer_wave)
-        timer_wave.waterLevelRatio = 0.0f
-        timer_wave.setShapeType(WaveView.ShapeType.SQUARE)
-
         if (savedInstanceState == null) timerViewModel.start()
-        else configChanged = true
 
+        waveHelper = WaveHelper(timer_wave)
         initReceiver()
-
         initObservers()
     }
 
 
     override fun onStart() {
         super.onStart()
-        Timber.d("trker: onStart")
-
         initService()
-
         registerLocalBroadcastReceiver()
     }
 
+
     override fun onResume() {
         super.onResume()
-        waveHelper.start()
+        waveHelper.start() // init wave anim
     }
+
 
     override fun onPause() {
         super.onPause()
-        waveHelper.cancel()
+        waveHelper.cancel() // cancel wave anim
     }
 
-    private fun registerLocalBroadcastReceiver() {
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(TimerService.BR_ACTION_TIMER_TICK_RESULT)
-        intentFilter.addAction(TimerService.BR_ACTION_TIMER_COMPLETED_RESULT)
-        intentFilter.addAction(TimerService.BR_ACTION_TIMER_RESUME_PAUSE_STATE)
-        intentFilter.addAction(TimerService.BR_ACTION_TIMER_TERMINATED)
-        intentFilter.addAction(TimerService.BR_ACTION_TIMER_SESSION_SWITCH)
-        intentFilter.addAction(TimerService.BR_ACTION_TIMER_ERROR)
-        LocalBroadcastManager
-                .getInstance(this)
-                .registerReceiver(receiver, intentFilter)
+
+    override fun onStop() {
+        super.onStop()
+        if (serviceBound) {
+            unbindService(serviceConn)
+            serviceBound = false
+        }
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
     }
+
+
+    override fun onDestroy() {
+        if (isFinishing)
+            finishService()
+        super.onDestroy()
+    }
+
+
+
+    // ---------------------------------------------- Initialization --------------------------------------
 
 
     private fun unpackExtra() {
         fromPreset = intent.extras?.getBoolean(EXTRA_KEY_FROM_PRESET) ?: fromPreset
         targetId = intent.extras?.getLong(EXTRA_KEY_ID) ?: targetId
     }
+
+
+    private fun registerLocalBroadcastReceiver() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(TimerCommunication.BR_ACTION_TIMER_TICK_RESULT)
+        intentFilter.addAction(TimerCommunication.BR_ACTION_TIMER_COMPLETED_RESULT)
+        intentFilter.addAction(TimerCommunication.BR_ACTION_TIMER_RESUME_PAUSE_STATE)
+        intentFilter.addAction(TimerCommunication.BR_ACTION_TIMER_TERMINATED)
+        intentFilter.addAction(TimerCommunication.BR_ACTION_TIMER_SESSION_SWITCH)
+        intentFilter.addAction(TimerCommunication.BR_ACTION_TIMER_ERROR)
+        LocalBroadcastManager
+                .getInstance(this)
+                .registerReceiver(receiver, intentFilter)
+    }
+
 
     private fun initReceiver() {
         receiver = object : BroadcastReceiver() {
@@ -141,11 +156,12 @@ class TimerActivity : AppCompatActivity() {
         })
 
         timerViewModel.completeTimer.observe(this, Observer {
+            timerViewModel.completedWhileBound = true
             Toast.makeText(this, "Workout Completed", Toast.LENGTH_SHORT).show()
         })
 
         timerViewModel.finishActivity.observe(this, Observer {
-            finish()
+            wrapUpActivity()
         })
 
         timerViewModel.animateWave.observe(this, Observer {
@@ -159,13 +175,36 @@ class TimerActivity : AppCompatActivity() {
     }
 
 
-    fun exitTimer() {
-        timerService?.terminateTimer()
-        finish()
+    private fun initService() {
+
+        // Only init Service when the timer hasn't been executed.
+
+        val bundle = Bundle()
+        bundle.putBoolean(TimerCommunication.BUNDLE_KEY_IS_PRESET, fromPreset)
+        bundle.putLong(TimerCommunication.BUNDLE_KEY_TARGET_ID, targetId)
+
+        if (timerIntent == null) {
+            timerIntent = Intent(this, TimerService::class.java)
+            timerIntent?.putExtras(bundle)
+        }
+
+        bindService(timerIntent, serviceConn, Context.BIND_AUTO_CREATE)
+
+        if (!TimerService.SERVICE_STARTED) {
+            Timber.d("Starting service")
+            startService(timerIntent)
+        }
     }
 
-    private fun finishService() {
-        timerService?.finish()
+
+
+    // ---------------------------------------------- User Interaction --------------------------------------
+
+
+    override fun onBackPressed() {
+        if (timerService?.timerCompleted == false) showWarningDialog()
+        else wrapUpActivity()
+
     }
 
 
@@ -175,36 +214,29 @@ class TimerActivity : AppCompatActivity() {
     }
 
 
-    override fun onBackPressed() {
-        if (timerService?.timerCompleted == false) showWarningDialog()
-        else {
-            finishService()
-            this.finish()
-        }
+    private fun finishService() {
+        TimerService.STOP_SELF = true
+        TimerService.SERVICE_STARTED = false
+        stopService(timerIntent)
     }
 
 
-    private fun initService() {
-        // Check if the param bundle and viewmodel bundle are all null.
-        // If true, return. If false, init service with the bundle.
-        val bundle = Bundle()
-        bundle.putBoolean(TimerService.BUNDLE_KEY_IS_PRESET, fromPreset)
-        bundle.putLong(TimerService.BUNDLE_KEY_TARGET_ID, targetId)
-
-        if (timerIntent == null) {
-            timerIntent = Intent(this, TimerService::class.java)
-            timerIntent?.putExtras(bundle)
-        }
-
-        bindService(timerIntent, serviceConn, Context.BIND_AUTO_CREATE)
-
-        if (!configChanged && !TimerService.SERVICE_STARTED) {
-            serviceStarted = true
-            Timber.d("Start service!")
-            startService(timerIntent)
-        }
-
+    fun exitTimer() {
+        // let service finish itself after logging data to DB
+        TimerService.STOP_SELF = true
+        timerService?.terminateTimer()
+        finish()
     }
+
+
+    private fun wrapUpActivity() {
+        finishService()
+        this.finish()
+    }
+
+
+
+    // ---------------------------------------------- Service Configuration --------------------------------------
 
 
     private val serviceConn = object : ServiceConnection {
@@ -213,14 +245,35 @@ class TimerActivity : AppCompatActivity() {
             serviceBound = false
         }
 
-        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+        override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
             Timber.d("trker: Service connected")
-            val binder = p1 as TimerService.TimerServiceBinder
-            timerService = binder.getService()
-            serviceBound = true
-
-            timerViewModel.setInitialValues(timerService?.lastTick, timerService?.isTimerPaused())
+            setupBoundService(binder)
+            checkIfTimerTerminated()
+            restoreUIState()
         }
+    }
+
+
+    private fun setupBoundService(binder: IBinder?) {
+        val b = binder as TimerService.TimerServiceBinder
+        timerService = b.getService()
+        serviceBound = true
+        TimerService.STOP_SELF = false
+    }
+
+
+    private fun checkIfTimerTerminated() {
+        // Finish service if the timer was already completed while the activity was not bound.
+        if (timerService?.timerTerminated == true && !timerViewModel.completedWhileBound)
+            wrapUpActivity()
+
+    }
+
+
+    private fun restoreUIState() {
+        timerViewModel.setInitialValues(timerService?.lastTick, timerService?.isTimerPaused())
+        waveHelper.setAnimState(timerService?.lastTick, timerService?.isTimerPaused())
+
     }
 
 
@@ -228,14 +281,5 @@ class TimerActivity : AppCompatActivity() {
         SnackbarUtil.showSnackBar(findViewById(android.R.id.content), s)
     }
 
-
-    override fun onStop() {
-        super.onStop()
-        if (serviceBound) {
-            unbindService(serviceConn)
-            serviceBound = false
-        }
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
-    }
 
 }

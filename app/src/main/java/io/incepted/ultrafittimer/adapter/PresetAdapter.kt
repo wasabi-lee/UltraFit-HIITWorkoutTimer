@@ -32,6 +32,7 @@ class PresetAdapter(var data: MutableList<Preset>, val viewModel: PresetListView
             true
         }
         itemBinding.preset = data[position]
+        itemBinding.viewmodel = viewModel
         itemBinding.executePendingBindings()
     }
 
