@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import io.incepted.ultrafittimer.R
+import timber.log.Timber
 
 class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : SoundPool.OnLoadCompleteListener {
 
@@ -45,6 +46,7 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
 
 
     init {
+        Timber.d("INIT!")
         initSoundPool()
         getSettingValues(sharedPref)
     }
@@ -95,7 +97,8 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
             playBeep(soundIds[flag])
         } else {
             soundIds[flag] = soundPool?.load(context,
-                    if (flag == FLAG_BEEP) beepSoundRes else cueSoundRes, 1) ?: 0
+                    if (flag == FLAG_BEEP || flag == FLAG_FINISH) beepSoundRes
+                    else cueSoundRes, 1) ?: 0
         }
     }
 

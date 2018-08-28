@@ -109,7 +109,6 @@ class TimerService : Service(),
         super.onCreate()
         Timber.d("Service created")
 
-
         cueSeconds = sharedPref.getString(resources.getString(R.string.pref_key_cue_seconds),
                 cueSeconds.toString())?.toInt() ?: cueSeconds
 
@@ -182,14 +181,11 @@ class TimerService : Service(),
 
                             when {
                                 it.switched -> {
-                                    printThis(it, "first")
                                     sendSessionSwitch(it)
                                     if (!it.firstTick) beepHelper.requestFire(BeepHelper.FLAG_BEEP)
                                 }
-                                it.remianingSecs in 1..cueSeconds -> {
-                                    printThis(it, "second")
+                                it.remianingSecs in 1..cueSeconds ->
                                     beepHelper.requestFire(BeepHelper.FLAG_CUE)
-                                }
                             }
 
 
@@ -208,12 +204,6 @@ class TimerService : Service(),
 
     }
 
-    private fun printThis(tickInfo: TickInfo?, block: String) {
-        Timber.d("""remaining: ${tickInfo?.remianingSecs}
-            switched: ${tickInfo?.switched}
-            currentBlock: $block
-        """.trimMargin())
-    }
 
 
     // ------------------------------------------ Update UI -----------------------------------------

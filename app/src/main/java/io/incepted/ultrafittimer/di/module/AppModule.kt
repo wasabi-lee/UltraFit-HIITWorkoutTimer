@@ -57,30 +57,8 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideNotificationUtil(app: Application): NotificationUtil {
-        return NotificationUtil(app.applicationContext)
-    }
-
-    @Singleton
-    @Provides
     fun provideLocalBroadcastManager(app: Application): LocalBroadcastManager {
         return LocalBroadcastManager.getInstance(app.applicationContext)
     }
-
-    @Singleton
-    @Provides
-    fun provideNotificationManager(app: Application): NotificationManager {
-        return app.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    }
-
-    @Singleton
-    @Provides
-    fun provideBeepHelper(app: Application,
-                          sharedPref: SharedPreferences)
-            : BeepHelper {
-        return BeepHelper(app.applicationContext, sharedPref)
-
-    }
-
 
 }

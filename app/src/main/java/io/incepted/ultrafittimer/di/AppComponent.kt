@@ -31,5 +31,4 @@ interface AppComponent {
 
     fun inject(ultraFitApp: UltraFitApp)
     fun inject(prefCategory: CustomPrefCategory)
-    fun inject(timerService: TimerService)
 }
