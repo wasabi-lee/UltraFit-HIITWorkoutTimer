@@ -7,6 +7,7 @@ import android.content.*
 import android.os.Binder
 import android.os.IBinder
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import dagger.android.AndroidInjection
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.UltraFitApp
 import io.incepted.ultrafittimer.db.DbRepository
@@ -55,6 +56,7 @@ class TimerService : Service(),
     @Inject
     lateinit var notificationUtil: NotificationUtil
 
+    @Inject
     lateinit var beepHelper: BeepHelper
 
     private lateinit var mReceiver: TimerActionReceiver
@@ -102,10 +104,11 @@ class TimerService : Service(),
 
 
     override fun onCreate() {
+        AndroidInjection.inject(this)
+
         super.onCreate()
         Timber.d("Service created")
 
-        (application as UltraFitApp).getAppComponent().inject(this)
 
         cueSeconds = sharedPref.getString(resources.getString(R.string.pref_key_cue_seconds),
                 cueSeconds.toString())?.toInt() ?: cueSeconds
@@ -114,8 +117,6 @@ class TimerService : Service(),
         startForeground(TimerCommunication.TIMER_NOTIFICATION_ID, notif)
 
         mReceiver = TimerActionReceiver()
-        beepHelper = BeepHelper(this, sharedPref)
-        beepHelper.init()
 
         this.registerReceiver(mReceiver, getTimerActionIntentFilter())
 

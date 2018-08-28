@@ -44,7 +44,7 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
     private var requestedFlag = FLAG_BEEP
 
 
-    fun init() {
+    init {
         initSoundPool()
         getSettingValues(sharedPref)
     }
