@@ -3,6 +3,7 @@
     package="io.incepted.ultrafittimer">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".UltraFitApp"
         android:allowBackup="true"
@@ -27,16 +28,21 @@
 
         <activity android:name=".activity.PresetListActivity" />
         <activity android:name=".activity.CustomizeActivity" />
-        <activity android:name=".activity.TimerActivity"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name=".activity.TimerActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".activity.SummaryActivity" />
-        <activity android:name=".activity.SettingsActivity"/>
+        <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.BaseActivity" />
 
-        <service android:name=".timer.TimerService"
-            android:exported="false"/>
+        <service
+            android:name=".timer.TimerService"
+            android:exported="false" />
 
-
+        <activity
+            android:name=".activity.SoundSettingActivity"
+            android:label="@string/title_activity_sound_setting"
+            android:theme="@style/AppTheme_light"></activity>
     </application>
 
 </manifest>

@@ -1,35 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <io.incepted.ultrafittimer.view.CustomPrefCategory android:title="Theme">
+    <!--<io.incepted.ultrafittimer.view.CustomPrefCategory android:title="Theme">-->
 
-        <androidx.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="@string/pref_key_theme"
-            android:title="Enable Dark Theme" />
+        <!--<androidx.preference.SwitchPreferenceCompat-->
+            <!--android:defaultValue="false"-->
+            <!--android:key="@string/pref_key_theme"-->
+            <!--android:title="Enable Dark Theme" />-->
 
-    </io.incepted.ultrafittimer.view.CustomPrefCategory>
+    <!--</io.incepted.ultrafittimer.view.CustomPrefCategory>-->
 
 
     <io.incepted.ultrafittimer.view.CustomPrefCategory android:title="Sound">
 
-        <androidx.preference.ListPreference
+        <androidx.preference.Preference
             android:defaultValue="1"
             android:dialogTitle="Beep Sound"
-            android:entries="@array/pref_list_beep_sound"
-            android:entryValues="@array/pref_list_beep_sound_value"
             android:key="pref_key_beep_sound"
-            android:summary="%s"
             android:title="Beep Sound" />
 
-        <androidx.preference.ListPreference
+        <androidx.preference.Preference
             android:defaultValue="1"
             android:dialogTitle="Cue Sound"
-            android:entries="@array/pref_list_cue_sound"
-            android:entryValues="@array/pref_list_cue_sound_value"
             android:key="pref_key_cue_sound"
-            android:summary="%s"
-            android:title="Cue Second" />
+            android:title="Cue Sound" />
 
         <androidx.preference.ListPreference
             android:defaultValue="3"

@@ -39,10 +39,11 @@ class CustomPrefCategory(context: Context, attributeSet: AttributeSet?, defStyle
 
     override fun onBindViewHolder(holder: PreferenceViewHolder?) {
         super.onBindViewHolder(holder)
-        val textColor: Int = ContextCompat
-                .getColor(context,
-                        if(darkMode) R.color.colorAccent_header_dark else R.color.colorAccent_header_light)
-        holder?.itemView?.findViewById<TextView>(android.R.id.title)?.setTextColor(textColor)
+//        val textColor: Int = ContextCompat
+//                .getColor(context,
+//                        if(darkMode) R.color.colorAccent_header_dark else R.color.colorAccent_header_light)
+        holder?.itemView?.findViewById<TextView>(android.R.id.title)?.
+                setTextColor(ContextCompat.getColor(context, R.color.colorAccent_header_light))
     }
 
 

@@ -57,6 +57,10 @@
     <string name="pref_key_cue_seconds">pref_key_cue_seconds</string>
     <string name="pref_key_vibration">pref_key_vibration</string>
     <string name="pref_key_increment_seconds">pref_key_increment_seconds</string>
+    <string name="title_activity_sound_setting">SoundSettingActivity</string>
+
+    <string name="sound_setting_toolbar_header_beep">Beep Sound</string>
+    <string name="sound_setting_toolbar_header_cue">Cue Sound</string>
 
 
 </resources>

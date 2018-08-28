@@ -33,4 +33,5 @@
     <dimen name="bookmark_dot_size">7dp</dimen>
 
     <dimen name="bottomsheet_peek_height">30dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

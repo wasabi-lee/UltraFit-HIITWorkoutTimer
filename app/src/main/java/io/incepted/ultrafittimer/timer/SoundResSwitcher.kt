@@ -4,8 +4,39 @@ import io.incepted.ultrafittimer.R
 
 object SoundResSwitcher {
 
-    fun beepSwitcher(beepTheme: Int): Int {
-        return when (beepTheme) {
+
+    fun beepNameSwitcher(beepVal: Int): String {
+        return when (beepVal) {
+            1 -> "Basic Beep"
+            2 -> "Whistle"
+            3 -> "Machine Gun"
+            4 -> "Rifle Shot"
+            5 -> "Chime Bell"
+            6 -> "Click"
+            7 -> "Glass Click"
+            8 -> "Home Run"
+            9 -> "Xylophone Beep"
+            else -> "Basic Beep"
+        }
+    }
+
+
+    fun cueNameSwitcher(cueVal: Int): String {
+        return when (cueVal) {
+            1 -> "Basic Cue"
+            2 -> "Camera Click"
+            3 -> "Hint"
+            4 -> "Pistol"
+            5 -> "Shotgun Pump"
+            6 -> "Temple Block"
+            7 -> "Xylophone Tick"
+            else -> "Basic Cue"
+        }
+    }
+
+
+    fun beepResSwitcher(beepVal: Int): Int {
+        return when (beepVal) {
             1 -> R.raw.beep_basic_beep
             2 -> R.raw.beep_whistle
             3 -> R.raw.beep_machine_gun
@@ -19,8 +50,8 @@ object SoundResSwitcher {
         }
     }
 
-    fun cueSwitcher(tickTheme: Int): Int {
-        return when (tickTheme) {
+    fun cueResSwitcher(cueVal: Int): Int {
+        return when (cueVal) {
             1 -> R.raw.tick_basic_tick
             2 -> R.raw.tick_camera_click
             3 -> R.raw.tick_hint

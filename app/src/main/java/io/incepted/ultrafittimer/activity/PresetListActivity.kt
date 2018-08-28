@@ -155,7 +155,7 @@ class PresetListActivity : BaseActivity() {
                 return true
             }
             R.id.menu_preset_list_add -> {
-                //TODO Implement later
+                presetViewModel.finishActivity()
                 return true
             }
         }

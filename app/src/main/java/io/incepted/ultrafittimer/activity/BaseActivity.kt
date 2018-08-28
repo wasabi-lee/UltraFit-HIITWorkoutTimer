@@ -18,9 +18,6 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val isDarkTheme = sharedPref
-                .getBoolean(resources.getString(R.string.pref_key_theme), false)
-        setTheme(if (isDarkTheme) R.style.AppTheme_dark else R.style.AppTheme_light)
     }
 
 }

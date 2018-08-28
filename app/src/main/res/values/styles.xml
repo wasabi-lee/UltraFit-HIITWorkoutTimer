@@ -247,5 +247,9 @@
         <item name="android:textColor">@color/secondaryGray</item>
     </style>
 
+    <style name="AppTheme_light.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme_light.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 
 </resources>

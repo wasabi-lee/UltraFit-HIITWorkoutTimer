@@ -8,7 +8,7 @@ import io.incepted.ultrafittimer.di.module.*
 @Module
 abstract class ActivityBuilder {
 
-    @ContributesAndroidInjector(modules= [BaseActivityModule::class])
+    @ContributesAndroidInjector(modules = [BaseActivityModule::class])
     abstract fun contributeBaseActivity(): BaseActivity
 
     @ContributesAndroidInjector(modules = [MainActivityModule::class])
@@ -29,4 +29,6 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = [TimerActivityModule::class])
     abstract fun contributeTimerActivity(): TimerActivity
 
+    @ContributesAndroidInjector(modules = [SoundSettingActivityModule::class])
+    abstract fun contributeSoundSettingActivity(): SoundSettingActivity
 }

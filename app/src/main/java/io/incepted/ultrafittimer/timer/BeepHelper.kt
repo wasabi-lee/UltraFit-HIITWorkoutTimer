@@ -74,9 +74,9 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
         val cuePrefKey = context.resources.getString(R.string.pref_key_cue_sound)
         val vibrationPrefKey = context.resources.getString(R.string.pref_key_vibration)
 
-        beepSoundRes = SoundResSwitcher.beepSwitcher((sharedPref.getString(beepPrefKey, "0")
+        beepSoundRes = SoundResSwitcher.beepResSwitcher((sharedPref.getString(beepPrefKey, "0")
                 ?: "0").toInt())
-        cueSoundRes = SoundResSwitcher.cueSwitcher((sharedPref.getString(cuePrefKey, "0")
+        cueSoundRes = SoundResSwitcher.cueResSwitcher((sharedPref.getString(cuePrefKey, "0")
                 ?: "0").toInt())
         vibrationEnabled = sharedPref.getBoolean(vibrationPrefKey, false)
     }
