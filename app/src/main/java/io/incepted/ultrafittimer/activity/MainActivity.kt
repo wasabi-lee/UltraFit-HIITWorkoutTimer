@@ -4,6 +4,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
@@ -26,11 +27,12 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
 
     private lateinit var mainViewModel: MainViewModel
 

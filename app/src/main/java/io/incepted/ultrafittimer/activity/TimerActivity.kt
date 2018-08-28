@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_timer.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class TimerActivity : AppCompatActivity() {
+class TimerActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_KEY_FROM_PRESET = "extra_key_from_preset"

@@ -8,6 +8,9 @@ import io.incepted.ultrafittimer.di.module.*
 @Module
 abstract class ActivityBuilder {
 
+    @ContributesAndroidInjector(modules= [BaseActivityModule::class])
+    abstract fun contributeBaseActivity(): BaseActivity
+
     @ContributesAndroidInjector(modules = [MainActivityModule::class])
     abstract fun contributeMainActivity(): MainActivity
 

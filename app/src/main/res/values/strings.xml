@@ -55,6 +55,7 @@
     <string name="pref_key_beep_sound">pref_key_beep_sound</string>
     <string name="pref_key_cue_sound">pref_key_cue_sound</string>
     <string name="pref_key_cue_seconds">pref_key_cue_seconds</string>
+    <string name="pref_key_vibration">pref_key_vibration</string>
     <string name="pref_key_increment_seconds">pref_key_increment_seconds</string>
 
 

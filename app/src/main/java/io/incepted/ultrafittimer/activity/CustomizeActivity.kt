@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_customize.*
 import java.util.*
 import javax.inject.Inject
 
-class CustomizeActivity : AppCompatActivity() {
+class CustomizeActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_KEY_WORKOUT_DETAILS = "extra_key_workout_details"

@@ -18,7 +18,7 @@ import io.incepted.ultrafittimer.viewmodel.PresetListViewModel
 import kotlinx.android.synthetic.main.activity_preset_list.*
 import javax.inject.Inject
 
-class PresetListActivity : AppCompatActivity() {
+class PresetListActivity : BaseActivity() {
 
     @Inject
     lateinit var viewmodelfactory: ViewModelProvider.Factory

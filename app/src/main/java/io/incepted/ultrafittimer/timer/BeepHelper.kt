@@ -8,6 +8,7 @@ import android.media.SoundPool
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import io.incepted.ultrafittimer.R
 
 class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : SoundPool.OnLoadCompleteListener {
 
@@ -21,6 +22,8 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
 
     private val soundIds = IntArray(3)
     private val isLoaded = BooleanArray(3)
+
+    private var vibrationEnabled = true
 
     companion object {
         const val FLAG_BEEP = 0
@@ -43,7 +46,7 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
 
     fun init() {
         initSoundPool()
-        getSoundResources(sharedPref)
+        getSettingValues(sharedPref)
     }
 
     private fun initSoundPool() {
@@ -66,11 +69,16 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
     }
 
 
-    private fun getSoundResources(sharedPref: SharedPreferences) {
-        beepSoundRes = SoundResSwitcher.beepSwitcher((sharedPref.getString("pref_key_beep_sound", "0")
+    private fun getSettingValues(sharedPref: SharedPreferences) {
+        val beepPrefKey = context.resources.getString(R.string.pref_key_beep_sound)
+        val cuePrefKey = context.resources.getString(R.string.pref_key_cue_sound)
+        val vibrationPrefKey = context.resources.getString(R.string.pref_key_vibration)
+
+        beepSoundRes = SoundResSwitcher.beepSwitcher((sharedPref.getString(beepPrefKey, "0")
                 ?: "0").toInt())
-        cueSoundRes = SoundResSwitcher.cueSwitcher((sharedPref.getString("pref_key_cue_sound", "0")
+        cueSoundRes = SoundResSwitcher.cueSwitcher((sharedPref.getString(cuePrefKey, "0")
                 ?: "0").toInt())
+        vibrationEnabled = sharedPref.getBoolean(vibrationPrefKey, false)
     }
 
 
@@ -101,11 +109,10 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
         }
     }
 
+
     private fun playBeep(soundId: Int) {
         soundPool?.play(soundId, 1f, 1f, 1, 0, 1f)
-        vibrateDevice()
-
-
+        if (vibrationEnabled) vibrateDevice()
     }
 
 

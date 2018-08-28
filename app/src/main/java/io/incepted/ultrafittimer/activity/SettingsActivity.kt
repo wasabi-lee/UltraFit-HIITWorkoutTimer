@@ -9,7 +9,7 @@ import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.fragment.SettingsFragment
 import kotlinx.android.synthetic.main.activity_settings.*
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

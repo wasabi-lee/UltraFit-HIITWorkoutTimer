@@ -31,6 +31,7 @@
             android:launchMode="singleTop"/>
         <activity android:name=".activity.SummaryActivity" />
         <activity android:name=".activity.SettingsActivity"/>
+        <activity android:name=".activity.BaseActivity" />
 
         <service android:name=".timer.TimerService"
             android:exported="false"/>

@@ -15,7 +15,7 @@ import io.incepted.ultrafittimer.viewmodel.SummaryViewModel
 import kotlinx.android.synthetic.main.activity_summary.*
 import javax.inject.Inject
 
-class SummaryActivity : AppCompatActivity() {
+class SummaryActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_KEY_SUMMARY_ID = "extra_key_summary_preset_id"
