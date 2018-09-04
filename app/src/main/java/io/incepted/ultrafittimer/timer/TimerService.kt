@@ -218,7 +218,7 @@ class TimerService : Service(),
 
     private fun completeNotification() {
         val notif = notificationUtil.getCompleteNotification()
-        notifManager.notify(TimerCommunication.TIMER_COMPLETE_NOTIFICATION_ID, notif)
+        notifManager.notify(TimerCommunication.TIMER_NOTIFICATION_ID, notif)
     }
 
 

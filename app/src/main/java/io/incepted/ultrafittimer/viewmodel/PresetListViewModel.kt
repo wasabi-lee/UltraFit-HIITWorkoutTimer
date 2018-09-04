@@ -68,7 +68,6 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
 
     fun editItem(presetPosition: Int) {
         openEditScreen.value = presets[presetPosition].id
-        openEditScreen.value = null
     }
 
     fun showPresetDetail(presetPosition: Int) {
@@ -77,7 +76,6 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
         bundle.putLong(SummaryActivity.EXTRA_KEY_SUMMARY_ID, presetId)
         bundle.putBoolean(SummaryActivity.EXTRA_KEY_SUMMARY_IS_PRESET, true)
         openSummaryActivity.value = bundle
-        openSummaryActivity.value = null
     }
 
     fun deleteItem(presetPosition: Int) {

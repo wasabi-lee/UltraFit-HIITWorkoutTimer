@@ -20,11 +20,10 @@
             android:id="@+id/timer_wave"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/timer_lock_iv"
@@ -48,9 +47,9 @@
             android:alpha="@{viewmodel.locked ? 0.5f : 1f}"
             android:clickable="@{!viewmodel.locked}"
             android:onClick="@{() -> viewmodel.exitTimer()}"
+            android:src="@drawable/ic_arrow_back_black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_back_black" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/timer_resume_pause_iv"
