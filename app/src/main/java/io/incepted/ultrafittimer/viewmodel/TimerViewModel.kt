@@ -2,6 +2,7 @@ package io.incepted.ultrafittimer.viewmodel
 
 import android.app.Application
 import android.content.Intent
+import android.graphics.Color
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
@@ -57,6 +58,8 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     val locked = ObservableBoolean(false)
 
+    val backgroundColor = ObservableField<Int>(Color.parseColor("#ffffff"))
+
     var completedWhileBound = false
 
 
@@ -82,6 +85,7 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
                 val sess = intent.getIntExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_SESSION, 0)
                 val roundTotal = intent.getLongExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, 0L)
                 animateWave.value = TickInfo(sess, roundTotal)
+                backgroundColor.set(WorkoutSession.getSessionColor(appContext, sess))
             }
             TimerCommunication.BR_ACTION_TIMER_TERMINATED -> finishActivity.value = null
             TimerCommunication.BR_ACTION_TIMER_ERROR -> handleError()

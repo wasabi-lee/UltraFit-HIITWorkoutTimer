@@ -14,6 +14,8 @@ object WorkoutSession {
     const val ROUND = 4
     const val COMPLETED = 5
 
+    var colorsLoaded = false
+
     var SESSION_COLOR_WARMUP: Int? = null
     var SESSION_COLOR_WORK: Int? = null
     var SESSION_COLOR_REST: Int? = null
@@ -43,10 +45,8 @@ object WorkoutSession {
 
     fun getSessionColor(context: Context, session: Int): Int {
 
-        if (SESSION_COLOR_WARMUP == null) SESSION_COLOR_WARMUP = ContextCompat.getColor(context, R.color.state_warmup)
-        if (SESSION_COLOR_WORK == null) SESSION_COLOR_WORK = ContextCompat.getColor(context, R.color.state_work)
-        if (SESSION_COLOR_REST == null) SESSION_COLOR_REST = ContextCompat.getColor(context, R.color.state_rest)
-        if (SESSION_COLOR_COOLDOWN == null) SESSION_COLOR_COOLDOWN = ContextCompat.getColor(context, R.color.state_cooldown)
+        if (!colorsLoaded)
+            initSessionColors(context, session)
 
         return when (session) {
             WARMUP -> SESSION_COLOR_WARMUP ?: ContextCompat.getColor(context, R.color.state_warmup)
@@ -60,27 +60,14 @@ object WorkoutSession {
     }
 
 
+    private fun initSessionColors(context: Context, session: Int) {
+        SESSION_COLOR_WARMUP = ContextCompat.getColor(context, R.color.state_warmup)
+        SESSION_COLOR_WORK = ContextCompat.getColor(context, R.color.state_work)
+        SESSION_COLOR_REST = ContextCompat.getColor(context, R.color.state_rest)
+        SESSION_COLOR_COOLDOWN = ContextCompat.getColor(context, R.color.state_cooldown)
 
-    fun getSecondarySessionColor(context: Context, session: Int): Int {
-
-        if (SESSION_COLOR_WARMUP == null) SESSION_COLOR_WARMUP_SECONDARY = ContextCompat.getColor(context, R.color.state_warmup_secondary)
-        if (SESSION_COLOR_WORK == null) SESSION_COLOR_WORK_SECONDARY = ContextCompat.getColor(context, R.color.state_work_secondary)
-        if (SESSION_COLOR_REST == null) SESSION_COLOR_REST_SECONDARY = ContextCompat.getColor(context, R.color.state_rest_secondary)
-        if (SESSION_COLOR_COOLDOWN == null) SESSION_COLOR_COOLDOWN_SECONDARY = ContextCompat.getColor(context, R.color.state_cooldown_secondary)
-
-        return when (session) {
-            WARMUP -> SESSION_COLOR_WARMUP_SECONDARY ?: ContextCompat.getColor(context, R.color.state_warmup_secondary)
-            WORK -> SESSION_COLOR_WORK_SECONDARY ?: ContextCompat.getColor(context, R.color.state_work_secondary)
-            REST -> SESSION_COLOR_REST_SECONDARY ?: ContextCompat.getColor(context, R.color.state_rest_secondary)
-            COOLDOWN -> SESSION_COLOR_COOLDOWN_SECONDARY
-                    ?: ContextCompat.getColor(context, R.color.state_cooldown_secondary)
-            else -> android.R.color.transparent
-        }
-
+        colorsLoaded = true
     }
-
-
-
 
 
 }

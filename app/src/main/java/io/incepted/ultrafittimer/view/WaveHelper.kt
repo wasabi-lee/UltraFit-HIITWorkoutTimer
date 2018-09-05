@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.graphics.Color
 import android.view.animation.LinearInterpolator
 import com.gelitenight.waveview.library.WaveView
 import io.incepted.ultrafittimer.timer.TickInfo
@@ -27,12 +28,10 @@ class WaveHelper(private val mWaveView: WaveView) {
 
 
     init {
+        mWaveView.setWaveColor(Color.parseColor("#0Bffffff"), Color.parseColor("#1Fffffff"))
         initState()
         initAnimation()
     }
-
-
-
 
 
     fun start() {
@@ -92,9 +91,6 @@ class WaveHelper(private val mWaveView: WaveView) {
 
         mWaveView.waterLevelRatio = startingWaterLevel
 
-        mWaveView.setWaveColor(WorkoutSession.getSessionColor(mWaveView.context, session),
-                WorkoutSession.getSecondarySessionColor(mWaveView.context, session))
-
         waterLevelAnim = ObjectAnimator.ofFloat(
                 mWaveView, "waterLevelRatio", startingWaterLevel, 1f)
 
@@ -125,6 +121,7 @@ class WaveHelper(private val mWaveView: WaveView) {
         waterLevelAnim?.currentPlayTime = pausedTime
         paused = false
     }
+
 
     fun pauseWave() {
         pausedTime = waterLevelAnim?.currentPlayTime ?: 0L
