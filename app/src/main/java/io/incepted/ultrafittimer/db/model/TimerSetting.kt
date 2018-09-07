@@ -19,16 +19,27 @@ class TimerSetting(@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id") va
     @Ignore
     lateinit var mRounds: MutableList<Round>
 
+    @Ignore
+    var defaultTimer = false
+
+    companion object {
+        const val DEFAULT_WARMUP_SECONDS = 180
+        const val DEFAULT_COOLDOWN_SECONDS = 180
+        const val DEFAULT_WORK_SECONDS = 20
+        const val DEFAULT_REST_SECONDS = 20
+        const val DEFAULT_WORK_NAME = "Work"
+    }
+
     // Called when no initial value is given
     @Ignore
-    constructor(warmupSeconds: Int,
-                cooldownSeconds: Int)
-            : this(null, warmupSeconds, "-1", "-1",
-            "-1", cooldownSeconds, false)
+    constructor()
+            : this(null, DEFAULT_WARMUP_SECONDS, "-1", "-1",
+            "-1", DEFAULT_COOLDOWN_SECONDS, false) {
+        this.defaultTimer = true
+    }
 
     init {
-        val isNewTimer = roundNames == "-1" || workSeconds == "-1" || restSeconds == "-1"
-        mRounds = if (isNewTimer) RoundUtil.getDefaultRoundList() else RoundUtil.getRoundList(this, false)
+        mRounds = if (defaultTimer) RoundUtil.getDefaultRoundList() else RoundUtil.getRoundList(this, false)
     }
 
 

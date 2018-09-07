@@ -36,9 +36,7 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
 
 
     init {
-        val isNewTimer: Boolean = timerSetting.roundNames == "-1"
-                || timerSetting.workSeconds == "-1"
-                || timerSetting.restSeconds == "-1"
+        val isNewTimer: Boolean = timerSetting.defaultTimer
 
         mRounds = if (isNewTimer) RoundUtil.getDefaultRoundList() else RoundUtil.getRoundList(timerSetting, false)
 

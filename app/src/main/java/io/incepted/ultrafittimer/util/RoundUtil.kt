@@ -74,7 +74,10 @@ object RoundUtil {
     fun getDefaultRoundList(): MutableList<Round> {
         val list: MutableList<Round> = mutableListOf()
         for (i in 0 until 8)
-            list.add(Round("Work", 3, 2))
+            list.add(Round(
+                    TimerSetting.DEFAULT_WORK_NAME,
+                    TimerSetting.DEFAULT_WORK_SECONDS,
+                    TimerSetting.DEFAULT_REST_SECONDS))
         return list
     }
 

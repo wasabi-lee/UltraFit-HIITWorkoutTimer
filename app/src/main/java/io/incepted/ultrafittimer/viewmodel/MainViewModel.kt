@@ -120,7 +120,7 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
 
     private fun initNewTimer() {
-        timer = TimerSetting(4, 4) // default value
+        timer = TimerSetting() // default value
         timerObsvb.set(TimerSettingObservable(timer))
         timerObsvb.notifyChange()
     }
