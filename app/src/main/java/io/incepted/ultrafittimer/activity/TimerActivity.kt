@@ -191,7 +191,6 @@ class TimerActivity : BaseActivity() {
         bindService(timerIntent, serviceConn, Context.BIND_AUTO_CREATE)
 
         if (!TimerService.SERVICE_STARTED) {
-            Timber.d("Starting service")
             startService(timerIntent)
         }
     }
@@ -241,12 +240,10 @@ class TimerActivity : BaseActivity() {
 
     private val serviceConn = object : ServiceConnection {
         override fun onServiceDisconnected(p0: ComponentName?) {
-            Timber.d("trker: Service disconnected")
             serviceBound = false
         }
 
         override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
-            Timber.d("trker: Service connected")
             setupBoundService(binder)
             checkIfTimerTerminated()
             restoreUIState()
