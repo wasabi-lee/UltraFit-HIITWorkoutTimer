@@ -5,13 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.*
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.ActivityMainBinding
 import io.incepted.ultrafittimer.fragment.PresetSaveDialogFragment
@@ -22,7 +19,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_timer.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -32,6 +28,9 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
 
     private lateinit var mainViewModel: MainViewModel
@@ -58,8 +57,8 @@ class MainActivity : BaseActivity() {
 
         unpackExtra()
 
-        if (savedInstanceState == null) mainViewModel.start(editMode, editPresetId)
-
+        if (savedInstanceState == null)
+            setupViewModel()
 
         initToolbar()
         initObservers()
@@ -67,10 +66,28 @@ class MainActivity : BaseActivity() {
 
     }
 
+
     private fun unpackExtra() {
         editMode = intent.getBooleanExtra(EXTRA_KEY_EDIT_MODE, false)
         editPresetId = intent.getLongExtra(EXTRA_KEY_EDIT_PRESET_ID, -1L)
     }
+
+
+    private fun setupViewModel() {
+        val lastPresetId =
+                sharedPref.getLong(resources.getString(R.string.pref_key_last_used_preset_id), -1)
+        val lastTimerId =
+                sharedPref.getLong(resources.getString(R.string.pref_key_last_used_timer_id), -1)
+        val offset =
+                sharedPref.getString(resources.getString(R.string.pref_key_increment_seconds), "1")
+                        ?.toInt() ?: 1
+
+        mainViewModel.lastPresetId = lastPresetId
+        mainViewModel.lastTimerId = lastTimerId
+        mainViewModel.offset = offset
+        mainViewModel.start(editMode, editPresetId)
+    }
+
 
     private fun initToolbar() {
         setSupportActionBar(main_toolbar)
@@ -83,7 +100,7 @@ class MainActivity : BaseActivity() {
 
     private fun initObservers() {
         mainViewModel.snackbarTextRes.observe(this, Observer {
-            showSnackBar(resources.getString(it?: return@Observer))
+            showSnackBar(resources.getString(it ?: return@Observer))
         })
     }
 
@@ -203,7 +220,7 @@ class MainActivity : BaseActivity() {
             } else {
                 super.onBackPressed()
             }
-         else {
+        else {
             super.onBackPressed()
         }
     }

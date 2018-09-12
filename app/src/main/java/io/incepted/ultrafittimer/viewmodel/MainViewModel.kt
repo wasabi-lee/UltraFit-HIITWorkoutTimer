@@ -41,7 +41,7 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
     // UI listeners & events
     var presetName = ObservableField<String>("Untitled")
-    val snackbarTextRes:SingleLiveEvent<Int> = SingleLiveEvent()
+    val snackbarTextRes: SingleLiveEvent<Int> = SingleLiveEvent()
     val focusListener: View.OnFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
         handleFocusChange(v, hasFocus)
     }
@@ -51,6 +51,8 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     var fromPreset: Boolean = false // This timer is from an existing preset
     var fromTemp: Boolean = false // This timer is from a temporarily saved timer
     var presetSaveInProgress: Boolean = false // Preset is being saved
+    var lastPresetId = -1L
+    var lastTimerId = -1L
 
 
     // Models
@@ -66,16 +68,12 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
     fun start(editMode: Boolean, editPresetId: Long) {
 
-        if (checkIfTimerServiceRunning()) {
+        if (checkIfTimerServiceRunning())
             toTimerActivity.value = null
-        }
 
         this.editMode.set(editMode)
         this.editPresetId = editPresetId
-        this.offset = sharedPref
-                .getString(appContext
-                        .resources
-                        .getString(R.string.pref_key_increment_seconds), "1")?.toInt() ?: offset
+
 
         initializeRounds()
     }
@@ -88,18 +86,13 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
     private fun initializeRounds() {
         when (editMode.get()) {
-            true -> initWithPreset(editPresetId)
+            true -> // When this is in preset edit mode
+                initWithPreset(editPresetId)
             else -> {
-                // When this is not in preset edit mode
-                val presetId: Long = sharedPref
-                        .getLong(appContext.resources
-                                .getString(R.string.pref_key_last_used_preset_id), -1)
-                val tempTimerId: Long = sharedPref
-                        .getLong(appContext.resources
-                                .getString(R.string.pref_key_last_used_timer_id), -1)
+                // When this is default mode
                 when {
-                    presetId != -1L -> initWithPreset(presetId)
-                    tempTimerId != -1L -> initWithExistingTimerSetting(tempTimerId)
+                    lastPresetId != -1L -> initWithPreset(lastPresetId)
+                    lastTimerId != -1L -> initWithExistingTimerSetting(lastTimerId)
                     else -> initNewTimer()
                 }
             }
@@ -126,12 +119,12 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     }
 
 
-    private fun loadPreset(presetId: Long) {
+    public fun loadPreset(presetId: Long) {
         repository.getPresetById(presetId, this)
     }
 
 
-    private fun loadTimer(timerId: Long) {
+    public fun loadTimer(timerId: Long) {
         repository.getTimerById(timerId, this)
     }
 

@@ -16,10 +16,12 @@ import io.reactivex.functions.Function
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import io.incepted.ultrafittimer.OpenForTesting
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
+@OpenForTesting
 @Singleton
 class DbRepository @Inject constructor(
         private val db: AppDatabase,
