@@ -61,7 +61,7 @@ class NotificationUtil(val context: Context) : ContextWrapper(context) {
                 PendingIntent.FLAG_CANCEL_CURRENT)
 
         workoutNotifBuilder = NotificationCompat.Builder(context, CHANNEL_ID_TIMER)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_timer_18_white)
                 .setAutoCancel(false)
                 .addAction(getDismissAction())
                 .addAction(getResumePauseAction(false))
@@ -93,7 +93,7 @@ class NotificationUtil(val context: Context) : ContextWrapper(context) {
         val contentIntent = PendingIntent.getActivity(context, 1, Intent(context, TimerActivity::class.java), 0)
 
         val completeNotifBuilder = NotificationCompat.Builder(context, CHANNEL_ID_TIMER)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_timer_18_white)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
                 .setContentTitle("All Done!")

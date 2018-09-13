@@ -4,9 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import io.incepted.ultrafittimer.OpenForTesting
 import io.incepted.ultrafittimer.db.tempmodel.Round
 import io.incepted.ultrafittimer.util.RoundUtil
 
+@OpenForTesting
 @Entity(tableName = "timer_setting")
 class TimerSetting(@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id") var id: Long?,
                    @ColumnInfo(name = "sec_warm_up") var warmupSeconds: Int,

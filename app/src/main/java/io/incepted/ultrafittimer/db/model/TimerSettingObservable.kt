@@ -3,22 +3,24 @@ package io.incepted.ultrafittimer.db.model
 import androidx.databinding.BaseObservable
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import io.incepted.ultrafittimer.OpenForTesting
 import io.incepted.ultrafittimer.db.tempmodel.Round
 import io.incepted.ultrafittimer.util.*
 import timber.log.Timber
 
-class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() {
+@OpenForTesting
+class TimerSettingObservable(final val timerSetting: TimerSetting) : BaseObservable() {
 
-    var warmupObservable: ObservableField<String> = ObservableField()
-    val workObservable: ObservableField<String> = ObservableField()
-    val restObservable: ObservableField<String> = ObservableField()
-    val roundCountObservable: ObservableField<String> = ObservableField()
-    var cooldownObservable: ObservableField<String> = ObservableField()
+    final var warmupObservable: ObservableField<String> = ObservableField()
+    final val workObservable: ObservableField<String> = ObservableField()
+    final val restObservable: ObservableField<String> = ObservableField()
+    final val roundCountObservable: ObservableField<String> = ObservableField()
+    final var cooldownObservable: ObservableField<String> = ObservableField()
 
-    val isCustomizedObservable: ObservableBoolean = ObservableBoolean()
+    final val isCustomizedObservable: ObservableBoolean = ObservableBoolean()
     val totalObservable: ObservableField<String> = ObservableField()
 
-    var mRounds: MutableList<Round> = mutableListOf()
+    final var mRounds: MutableList<Round> = mutableListOf()
         set(value) {
             field = value
             workObservable.set(TimerUtil.secondsToTimeString(value[0].workSeconds))
@@ -129,7 +131,7 @@ class TimerSettingObservable(val timerSetting: TimerSetting) : BaseObservable() 
     }
 
 
-    fun calculateTotal() {
+    final fun calculateTotal() {
         val rounds: Int = mRounds.size
         val warmup: Int = TimerUtil.stringToSecond(warmupObservable.get() ?: return)
         val work: Int = TimerUtil.stringToSecond(workObservable.get() ?: return)

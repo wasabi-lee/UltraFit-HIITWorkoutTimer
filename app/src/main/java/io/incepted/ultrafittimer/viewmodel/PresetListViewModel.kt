@@ -45,7 +45,7 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
         loadPresets()
     }
 
-    private fun loadPresets() {
+    public fun loadPresets() {
         repository.getPresets(this)
     }
 
