@@ -22,6 +22,7 @@ import io.incepted.ultrafittimer.timer.TimerService
 import io.incepted.ultrafittimer.util.RoundUtil
 import io.incepted.ultrafittimer.util.SingleLiveEvent
 import io.incepted.ultrafittimer.util.WorkoutSession
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(val appContext: Application, val repository: DbRepository)
@@ -153,8 +154,8 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
             // Nothing has been changed, but the timer is from temporarily saved timer -> Pass the timer id as an extra
             when {
                 to.checkIfEdited() -> repository.saveTimer(to.getFinalSetting(), this)
-                fromPreset -> toTimerActivity(preset.id ?: return)
-                else -> toTimerActivity(timer.id ?: return)
+                fromPreset -> toTimerActivity(preset.id ?: return, true)
+                else -> toTimerActivity(timer.id ?: return, false)
             }
         }
     }
@@ -194,7 +195,7 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     }
 
 
-    private fun toTimerActivity(id: Long) {
+    private fun toTimerActivity(id: Long, fromPreset: Boolean) {
         val bundle = Bundle()
         bundle.putBoolean(TimerActivity.EXTRA_KEY_FROM_PRESET, fromPreset)
         bundle.putLong(TimerActivity.EXTRA_KEY_ID, id)
@@ -270,7 +271,7 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
                 val newPreset = Preset(null, false, name, id)
                 repository.savePreset(newPreset, this)
             } else {
-                toTimerActivity(id)
+                toTimerActivity(id, false)
             }
         }
 
@@ -284,6 +285,8 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     override fun onPresetSaved(presetId: Long) {
         presetSaveInProgress = false
         snackbarTextRes.value = R.string.preset_save_successful
+
+        loadPreset(presetId)
     }
 
 
@@ -294,7 +297,6 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
     override fun onPresetLoaded(preset: Preset) {
         this.preset = preset
-        this.fromPreset = true
         this.presetName.set(preset.name)
 
         loadTimer(preset.timerSettingId)
@@ -319,11 +321,13 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
 
 
     override fun onPresetUpdated() {
+        presetSaveInProgress = false
         finishActivity()
     }
 
 
     override fun onPresetUpdateNotAvailable() {
+        presetSaveInProgress = false
         snackbarTextRes.value = R.string.error_unexpected
     }
 

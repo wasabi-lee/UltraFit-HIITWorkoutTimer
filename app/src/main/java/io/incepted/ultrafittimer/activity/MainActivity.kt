@@ -29,10 +29,6 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
-
-
     private lateinit var mainViewModel: MainViewModel
 
     private var exit: Boolean = false

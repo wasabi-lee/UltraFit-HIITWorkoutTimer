@@ -314,7 +314,11 @@ class TimerService : Service(),
         val prefKey =
                 resources.getString(if (fromPreset) R.string.pref_key_last_used_preset_id
                 else R.string.pref_key_last_used_timer_id)
+        val oppositPrefKey =
+                resources.getString(if (fromPreset) R.string.pref_key_last_used_timer_id
+                else  R.string.pref_key_last_used_preset_id)
         editor.putLong(prefKey, targetId)
+        editor.putLong(oppositPrefKey, -1L)
         editor.apply()
     }
 
