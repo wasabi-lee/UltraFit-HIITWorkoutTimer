@@ -8,6 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -181,6 +182,7 @@ class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayL
 
     fun terminateTimer() {
         stopped.set(true)
+        Timber.d("Termnation called")
         if (disposable?.isDisposed == true) disposable?.dispose()
     }
 

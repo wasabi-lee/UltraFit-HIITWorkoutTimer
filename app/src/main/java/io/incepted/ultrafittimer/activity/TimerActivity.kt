@@ -1,7 +1,6 @@
 package io.incepted.ultrafittimer.activity
 
 import android.content.*
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.Toast
@@ -16,10 +15,10 @@ import io.incepted.ultrafittimer.fragment.TimerExitDialogFragment
 import io.incepted.ultrafittimer.timer.TimerCommunication
 import io.incepted.ultrafittimer.timer.TimerService
 import io.incepted.ultrafittimer.util.SnackbarUtil
+import io.incepted.ultrafittimer.view.ProgressHelper
 import io.incepted.ultrafittimer.view.WaveHelper
 import io.incepted.ultrafittimer.viewmodel.TimerViewModel
 import kotlinx.android.synthetic.main.activity_timer.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class TimerActivity : BaseActivity() {
@@ -48,6 +47,8 @@ class TimerActivity : BaseActivity() {
 
     lateinit var waveHelper: WaveHelper
 
+    lateinit var progressHelper: ProgressHelper
+
 
 
 
@@ -67,6 +68,8 @@ class TimerActivity : BaseActivity() {
         if (savedInstanceState == null) timerViewModel.start()
 
         waveHelper = WaveHelper(timer_wave)
+        progressHelper = ProgressHelper(timer_progress_bar)
+
         initReceiver()
         initObservers()
     }
@@ -81,13 +84,15 @@ class TimerActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        waveHelper.start() // init wave anim
+        waveHelper.start()
+        progressHelper.resumeProgressBar()
     }
 
 
     override fun onPause() {
         super.onPause()
-        waveHelper.cancel() // cancel wave anim
+        waveHelper.cancel()
+        progressHelper.pauseProgressBar()
     }
 
 
@@ -166,11 +171,18 @@ class TimerActivity : BaseActivity() {
 
         timerViewModel.animateWave.observe(this, Observer {
             waveHelper.liftWave(it)
+            progressHelper.animateProgressBar(timerService?.timer?.totalTime, timerService?.totalProgress, timerService?.isTimerPaused())
         })
 
         timerViewModel.resumePauseWave.observe(this, Observer {
-            if (it) waveHelper.pauseWave()
-            else waveHelper.resumeWave()
+            if (it) {
+                waveHelper.pauseWave()
+                progressHelper.pauseProgressBar()
+            }
+            else {
+                waveHelper.resumeWave()
+                progressHelper.resumeProgressBar()
+            }
         })
     }
 
@@ -270,7 +282,7 @@ class TimerActivity : BaseActivity() {
     private fun restoreUIState() {
         timerViewModel.setInitialValues(timerService?.lastTick, timerService?.isTimerPaused())
         waveHelper.setAnimState(timerService?.lastTick, timerService?.isTimerPaused())
-
+        progressHelper.animateProgressBar(timerService?.timer?.totalTime, timerService?.totalProgress, timerService?.isTimerPaused())
     }
 
 

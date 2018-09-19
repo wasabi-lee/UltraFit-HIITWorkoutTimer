@@ -54,7 +54,6 @@ object RoundUtil {
     }
 
 
-
     fun joinListToString(l: List<Round>): Array<String> {
 
         val res = Array(3) { "" }
@@ -70,7 +69,6 @@ object RoundUtil {
     }
 
 
-
     fun getDefaultRoundList(): MutableList<Round> {
         val list: MutableList<Round> = mutableListOf()
         for (i in 0 until 8)
@@ -80,5 +78,22 @@ object RoundUtil {
                     TimerSetting.DEFAULT_REST_SECONDS))
         return list
     }
+
+
+    fun calculateWorkoutTime(works: String, rests: String): Int {
+
+        return calculateSessionTime(works) + calculateSessionTime(rests)
+    }
+
+
+    fun calculateSessionTime(session: String): Int {
+        val arr = session.split(DbDelimiter.DELIMITER)
+        var sum = 0
+        arr.forEach {
+            sum += it.toInt()
+        }
+        return sum
+    }
+
 
 }

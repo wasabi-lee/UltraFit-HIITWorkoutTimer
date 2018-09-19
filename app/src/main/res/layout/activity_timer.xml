@@ -35,7 +35,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:onClick="@{() -> viewmodel.toggleScreenInteraction()}"
-            android:src="@{viewmodel.locked ? @drawable/ic_lock_black : @drawable/ic_lock_open_black}"
+            android:src="@{viewmodel.locked ? @drawable/ic_lock_white_24 : @drawable/ic_lock_open_white_24}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,7 +49,7 @@
             android:alpha="@{viewmodel.locked ? 0.5f : 1f}"
             android:clickable="@{!viewmodel.locked}"
             android:onClick="@{() -> viewmodel.exitTimer()}"
-            android:src="@drawable/ic_arrow_back_black"
+            android:src="@drawable/ic_arrow_back_white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,7 +60,7 @@
             android:alpha="@{viewmodel.locked ? 0.5f : 1f}"
             android:clickable="@{!viewmodel.locked}"
             android:onClick="@{() -> viewmodel.resumePauseTimer()}"
-            android:src="@{viewmodel.paused ? @drawable/ic_play_circle_outline_48_black : @drawable/ic_pause_circle_outline_black}"
+            android:src="@{viewmodel.paused ? @drawable/ic_play_circle_outline_48_white : @drawable/ic_pause_circle_outline_48_white}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,7 +71,7 @@
             style="@style/timerSessionNameTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="28dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{viewmodel.workoutName}"
@@ -90,7 +90,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.45"
+            app:layout_constraintVertical_bias="0.40"
             tools:text="00:12" />
 
         <TextView
@@ -104,6 +104,21 @@
             app:layout_constraintStart_toStartOf="@+id/timer_round_time_tv"
             app:layout_constraintTop_toBottomOf="@+id/timer_round_time_tv"
             tools:text="00/12" />
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/timer_progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="7dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:mpb_progressStyle="horizontal"
+        app:mpb_progressTint="#cdffffff"
+        app:mpb_progressBackgroundTint="#51ffffff"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+        app:mpb_useIntrinsicPadding="false"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </layout>

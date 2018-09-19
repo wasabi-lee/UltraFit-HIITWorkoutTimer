@@ -9,7 +9,6 @@ import android.os.IBinder
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.android.AndroidInjection
 import io.incepted.ultrafittimer.R
-import io.incepted.ultrafittimer.UltraFitApp
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.model.TimerSetting
@@ -74,10 +73,11 @@ class TimerService : Service(),
 
     private var cueSeconds = 3
 
-    private var timer: TimerSetting? = null
+    var timer: TimerSetting? = null
 
     private var timerHelper: TimerHelper? = null
 
+    var totalProgress = 0
 
     // Timer is completed normally (not by stopping or any interruption)
     var timerCompleted = false
@@ -105,9 +105,7 @@ class TimerService : Service(),
 
     override fun onCreate() {
         AndroidInjection.inject(this)
-
         super.onCreate()
-        Timber.d("Service created")
 
         cueSeconds = sharedPref.getString(resources.getString(R.string.pref_key_cue_seconds),
                 cueSeconds.toString())?.toInt() ?: cueSeconds
@@ -123,7 +121,6 @@ class TimerService : Service(),
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Timber.d("Service Started")
         SERVICE_STARTED = true
         unpackExtra(intent)
         loadTimer(fromPreset, targetId)
@@ -135,7 +132,6 @@ class TimerService : Service(),
     override fun onDestroy() {
         // Unregister the notification action receiver
         unregisterReceiver(mReceiver)
-        Timber.d("Service Destroyed")
         super.onDestroy()
     }
 
@@ -176,6 +172,7 @@ class TimerService : Service(),
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onNext = {
+                            totalProgress++
                             lastTick = it
                             sendTick(it)
 
@@ -187,7 +184,6 @@ class TimerService : Service(),
                                 it.remianingSecs in 1..cueSeconds ->
                                     beepHelper.requestFire(BeepHelper.FLAG_CUE)
                             }
-
 
                             updateNotification(it)
                         },
@@ -253,7 +249,7 @@ class TimerService : Service(),
     }
 
 
-    fun handleUserAction(context: Context?, intent: Intent?) {
+    fun handleNotifAction(context: Context?, intent: Intent?) {
         when (intent?.action) {
             NotificationUtil.ACTION_INTENT_FILTER_DISMISS -> {
                 timerCompleted = false
@@ -303,6 +299,7 @@ class TimerService : Service(),
         broadcaster.sendBroadcast(Intent(TimerCommunication.BR_ACTION_TIMER_ERROR))
     }
 
+
     private fun saveHistory(completed: Boolean, tickInfo: TickInfo?) {
         val newHistory: WorkoutHistory = getWorkoutHistory(completed, tickInfo)
         repository.saveWorkoutHistory(newHistory, this)
@@ -314,11 +311,11 @@ class TimerService : Service(),
         val prefKey =
                 resources.getString(if (fromPreset) R.string.pref_key_last_used_preset_id
                 else R.string.pref_key_last_used_timer_id)
-        val oppositPrefKey =
+        val oppositePrefKey =
                 resources.getString(if (fromPreset) R.string.pref_key_last_used_timer_id
                 else  R.string.pref_key_last_used_preset_id)
         editor.putLong(prefKey, targetId)
-        editor.putLong(oppositPrefKey, -1L)
+        editor.putLong(oppositePrefKey, -1L)
         editor.apply()
     }
 
@@ -339,7 +336,6 @@ class TimerService : Service(),
 
 
     private fun finish() {
-        Timber.d("Finish called")
         beepHelper.release()
         SERVICE_STARTED = false
         stopSelf()
@@ -353,27 +349,29 @@ class TimerService : Service(),
         startTimer(timer)
     }
 
+
     override fun onTimerNotAvailable() {
         sendError()
     }
+
 
     override fun onPresetLoaded(preset: Preset) {
         presetId = preset.id ?: presetId
         repository.getTimerById(preset.timerSettingId, this)
     }
 
+
     override fun onPresetNotAvailable() {
         sendError()
     }
 
+
     override fun onHistorySaved(id: Long) {
         stopForeground(true)
-        Timber.d("History saved. stopped foreground. ")
-        if (STOP_SELF) {
-            Timber.d("Finishing!!")
+        if (STOP_SELF)
             finish()
-        }
     }
+
 
     override fun onHistorySaveNotAvailable() {
         sendError()
@@ -382,7 +380,7 @@ class TimerService : Service(),
 
     inner class TimerActionReceiver : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
-            handleUserAction(p0, p1)
+            handleNotifAction(p0, p1)
         }
     }
 

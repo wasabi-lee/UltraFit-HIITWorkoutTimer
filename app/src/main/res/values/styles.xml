@@ -133,18 +133,21 @@
 
 
     <style name="timerSessionNameTextStyle">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="timerTimeTextStyle">
-        <item name="android:textSize">70sp</item>
+        <item name="android:textSize">86sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="timerRoundsTextStyle">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
 

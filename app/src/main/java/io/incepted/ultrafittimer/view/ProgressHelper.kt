@@ -1,0 +1,54 @@
+package io.incepted.ultrafittimer.view
+
+import android.animation.ObjectAnimator
+import android.view.animation.LinearInterpolator
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar
+
+class ProgressHelper(private val progressBar: MaterialProgressBar) {
+
+    private var progressAnimator: ObjectAnimator? = null
+
+    private var paused = false
+
+    private var started = false
+
+    private fun startProgressAnim(max: Int?, progress: Int?, paused: Boolean?) {
+
+        if (max == null || progress == null || paused == null) return
+
+        if (!started) started = true
+
+        val duration = (max - progress) * 1000
+
+        if (duration < 0) return
+
+        progressBar.max = max * 1000
+        progressBar.progress = progress * 1000
+        progressAnimator = ObjectAnimator.ofInt(progressBar, "progress", progress * 1000, max * 1000)
+        progressAnimator?.duration = duration.toLong()
+        progressAnimator?.interpolator = LinearInterpolator()
+
+        if (!paused)
+            progressAnimator?.start()
+    }
+
+
+    fun animateProgressBar(max: Int?, progress: Int?, paused: Boolean?) {
+        if (!started) {
+            if (max == null || progress == null || paused == null) return
+            startProgressAnim(max, progress, paused)
+        }
+    }
+
+
+    fun pauseProgressBar() {
+        progressAnimator?.cancel()
+        paused = true
+    }
+
+    fun resumeProgressBar() {
+        progressAnimator?.start()
+        paused = false
+    }
+
+}

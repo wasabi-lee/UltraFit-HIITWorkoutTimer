@@ -89,6 +89,8 @@ class WaveHelper(private val mWaveView: WaveView) {
         val startingWaterLevel = progress.toFloat() / max.toFloat()
         val duration = (max - progress) * 1000
 
+        if (duration < 0) return
+
         mWaveView.waterLevelRatio = startingWaterLevel
 
         waterLevelAnim = ObjectAnimator.ofFloat(

@@ -24,6 +24,9 @@ class TimerSetting(@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id") va
     @Ignore
     var defaultTimer = false
 
+    @Ignore
+    var totalTime = 0
+
     companion object {
         const val DEFAULT_WARMUP_SECONDS = 180
         const val DEFAULT_COOLDOWN_SECONDS = 180
@@ -41,7 +44,18 @@ class TimerSetting(@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id") va
     }
 
     init {
-        mRounds = if (defaultTimer) RoundUtil.getDefaultRoundList() else RoundUtil.getRoundList(this, false)
+        mRounds =
+                if (defaultTimer)
+                    RoundUtil.getDefaultRoundList()
+                else
+                    RoundUtil.getRoundList(this, false)
+        totalTime = calculateTotal()
+    }
+
+
+    final fun calculateTotal(): Int {
+        val workoutTime = RoundUtil.calculateWorkoutTime(workSeconds, restSeconds)
+        return warmupSeconds + workoutTime + cooldownSeconds
     }
 
 

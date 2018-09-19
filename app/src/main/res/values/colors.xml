@@ -28,10 +28,10 @@
     <color name="status_tried">#ceb200</color>
 
 
-    <color name="state_warmup">#ffd500</color>
-    <color name="state_work">#ff3347</color>
-    <color name="state_rest">#00d7fe</color>
-    <color name="state_cooldown">#00e3bb</color>
+    <color name="state_warmup">#f2cb00</color>
+    <color name="state_work">#e80f3a</color>
+    <color name="state_rest">#00c4e7</color>
+    <color name="state_cooldown">#00e1c7</color>
 
     <color name="state_warmup_secondary">#3dc9fd14</color>
     <color name="state_work_secondary">#33ff5b20</color>

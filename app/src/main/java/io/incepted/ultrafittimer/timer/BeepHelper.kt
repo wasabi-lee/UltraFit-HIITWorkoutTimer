@@ -2,6 +2,7 @@ package io.incepted.ultrafittimer.timer
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.SoundPool
@@ -15,7 +16,6 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
 
     private var soundPool: SoundPool? = null
 
-    private val MAXSTREAM = 3
     private val v: Vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
     private var cueSoundRes: Int = 0
@@ -31,14 +31,16 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
         const val FLAG_CUE = 1
         const val FLAG_FINISH = 2
 
+        private const val MAX_STREAM = 3
+
         val VIBRATION_PATTERN_BEEP_TIMING = longArrayOf(0L, 400L, 100L, 200L)
         val VIBRATION_PATTERN_BEEP_AMPLITUDE = intArrayOf(0, 255, 0, 255)
 
         val VIBRATION_PATTERN_FINISH_TIMING = longArrayOf(0L, 800L, 100L, 800L, 100L, 800L)
         val VIBRATION_PATTERN_FINISH_AMPLITUDE = intArrayOf(0, 255, 0, 255, 0, 255)
 
-        val VIBRATION_CUE_DURATION = 200L
-        val VIBRATION_CUE_AMPLITUDE = 180
+        const val VIBRATION_CUE_DURATION = 200L
+        const val VIBRATION_CUE_AMPLITUDE = 180
     }
 
 
@@ -59,12 +61,12 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
                     .build()
 
             SoundPool.Builder()
-                    .setMaxStreams(MAXSTREAM)
+                    .setMaxStreams(MAX_STREAM)
                     .setAudioAttributes(audioAttrs)
                     .build()
 
         } else {
-            SoundPool(MAXSTREAM, AudioManager.STREAM_MUSIC, 0)
+            SoundPool(MAX_STREAM, AudioManager.STREAM_MUSIC, 0)
         }
 
         soundPool?.setOnLoadCompleteListener(this)
@@ -91,14 +93,18 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
      * @param flag BEEP = 0, CUE = 1
      */
     fun requestFire(flag: Int) {
-        requestedFlag = flag
-        if (isLoaded[flag]) {
-            // sound is loaded.
-            playBeep(soundIds[flag])
-        } else {
-            soundIds[flag] = soundPool?.load(context,
-                    if (flag == FLAG_BEEP || flag == FLAG_FINISH) beepSoundRes
-                    else cueSoundRes, 1) ?: 0
+        try {
+            requestedFlag = flag
+            if (isLoaded[flag]) {
+                // sound is loaded.
+                playBeep(soundIds[flag])
+            } else {
+                soundIds[flag] = soundPool?.load(context,
+                        if (flag == FLAG_BEEP || flag == FLAG_FINISH) beepSoundRes
+                        else cueSoundRes, 1) ?: 0
+            }
+        } catch (e: Resources.NotFoundException) {
+            Timber.d("Resource not found")
         }
     }
 
