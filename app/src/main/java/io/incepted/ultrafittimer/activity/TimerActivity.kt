@@ -19,7 +19,13 @@ import io.incepted.ultrafittimer.view.ProgressHelper
 import io.incepted.ultrafittimer.view.WaveHelper
 import io.incepted.ultrafittimer.viewmodel.TimerViewModel
 import kotlinx.android.synthetic.main.activity_timer.*
+import timber.log.Timber
 import javax.inject.Inject
+import android.content.Context.NOTIFICATION_SERVICE
+import androidx.core.content.ContextCompat.getSystemService
+import android.app.NotificationManager
+
+
 
 class TimerActivity : BaseActivity() {
 
@@ -48,8 +54,6 @@ class TimerActivity : BaseActivity() {
     lateinit var waveHelper: WaveHelper
 
     lateinit var progressHelper: ProgressHelper
-
-
 
 
     // ---------------------------------------------- Lifecycle --------------------------------------
@@ -85,7 +89,6 @@ class TimerActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         waveHelper.start()
-        progressHelper.resumeProgressBar()
     }
 
 
@@ -111,7 +114,6 @@ class TimerActivity : BaseActivity() {
             finishService()
         super.onDestroy()
     }
-
 
 
     // ---------------------------------------------- Initialization --------------------------------------
@@ -171,15 +173,17 @@ class TimerActivity : BaseActivity() {
 
         timerViewModel.animateWave.observe(this, Observer {
             waveHelper.liftWave(it)
-            progressHelper.animateProgressBar(timerService?.timer?.totalTime, timerService?.totalProgress, timerService?.isTimerPaused())
+            if (it.firstTick) {// the progressbar anim should be fired only once
+                progressHelper.animateProgressBar(timerService?.timer?.totalTime,
+                        timerService?.totalProgress, timerService?.isTimerPaused())
+            }
         })
 
         timerViewModel.resumePauseWave.observe(this, Observer {
             if (it) {
                 waveHelper.pauseWave()
                 progressHelper.pauseProgressBar()
-            }
-            else {
+            } else {
                 waveHelper.resumeWave()
                 progressHelper.resumeProgressBar()
             }
@@ -208,12 +212,11 @@ class TimerActivity : BaseActivity() {
     }
 
 
-
     // ---------------------------------------------- User Interaction --------------------------------------
 
 
     override fun onBackPressed() {
-        if (timerService?.timerCompleted == false) showWarningDialog()
+        if (timerService?.timerTerminated == false) showWarningDialog()
         else wrapUpActivity()
 
     }
@@ -235,16 +238,22 @@ class TimerActivity : BaseActivity() {
     fun exitTimer() {
         // let service finish itself after logging data to DB
         TimerService.STOP_SELF = true
-        timerService?.terminateTimer()
+        timerService?.terminateTimer(false)
         finish()
     }
 
 
     private fun wrapUpActivity() {
         finishService()
+        cancelNotification()
         this.finish()
     }
 
+    private fun cancelNotification() {
+        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(TimerCommunication.TIMER_NOTIFICATION_ID)
+        notificationManager.cancel(TimerCommunication.TIMER_COMPLETE_NOTIFICATION_ID)
+    }
 
 
     // ---------------------------------------------- Service Configuration --------------------------------------
@@ -280,9 +289,11 @@ class TimerActivity : BaseActivity() {
 
 
     private fun restoreUIState() {
+        Timber.d("Progress: restoreUiState")
         timerViewModel.setInitialValues(timerService?.lastTick, timerService?.isTimerPaused())
         waveHelper.setAnimState(timerService?.lastTick, timerService?.isTimerPaused())
-        progressHelper.animateProgressBar(timerService?.timer?.totalTime, timerService?.totalProgress, timerService?.isTimerPaused())
+        progressHelper.animateProgressBar(timerService?.timer?.totalTime,
+                timerService?.totalProgress, timerService?.isTimerPaused())
     }
 
 

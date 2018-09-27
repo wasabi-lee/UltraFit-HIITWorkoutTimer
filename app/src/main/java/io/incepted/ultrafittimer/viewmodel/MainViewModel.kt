@@ -226,6 +226,7 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
                 timerObsvb.get()?.isCustomizedObservable?.set(true)
 
             timerObsvb.get()?.mRounds = RoundUtil.getRoundList(names, works, rests)
+            timerObsvb.get()?.calculateTotal()
         }
     }
 

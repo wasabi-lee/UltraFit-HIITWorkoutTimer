@@ -80,8 +80,13 @@ object RoundUtil {
     }
 
 
-    fun calculateWorkoutTime(works: String, rests: String): Int {
+    fun calculateWorkoutTime(rounds: List<Round>): Int {
+        val works = rounds.joinToString(DbDelimiter.DELIMITER) { it.workSeconds.toString() }
+        val rests = rounds.joinToString(DbDelimiter.DELIMITER) { it.restSeconds.toString() }
+        return calculateSessionTime(works) + calculateSessionTime(rests)
+    }
 
+    fun calculateWorkoutTime(works: String, rests: String): Int {
         return calculateSessionTime(works) + calculateSessionTime(rests)
     }
 

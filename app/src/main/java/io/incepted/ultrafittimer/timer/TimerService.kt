@@ -80,7 +80,7 @@ class TimerService : Service(),
     var totalProgress = 0
 
     // Timer is completed normally (not by stopping or any interruption)
-    var timerCompleted = false
+    var completed = false
 
     var timerTerminated = false
 
@@ -173,26 +173,14 @@ class TimerService : Service(),
                 .subscribeBy(
                         onNext = {
                             totalProgress++
-                            lastTick = it
-                            sendTick(it)
-
-                            when {
-                                it.switched -> {
-                                    sendSessionSwitch(it)
-                                    if (!it.firstTick) beepHelper.requestFire(BeepHelper.FLAG_BEEP)
-                                }
-                                it.remianingSecs in 1..cueSeconds ->
-                                    beepHelper.requestFire(BeepHelper.FLAG_CUE)
-                            }
-
+                            processTick(it)
                             updateNotification(it)
                         },
                         onComplete = {
-                            timerCompleted = true
                             timerTerminated = true
                             beepHelper.requestFire(BeepHelper.FLAG_FINISH)
                             sendCompleted()
-                            terminateTimer()
+                            terminateTimer(completed)
                             completeNotification()
                         },
                         onError = { it.printStackTrace() }
@@ -201,8 +189,24 @@ class TimerService : Service(),
     }
 
 
-
     // ------------------------------------------ Update UI -----------------------------------------
+
+
+    private fun processTick(tickInfo: TickInfo) {
+        lastTick = tickInfo
+        sendTick(tickInfo)
+
+        if (tickInfo.remianingSecs in 1..cueSeconds)
+            beepHelper.requestFire(BeepHelper.FLAG_CUE)
+
+        if (tickInfo.switched) {
+            // session is being switched to the next one. (e.g. work -> rest -> cooldown ... etc)
+            sendSessionSwitch(tickInfo)
+            if (!tickInfo.firstTick)
+                // if it is not the start second of the entire timer, then fire the switch sound effect.
+                beepHelper.requestFire(BeepHelper.FLAG_BEEP)
+        }
+    }
 
 
     private fun updateNotification(tickInfo: TickInfo?) {
@@ -214,7 +218,7 @@ class TimerService : Service(),
 
     private fun completeNotification() {
         val notif = notificationUtil.getCompleteNotification()
-        notifManager.notify(TimerCommunication.TIMER_NOTIFICATION_ID, notif)
+        notifManager.notify(TimerCommunication.TIMER_COMPLETE_NOTIFICATION_ID, notif)
     }
 
 
@@ -222,16 +226,17 @@ class TimerService : Service(),
 
     fun resumePauseTimer() {
         timerHelper?.pauseResumeTimer()
-        notifManager.notify(TimerCommunication.TIMER_NOTIFICATION_ID, notificationUtil.getTimerNotificationToggleResumePause(isTimerPaused()))
+        notifManager.notify(TimerCommunication.TIMER_NOTIFICATION_ID,
+                notificationUtil.getTimerNotificationToggleResumePause(isTimerPaused()))
         sendResumePauseState()
     }
 
 
-    fun terminateTimer() {
+    fun terminateTimer(completed: Boolean) {
         timerHelper?.terminateTimer()
         disposable?.dispose()
         saveLastUsedTimer(fromPreset, targetId)
-        saveHistory(timerCompleted, lastTick)
+        saveHistory(completed, lastTick)
     }
 
 
@@ -252,10 +257,9 @@ class TimerService : Service(),
     fun handleNotifAction(context: Context?, intent: Intent?) {
         when (intent?.action) {
             NotificationUtil.ACTION_INTENT_FILTER_DISMISS -> {
-                timerCompleted = false
                 timerTerminated = true
                 sendTerminated()
-                terminateTimer()
+                terminateTimer(false)
             }
             NotificationUtil.ACTION_INTENT_FILTER_RESUME -> resumePauseTimer()
             NotificationUtil.ACTION_INTENT_FILTER_PAUSE -> resumePauseTimer()
@@ -273,6 +277,7 @@ class TimerService : Service(),
             val intent = Intent(TimerCommunication.BR_ACTION_TIMER_SESSION_SWITCH)
             intent.putExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_SESSION, tickInfo.session)
             intent.putExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, tickInfo.roundTotalSecs)
+            intent.putExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_FIRST_TICK, tickInfo.firstTick)
             broadcaster.sendBroadcast(intent)
         }
     }
@@ -313,7 +318,7 @@ class TimerService : Service(),
                 else R.string.pref_key_last_used_timer_id)
         val oppositePrefKey =
                 resources.getString(if (fromPreset) R.string.pref_key_last_used_timer_id
-                else  R.string.pref_key_last_used_preset_id)
+                else R.string.pref_key_last_used_preset_id)
         editor.putLong(prefKey, targetId)
         editor.putLong(oppositePrefKey, -1L)
         editor.apply()
@@ -368,8 +373,9 @@ class TimerService : Service(),
 
     override fun onHistorySaved(id: Long) {
         stopForeground(true)
-        if (STOP_SELF)
+        if (STOP_SELF) {
             finish()
+        }
     }
 
 

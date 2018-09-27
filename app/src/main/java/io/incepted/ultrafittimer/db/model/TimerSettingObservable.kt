@@ -132,13 +132,10 @@ class TimerSettingObservable(final val timerSetting: TimerSetting) : BaseObserva
 
 
     final fun calculateTotal() {
-        val rounds: Int = mRounds.size
         val warmup: Int = TimerUtil.stringToSecond(warmupObservable.get() ?: return)
-        val work: Int = TimerUtil.stringToSecond(workObservable.get() ?: return)
-        val rest: Int = TimerUtil.stringToSecond(restObservable.get() ?: return)
         val cooldown: Int = TimerUtil.stringToSecond(cooldownObservable.get() ?: return)
-
-        val total: Int = warmup + ((work + rest) * rounds) + cooldown
+        val workoutTime = RoundUtil.calculateWorkoutTime(mRounds)
+        val total = warmup + workoutTime + cooldown
         totalObservable.set(TimerUtil.secondsToTimeString(total))
     }
 

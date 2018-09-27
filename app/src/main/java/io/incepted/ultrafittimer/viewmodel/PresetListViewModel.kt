@@ -45,14 +45,17 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
         loadPresets()
     }
 
+
     public fun loadPresets() {
         repository.getPresets(this)
     }
+
 
     private fun populateList(l: List<Preset>) {
         presets.clear()
         presets.addAll(l)
     }
+
 
     fun showPresetActionDialog(presetPosition: Int) {
         if (presetPosition == -1) return
@@ -66,9 +69,11 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
         repository.updatePreset(presetToUpdate, this)
     }
 
+
     fun editItem(presetPosition: Int) {
         openEditScreen.value = presets[presetPosition].id
     }
+
 
     fun showPresetDetail(presetPosition: Int) {
         val presetId: Long = presets[presetPosition].id ?: return
@@ -78,10 +83,12 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
         openSummaryActivity.value = bundle
     }
 
+
     fun deleteItem(presetPosition: Int) {
         val presetToDelete = presets.removeAt(presetPosition)
         repository.deletePreset(presetToDelete.id ?: return, this)
     }
+
 
     fun playPreset(presetPosition: Int) {
         val bundle = Bundle()
@@ -89,6 +96,7 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
         bundle.putLong(TimerActivity.EXTRA_KEY_ID, presets[presetPosition].id ?: return) // TODO Handle error
         openTimerActivity.value = bundle
     }
+
 
     fun playPreset(presetId: Long?) {
         val bundle = Bundle()
@@ -101,6 +109,7 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
     fun finishActivity() {
         finishActivity.value = null
     }
+
 
     fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PresetListActivity.RC_PRESET_EDITED && resultCode == Activity.RESULT_OK) {
@@ -120,32 +129,39 @@ class PresetListViewModel @Inject constructor(appContext: Application, val repos
         repository.getTimerSettingsForPresets(presets, this)
     }
 
+
     override fun onPresetsNotAvailable() {
         snackbarResource.value = R.string.error_unexpected
     }
+
 
     override fun onPresetTimerLoadCompleted(presets: List<Preset>) {
         presetsExist.set(presets.isNotEmpty())
         populateList(presets)
     }
 
+
     override fun onPresetTimerNotAvailable() {
         snackbarResource.value = R.string.error_unexpected
     }
+
 
     override fun onPresetUpdated() {
         snackbarResource.value = R.string.preset_action_updated
         populateList(presets.toList())
     }
 
+
     override fun onPresetUpdateNotAvailable() {
         snackbarResource.value = R.string.error_unexpected
     }
+
 
     override fun onPresetDeleted() {
         snackbarResource.value = R.string.preset_action_deleted
         populateList(presets.toList())
     }
+
 
     override fun onPresetDeletionNotAvailable() {
         snackbarResource.value = R.string.error_unexpected

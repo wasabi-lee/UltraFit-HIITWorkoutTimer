@@ -24,6 +24,7 @@ object TimerCommunication {
     const val BR_EXTRA_KEY_TICK_SESSION_SESSION = "io.incepted.ultrafittimer.timer.EXTRA_KEY_SESSION_SESSION"
     const val BR_EXTRA_KEY_TICK_SESSION_ROUND_COUNT = "io.incepted.ultrafittimer.timer.EXTRA_KEY_SESSION_COUNT"
     const val BR_EXTRA_KEY_TICK_SESSION_TOTAL_ROUND = "io.incepted.ultrafittimer.timer.EXTRA_KEY_TOTAL_ROUND"
+    const val BR_EXTRA_KEY_TICK_SESSION_FIRST_TICK = "io.incepted.ultrafittimer.timer.EXTRA_KEY_TOTAL_ROUND"
 
     // Resume pause state extra
     const val BR_EXTRA_KEY_RESUME_PAUSE_STATE = "io.incepted.ultrafittimer.timer.EXTRA_KEY_RESUME_PAUSE_STATE"

@@ -20,10 +20,6 @@ class WaveHelper(private val mWaveView: WaveView) {
 
     private var pausedTime: Long = 0L
 
-
-    private var lastWaterLevel = 0f
-    private var currentMaxWaterLevel = 0f
-    private var currentSession = 0
     private var paused = false
 
 
@@ -129,7 +125,6 @@ class WaveHelper(private val mWaveView: WaveView) {
         pausedTime = waterLevelAnim?.currentPlayTime ?: 0L
         waterLevelAnim?.cancel()
         paused = true
-        lastWaterLevel = mWaveView.waterLevelRatio
     }
 
 

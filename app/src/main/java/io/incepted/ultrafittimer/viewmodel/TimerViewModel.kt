@@ -6,14 +6,12 @@ import android.graphics.Color
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.incepted.ultrafittimer.timer.TickInfo
 import io.incepted.ultrafittimer.timer.TimerCommunication
-import io.incepted.ultrafittimer.timer.TimerService
 import io.incepted.ultrafittimer.util.SingleLiveEvent
 import io.incepted.ultrafittimer.util.TimerUtil
 import io.incepted.ultrafittimer.util.WorkoutSession
@@ -75,18 +73,9 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
         if (intent == null) return
         when (intent.action) {
             TimerCommunication.BR_ACTION_TIMER_TICK_RESULT -> updateTime(intent)
-            TimerCommunication.BR_ACTION_TIMER_COMPLETED_RESULT -> completeTimer.value = null
-            TimerCommunication.BR_ACTION_TIMER_RESUME_PAUSE_STATE -> {
-                val state = intent.getBooleanExtra(TimerCommunication.BR_EXTRA_KEY_RESUME_PAUSE_STATE, false)
-                paused.set(state)
-                resumePauseWave.value = state
-            }
-            TimerCommunication.BR_ACTION_TIMER_SESSION_SWITCH -> {
-                val sess = intent.getIntExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_SESSION, 0)
-                val roundTotal = intent.getLongExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, 0L)
-                animateWave.value = TickInfo(sess, roundTotal)
-                backgroundColor.set(WorkoutSession.getSessionColor(appContext, sess))
-            }
+            TimerCommunication.BR_ACTION_TIMER_COMPLETED_RESULT -> handleTimerCompletion()
+            TimerCommunication.BR_ACTION_TIMER_RESUME_PAUSE_STATE -> adjustUIforResumePause(intent)
+            TimerCommunication.BR_ACTION_TIMER_SESSION_SWITCH -> handleSessionSwitch(intent)
             TimerCommunication.BR_ACTION_TIMER_TERMINATED -> finishActivity.value = null
             TimerCommunication.BR_ACTION_TIMER_ERROR -> handleError()
         }
@@ -100,8 +89,10 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
             workoutName.set(tickInfo.workoutName)
             remainingTime.set(TimerUtil.secondsToTimeString(tickInfo.remianingSecs.toInt()))
             roundCount.set(getRoundDisplayValue(tickInfo.session, tickInfo.roundCount, tickInfo.totalRounds))
+            backgroundColor.set(WorkoutSession.getSessionColor(appContext, tickInfo.session))
         }
         paused.set(timerPaused ?: false)
+
     }
 
 
@@ -138,6 +129,28 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
         remainingTime.set(TimerUtil.secondsToTimeString(remaining.toInt()))
         roundCount.set(roundStr)
 
+    }
+
+
+    private fun adjustUIforResumePause(intent: Intent) {
+        val state = intent.getBooleanExtra(TimerCommunication.BR_EXTRA_KEY_RESUME_PAUSE_STATE, false)
+        paused.set(state) // adjusting pause/resume icon on the screen accordingly
+        resumePauseWave.value = state // pause/resume wave animation accordingly
+    }
+
+
+    private fun handleSessionSwitch(intent: Intent) {
+        val sess = intent.getIntExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_SESSION, 0)
+        val roundTotal = intent.getLongExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, 0L)
+        val firstTick = intent.getBooleanExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_FIRST_TICK, false);
+        animateWave.value = TickInfo(sess, roundTotal, firstTick)
+        backgroundColor.set(WorkoutSession.getSessionColor(appContext, sess))
+    }
+
+
+    private fun handleTimerCompletion() {
+        completeTimer.value = null
+        locked.set(true) // disabling further interaction
     }
 
 

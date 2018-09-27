@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.PresetListItemBinding
 import io.incepted.ultrafittimer.db.model.Preset
+import io.incepted.ultrafittimer.util.PresetComparator
 import io.incepted.ultrafittimer.viewmodel.PresetListViewModel
 import kotlinx.android.synthetic.main.preset_list_item.view.*
 
@@ -44,6 +45,7 @@ class PresetAdapter(var data: MutableList<Preset>, val viewModel: PresetListView
 
     private fun setList(newData: MutableList<Preset>) {
         this.data = newData
+        newData.sortWith(PresetComparator)
         notifyDataSetChanged()
     }
 
