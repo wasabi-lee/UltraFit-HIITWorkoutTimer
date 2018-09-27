@@ -164,6 +164,10 @@ class MainActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
+            R.id.menu_main_reset_timer -> {
+                mainViewModel.resetCurrentTimer()
+                true
+            }
             R.id.menu_main_save_preset -> {
                 launchSaveDialog()
                 true

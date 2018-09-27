@@ -18,7 +18,6 @@
         <item name="android:textColor">@color/textColor_light</item>
         <item name="header_text_color">@color/colorAccent_header_light</item>
 
-        <item name="transparent_toolbar_style">@style/transparent_toolbar_style_dark</item>
         <item name="button_accent_style">@style/button_accent_light</item>
 
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black</item>
@@ -47,7 +46,6 @@
         <item name="android:textColor">@color/textColor_dark</item>
         <item name="header_text_color">@color/colorAccent</item>
 
-        <item name="transparent_toolbar_style">@style/transparent_toolbar_style_dark</item>
         <item name="button_accent_style">@style/button_accent_dark</item>
 
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white</item>
@@ -61,7 +59,6 @@
 
     <!-- attrs -->
 
-    <attr name="transparent_toolbar_style" format="reference" />
     <attr name="button_accent_style" format="reference" />
 
     <attr name="card_background_drawable" format="reference" />
@@ -100,17 +97,6 @@
         <item name="android:textSize">20sp</item>
         <item name="android:background">@drawable/rounded_button_accent</item>
         <item name="android:textColor">@color/textColor_dark</item>
-    </style>
-
-
-    <style name="transparent_toolbar_style_light" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="colorControlNormal">@android:color/black</item>
-        <item name="android:textColorSecondary">@android:color/black</item>
-    </style>
-
-    <style name="transparent_toolbar_style_dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="colorControlNormal">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
 

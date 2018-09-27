@@ -33,6 +33,7 @@
     <string name="rounds">Rounds</string>
     <string name="total">Total</string>
     <string name="start_all_caps">START</string>
+    <string name="loaded_default_timer">Loaded the default timer</string>
 
     <string name="preset_save_successful">Saved as preset</string>
     <string name="no_preset_message_header">Looks a little empty here…</string>
@@ -56,11 +57,13 @@
     <string name="pref_key_cue_sound">pref_key_cue_sound</string>
     <string name="pref_key_cue_seconds">pref_key_cue_seconds</string>
     <string name="pref_key_vibration">pref_key_vibration</string>
+    <string name="pref_key_vibration_intensity">pref_key_vibration_intensity</string>
     <string name="pref_key_increment_seconds">pref_key_increment_seconds</string>
     <string name="title_activity_sound_setting">SoundSettingActivity</string>
 
     <string name="sound_setting_toolbar_header_beep">Beep Sound</string>
     <string name="sound_setting_toolbar_header_cue">Cue Sound</string>
+    <string name="reset_current_timer">Reset Current Timer</string>
 
 
 </resources>

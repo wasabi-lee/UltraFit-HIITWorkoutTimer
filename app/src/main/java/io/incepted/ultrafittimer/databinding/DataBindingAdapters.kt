@@ -21,7 +21,7 @@ object DataBindingAdapters {
 
     @JvmStatic
     @BindingAdapter("presetData")
-    fun setPrsetListData(v: androidx.recyclerview.widget.RecyclerView, data: List<Preset>) {
+    fun setPresetListData(v: androidx.recyclerview.widget.RecyclerView, data: List<Preset>) {
         val adapter: PresetAdapter = v.adapter as PresetAdapter
         adapter.replaceData(data as MutableList<Preset>)
     }
@@ -48,6 +48,8 @@ object DataBindingAdapters {
         v.text = if (isCustomized) "CUSTOMIZED" else "CUSTOMIZE"
         if (isCustomized) {
             v.paintFlags = v.paintFlags with Paint.UNDERLINE_TEXT_FLAG
+        } else {
+            v.paintFlags = v.paintFlags and Paint.UNDERLINE_TEXT_FLAG.inv()
         }
     }
 

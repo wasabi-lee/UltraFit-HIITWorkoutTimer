@@ -4,6 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
+        android:id="@+id/menu_main_reset_timer"
+        android:icon="@drawable/ic_refresh_18_black"
+        android:title="@string/reset_current_timer"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/menu_main_save_preset"
         android:title="@string/save_this_setting"
         app:showAsAction="never"

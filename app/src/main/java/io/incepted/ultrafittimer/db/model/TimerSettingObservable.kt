@@ -91,7 +91,7 @@ class TimerSettingObservable(final val timerSetting: TimerSetting) : BaseObserva
     private fun trimRoundCount(offset: Int) {
         var newRoundCount = NumberUtil.toValidRoundCount(roundCountObservable.get() ?: "1", offset)
         newRoundCount = if (newRoundCount <= 0) 1 else newRoundCount
-        roundCountObservable.set((if (newRoundCount <= 0) 1 else newRoundCount).toString())
+        roundCountObservable.set(newRoundCount.toString())
         adjustRounds(mRounds.size, newRoundCount)
     }
 
@@ -103,14 +103,24 @@ class TimerSettingObservable(final val timerSetting: TimerSetting) : BaseObserva
 
 
     private fun updateRounds(fieldToUpdate: ObservableField<String>, session: Int) {
-        if (!isCustomizedObservable.get()) {
-            val updatedValue = TimerUtil.stringToSecond(fieldToUpdate.get() ?: return)
-            for (round in mRounds)
-                if (session == WorkoutSession.WORK)
-                    round.workSeconds = updatedValue
-                else
-                    round.restSeconds = updatedValue
+        if (isCustomizedObservable.get()) {
+            // the customized setting gets reset when the user changes the input in the MainActivity
+            isCustomizedObservable.set(false)
+            resetRoundNames()
         }
+
+        val updatedValue = TimerUtil.stringToSecond(fieldToUpdate.get() ?: return)
+        for (round in mRounds)
+            if (session == WorkoutSession.WORK)
+                round.workSeconds = updatedValue
+            else
+                round.restSeconds = updatedValue
+
+    }
+
+
+    private fun resetRoundNames() {
+        mRounds.forEach { it.workoutName = "Work" }
     }
 
 

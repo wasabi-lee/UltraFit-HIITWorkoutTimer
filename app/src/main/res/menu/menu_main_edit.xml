@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/menu_main_reset_timer"
+        android:icon="@drawable/ic_refresh_18_black"
+        android:title="@string/reset_current_timer"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_main_edit_save"

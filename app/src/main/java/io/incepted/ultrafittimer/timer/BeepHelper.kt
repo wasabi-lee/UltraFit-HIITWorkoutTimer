@@ -34,13 +34,12 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
         private const val MAX_STREAM = 3
 
         val VIBRATION_PATTERN_BEEP_TIMING = longArrayOf(0L, 400L, 100L, 200L)
-        val VIBRATION_PATTERN_BEEP_AMPLITUDE = intArrayOf(0, 255, 0, 255)
-
+        val VIBRATION_PATTERN_BEEP_AMPLITUDE = intArrayOf(0, 200, 0, 200)
         val VIBRATION_PATTERN_FINISH_TIMING = longArrayOf(0L, 800L, 100L, 800L, 100L, 800L)
-        val VIBRATION_PATTERN_FINISH_AMPLITUDE = intArrayOf(0, 255, 0, 255, 0, 255)
+        val VIBRATION_PATTERN_FINISH_AMPLITUDE = intArrayOf(0, 200, 0, 200, 0, 200)
 
         const val VIBRATION_CUE_DURATION = 200L
-        const val VIBRATION_CUE_AMPLITUDE = 180
+        const val VIBRATION_CUE_AMPLITUDE = 80
     }
 
 
@@ -48,7 +47,6 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
 
 
     init {
-        Timber.d("INIT!")
         initSoundPool()
         getSettingValues(sharedPref)
     }
@@ -83,6 +81,7 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
         cueSoundRes = SoundResSwitcher.cueResSwitcher((sharedPref.getString(cuePrefKey, "0")
                 ?: "0").toInt())
         vibrationEnabled = sharedPref.getBoolean(vibrationPrefKey, false)
+
     }
 
 
@@ -126,7 +125,7 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
 
 
     private fun vibrateDevice() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= 26) {
             when (requestedFlag) {
                 FLAG_BEEP ->
                     v.vibrate(VibrationEffect.createWaveform(VIBRATION_PATTERN_BEEP_TIMING,

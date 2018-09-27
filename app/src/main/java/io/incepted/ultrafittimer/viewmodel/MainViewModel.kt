@@ -170,6 +170,12 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
     }
 
 
+    fun resetCurrentTimer() {
+        initNewTimer()
+        snackbarTextRes.value = R.string.loaded_default_timer
+    }
+
+
     // ---------------------------------- Activity transition ----------------------------------
 
 
@@ -251,7 +257,6 @@ class MainViewModel @Inject constructor(val appContext: Application, val reposit
         val session: Int = WorkoutSession.getSessionById(clickedId)
         val curOffset = if (session == WorkoutSession.ROUND) 1 else offset
         timerObsvb.get()?.handleChange(session, curOffset * if (increment) 1 else -1)
-        timerObsvb.get()?.calculateTotal()
     }
 
 
