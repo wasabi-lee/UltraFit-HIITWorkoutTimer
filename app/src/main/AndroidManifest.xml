@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.incepted.ultrafittimer">
 
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -11,7 +12,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme_light">
+        android:theme="@style/AppTheme_light"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".activity.MainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize">
@@ -42,7 +44,8 @@
         <activity
             android:name=".activity.SoundSettingActivity"
             android:label="@string/title_activity_sound_setting"
-            android:theme="@style/AppTheme_light"></activity>
+            android:theme="@style/AppTheme_light" />
+        <activity android:name=".activity.FeedbackActivity"/>
     </application>
 
 </manifest>

@@ -11,45 +11,54 @@
     <!--</io.incepted.ultrafittimer.view.CustomPrefCategory>-->
 
 
-    <io.incepted.ultrafittimer.view.CustomPrefCategory android:title="Sound">
+    <io.incepted.ultrafittimer.view.CustomPrefCategory android:title="@string/pref_category_title_sound">
 
         <androidx.preference.Preference
             android:defaultValue="1"
-            android:dialogTitle="Beep Sound"
-            android:key="pref_key_beep_sound"
-            android:title="Beep Sound" />
+            android:dialogTitle="@string/pref_dialog_title_beep_sound"
+            android:key="@string/pref_key_beep_sound"
+            android:title="@string/pref_title_beep_sound" />
 
         <androidx.preference.Preference
             android:defaultValue="1"
-            android:dialogTitle="Cue Sound"
-            android:key="pref_key_cue_sound"
-            android:title="Cue Sound" />
+            android:dialogTitle="@string/pref_dialog_title_cue_sound"
+            android:key="@string/pref_key_cue_sound"
+            android:title="@string/pref_title_cue_sound" />
 
         <androidx.preference.ListPreference
             android:defaultValue="3"
-            android:dialogTitle="Cue Seconds"
+            android:dialogTitle="@string/pref_title_cue_seconds"
             android:entries="@array/pref_list_cue_seconds"
             android:entryValues="@array/pref_list_cue_second_values"
-            android:key="pref_key_cue_seconds"
+            android:key="@string/pref_key_cue_seconds"
             android:summary="%s"
-            android:title="Cue Seconds" />
+            android:title="@string/pref_dialog_title_cue_seconds" />
     </io.incepted.ultrafittimer.view.CustomPrefCategory>
 
-    <io.incepted.ultrafittimer.view.CustomPrefCategory android:title="Timer Setup">
+    <io.incepted.ultrafittimer.view.CustomPrefCategory android:title="@string/pref_category_title_timer">
 
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="@string/pref_key_vibration"
-            android:title="Vibration"/>
+            android:title="@string/pref_title_vibration"/>
 
         <androidx.preference.ListPreference
             android:defaultValue="1"
-            android:dialogTitle="Increment the time by"
+            android:dialogTitle="@string/pref_dialog_title_increment"
             android:entries="@array/pref_list_time_increment"
             android:entryValues="@array/pref_list_time_increment_value"
-            android:key="pref_key_increment_seconds"
+            android:key="@string/pref_key_increment_seconds"
             android:summary="%s"
-            android:title="+/-Button Increment" />
+            android:title="@string/pref_title_increment" />
+
+    </io.incepted.ultrafittimer.view.CustomPrefCategory>
+
+    <io.incepted.ultrafittimer.view.CustomPrefCategory
+        android:title = "@string/pref_category_title_help">
+
+        <androidx.preference.Preference
+            android:key="@string/pref_key_feedback"
+            android:title="@string/pref_title_feedback"/>
 
     </io.incepted.ultrafittimer.view.CustomPrefCategory>
 </androidx.preference.PreferenceScreen>

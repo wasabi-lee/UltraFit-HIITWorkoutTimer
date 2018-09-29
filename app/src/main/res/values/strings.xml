@@ -59,11 +59,32 @@
     <string name="pref_key_vibration">pref_key_vibration</string>
     <string name="pref_key_vibration_intensity">pref_key_vibration_intensity</string>
     <string name="pref_key_increment_seconds">pref_key_increment_seconds</string>
+    <string name="pref_key_feedback">pref_key_feedback</string>
+
     <string name="title_activity_sound_setting">SoundSettingActivity</string>
 
     <string name="sound_setting_toolbar_header_beep">Beep Sound</string>
     <string name="sound_setting_toolbar_header_cue">Cue Sound</string>
     <string name="reset_current_timer">Reset Current Timer</string>
+    <string name="pref_title_feedback">Send Feedback</string>
+    <string name="pref_dialog_title_increment">Increment the time by</string>
+    <string name="pref_title_increment">+/-Button Increment</string>
+    <string name="pref_title_vibration">Vibration</string>
+    <string name="pref_title_beep_sound">Beep Sound</string>
+    <string name="pref_title_cue_sound">Cue Sound</string>
+    <string name="pref_title_cue_seconds">Cue Seconds</string>
+    <string name="pref_dialog_title_cue_seconds">Cue Seconds</string>
+    <string name="pref_dialog_title_beep_sound">Beep Sound</string>
+    <string name="pref_dialog_title_cue_sound">Cue Sound</string>
+
+    <string name="pref_category_title_sound">Sound</string>
+    <string name="pref_category_title_timer">Timer</string>
+    <string name="pref_category_title_help">Help Us</string>
+    <string name="let_us_know_how_you_think">Let us know how you think</string>
+    <string name="send_us_some_feedback_and_bug_reports_nwe_would_love_to_hear_your_opinion">Send us some feedback and bug reports.
+        \nWe would love to hear your opinion!</string>
+    <string name="send_feedback_email">Send Feedback Email</string>
+    <string name="feedback">Feedback</string>
 
 
 </resources>

@@ -31,4 +31,7 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = [SoundSettingActivityModule::class])
     abstract fun contributeSoundSettingActivity(): SoundSettingActivity
+
+    @ContributesAndroidInjector(modules = [FeedbackActivityModule::class])
+    abstract fun contributeFeedbackActivity(): FeedbackActivity
 }

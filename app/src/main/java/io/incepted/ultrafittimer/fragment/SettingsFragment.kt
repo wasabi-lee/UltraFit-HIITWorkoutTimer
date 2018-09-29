@@ -7,6 +7,7 @@ import androidx.preference.PreferenceFragmentCompat
 import io.incepted.ultrafittimer.R
 import android.content.Intent
 import android.content.SharedPreferences
+import io.incepted.ultrafittimer.activity.FeedbackActivity
 import io.incepted.ultrafittimer.activity.SoundSettingActivity
 import io.incepted.ultrafittimer.timer.SoundResSwitcher
 
@@ -54,6 +55,11 @@ class SettingsFragment : PreferenceFragmentCompat(), androidx.preference.Prefere
                 intent.putExtra(SoundSettingActivity.EXTRA_KEY_PREF_VALUE, cueValue)
                 startActivityForResult(intent, RC_CUE)
 
+            }
+
+            resources.getString(R.string.pref_key_feedback) -> {
+                val intent = Intent(activity, FeedbackActivity::class.java)
+                startActivity(intent)
             }
         }
 
