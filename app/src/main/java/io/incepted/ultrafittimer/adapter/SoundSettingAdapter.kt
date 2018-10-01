@@ -16,7 +16,6 @@ import android.widget.TextView
 import io.incepted.ultrafittimer.generated.callback.OnClickListener
 import kotlinx.android.synthetic.main.sound_setting_list_item.view.*
 
-
 class SoundSettingAdapter(context: Context, val soundList: List<SoundItem>, val callback: SoundSelectCallback)
     : ArrayAdapter<SoundItem>(context, -1){
 

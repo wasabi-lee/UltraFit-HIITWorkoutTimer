@@ -35,7 +35,7 @@ class SettingsFragment : PreferenceFragmentCompat(), androidx.preference.Prefere
             getString(R.string.pref_key_beep_sound) -> {
 
                 val beepValue =
-                        (sharedPref.getString(resources.getString(R.string.pref_key_beep_sound), "0") ?: "0").toInt()
+                        (sharedPref.getString(resources.getString(R.string.pref_key_beep_sound), "1") ?: "1").toInt()
 
                 val intent = Intent(activity, SoundSettingActivity::class.java)
                 intent.putExtra(SoundSettingActivity.EXTRA_KEY_IS_CUE_PREF, false)
@@ -47,7 +47,7 @@ class SettingsFragment : PreferenceFragmentCompat(), androidx.preference.Prefere
             getString(R.string.pref_key_cue_sound) -> {
 
                 val cueValue =
-                        (sharedPref.getString(resources.getString(R.string.pref_key_cue_sound), "0") ?: "0").toInt()
+                        (sharedPref.getString(resources.getString(R.string.pref_key_cue_sound), "1") ?: "1").toInt()
 
 
                 val intent = Intent(activity, SoundSettingActivity::class.java)
