@@ -1,8 +1,8 @@
 package io.incepted.ultrafittimer.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -19,6 +19,7 @@ class CustomPrefCategory(context: Context, attributeSet: AttributeSet?, defStyle
     constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) :
             this(context, attributeSet, defStyleAttr, 0)
 
+    @SuppressLint("RestrictedApi")
     constructor(context: Context, attributeSet: AttributeSet?) :
             this(context, attributeSet, TypedArrayUtils.getAttr(context, R.attr.preferenceCategoryStyle,
                     android.R.attr.preferenceCategoryStyle))

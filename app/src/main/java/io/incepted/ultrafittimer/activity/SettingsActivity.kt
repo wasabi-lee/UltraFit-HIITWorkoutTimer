@@ -1,9 +1,6 @@
 package io.incepted.ultrafittimer.activity
 
-import android.app.FragmentTransaction
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceFragment
 import android.view.MenuItem
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.fragment.SettingsFragment

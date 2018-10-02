@@ -1,31 +1,38 @@
 <resources>
     <string name="app_name">UltraFit -HIIT Workout Timer</string>
+    <string name="appname_short">UltraFit.</string>
+
 
     <!-- Error messages -->
     <string name="error_invalid_time">Please type a valid time</string>
     <string name="error_invalid_round">Please type a valid number</string>
-
     <string name="error_unexpected">Unexpected error occurred. Please try again later!</string>
 
+
+    <!-- user interaction message -->
     <string name="save_this_setting">Save This As Preset</string>
     <string name="load_presets">Load Presets</string>
-    <string name="settings">Settings</string>
-    <string name="appname_short">UltraFit.</string>
+    <string name="loaded_default_timer">Loaded the default timer</string>
+    <string name="preset_save_successful">Saved as preset</string>
+    <string name="preset_action_updated">Successfully updated</string>
+    <string name="preset_action_deleted">Successfully deleted</string>
+    <string name="preset_action_edited">Successfully edited</string>
 
+
+    <!-- alert dialog text -->
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_discard">Discard</string>
     <string name="alert_dialog_cancel">Cancel</string>
     <string name="alert_dialog_empty_title"> </string>
     <string name="alert_dialog_exit_warning_title">Are your sure to exit this screen?</string>
     <string name="alert_dialog_exit_warning_message">Your customized detail will be discarded</string>
-
     <string name="alert_dialog_timer_exit_warning_title">Are your sure to exit?</string>
     <string name="alert_dialog_timer_exit_warning_message">The current timer will be discarded</string>
-
     <string name="alert_dialog_preset_save_title">Save this preset</string>
     <string name="alert_dialog_preset_save_edit_hint">Type this preset\'s name</string>
 
 
+    <!-- workout session text -->
     <string name="cool_down">Cool Down</string>
     <string name="warm_up">Warm Up</string>
     <string name="work">Work</string>
@@ -33,25 +40,36 @@
     <string name="rounds">Rounds</string>
     <string name="total">Total</string>
     <string name="start_all_caps">START</string>
-    <string name="loaded_default_timer">Loaded the default timer</string>
 
-    <string name="preset_save_successful">Saved as preset</string>
+
+    <!-- preset activity placeholder text -->
     <string name="no_preset_message_header">Looks a little empty here…</string>
     <string name="no_preset_message_body">No worries, Hit the button below to save your workout plans!</string>
     <string name="create_a_preset">CREATE A PRESET</string>
-    <string name="presets">Presets</string>
 
-    <string name="preset_action_updated">Successfully updated</string>
-    <string name="preset_action_deleted">Successfully deleted</string>
-    <string name="preset_action_edited">Successfully edited</string>
-    <string name="save_all_caps">SAVE</string>
+
+    <!-- toolbar title text -->
+    <string name="presets">Presets</string>
     <string name="timer_setup">Timer Setup</string>
     <string name="summary">Summary</string>
+    <string name="feedback">Feedback</string>
+    <string name="setting_text">Settings</string>
 
 
+    <!-- menu text -->
+    <string name="save_all_caps">SAVE</string>
+    <string name="reset_current_timer">Reset Current Timer</string>
+
+
+    <!-- activity label -->
+    <string name="title_activity_sound_setting">SoundSettingActivity</string>
+    <string name="sound_setting_toolbar_header_beep">Beep Sound</string>
+    <string name="sound_setting_toolbar_header_cue">Cue Sound</string>
+
+
+    <!-- preference keys -->
     <string name="pref_key_last_used_preset_id">pref_key_last_used_preset_id</string>
     <string name="pref_key_last_used_timer_id">pref_key_last_used_timer_id</string>
-
     <string name="pref_key_theme">pref_key_theme</string>
     <string name="pref_key_beep_sound">pref_key_beep_sound</string>
     <string name="pref_key_cue_sound">pref_key_cue_sound</string>
@@ -61,30 +79,35 @@
     <string name="pref_key_increment_seconds">pref_key_increment_seconds</string>
     <string name="pref_key_feedback">pref_key_feedback</string>
 
-    <string name="title_activity_sound_setting">SoundSettingActivity</string>
 
-    <string name="sound_setting_toolbar_header_beep">Beep Sound</string>
-    <string name="sound_setting_toolbar_header_cue">Cue Sound</string>
-    <string name="reset_current_timer">Reset Current Timer</string>
-    <string name="pref_title_feedback">Send Feedback</string>
-    <string name="pref_dialog_title_increment">Increment the time by</string>
+    <!-- preference title -->
     <string name="pref_title_increment">+/-Button Increment</string>
     <string name="pref_title_vibration">Vibration</string>
     <string name="pref_title_beep_sound">Beep Sound</string>
     <string name="pref_title_cue_sound">Cue Sound</string>
     <string name="pref_title_cue_seconds">Cue Seconds</string>
+    <string name="pref_title_feedback">Send Feedback</string>
+
+
+    <!-- preference dialog title -->
+    <string name="pref_dialog_title_increment">Increment the time by</string>
     <string name="pref_dialog_title_cue_seconds">Cue Seconds</string>
     <string name="pref_dialog_title_beep_sound">Beep Sound</string>
     <string name="pref_dialog_title_cue_sound">Cue Sound</string>
 
+
+    <!-- preference category title -->
     <string name="pref_category_title_sound">Sound</string>
     <string name="pref_category_title_timer">Timer</string>
     <string name="pref_category_title_help">Help Us</string>
+
+
+    <!-- feedback activity text -->
     <string name="let_us_know_how_you_think">Let us know how you think</string>
-    <string name="send_us_some_feedback_and_bug_reports_nwe_would_love_to_hear_your_opinion">Send us some feedback and bug reports.
+    <string name="send_us_some_feedback_and_bug_reports_nwe_would_love_to_hear_your_opinion">
+        Send us some feedback and bug reports.
         \nWe would love to hear your opinion!</string>
     <string name="send_feedback_email">Send Feedback Email</string>
-    <string name="feedback">Feedback</string>
 
 
 </resources>
