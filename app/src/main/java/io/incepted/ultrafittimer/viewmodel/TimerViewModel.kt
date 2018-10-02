@@ -15,7 +15,6 @@ import io.incepted.ultrafittimer.timer.TimerCommunication
 import io.incepted.ultrafittimer.util.SingleLiveEvent
 import io.incepted.ultrafittimer.util.TimerUtil
 import io.incepted.ultrafittimer.util.WorkoutSession
-import timber.log.Timber
 import javax.inject.Inject
 
 class TimerViewModel @Inject constructor(val appContext: Application, val repository: DbRepository)
@@ -62,7 +61,6 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
 
     fun start() {
-        Timber.d("Started")
     }
 
 

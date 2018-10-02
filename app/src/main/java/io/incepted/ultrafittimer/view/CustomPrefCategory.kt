@@ -11,7 +11,6 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceViewHolder
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.UltraFitApp
-import timber.log.Timber
 import javax.inject.Inject
 
 class CustomPrefCategory(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :

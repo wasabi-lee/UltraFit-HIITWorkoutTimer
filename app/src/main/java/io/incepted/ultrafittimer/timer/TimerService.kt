@@ -167,7 +167,7 @@ class TimerService : Service(),
                     rounds = (RoundUtil.getRoundList(timer, false)) as ArrayList<Round>)
 
         disposable = Observable.create<TickInfo> { it -> timerHelper?.startTimer(it) }
-                .doOnDispose { Timber.d("disposed!") }
+                .doOnDispose { }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(

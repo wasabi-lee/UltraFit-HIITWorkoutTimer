@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import timber.log.Timber
 
 @Entity(tableName = "preset")
 class Preset(@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "_id") var id: Long?,

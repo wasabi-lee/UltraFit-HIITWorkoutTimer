@@ -9,13 +9,9 @@ import io.incepted.ultrafittimer.db.model.WorkoutHistory
 import io.incepted.ultrafittimer.db.source.LocalDataSource
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Action
 import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Consumer
-import io.reactivex.functions.Function
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import io.incepted.ultrafittimer.OpenForTesting
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -11,8 +11,6 @@ import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.CustomizeListItemBinding
 import io.incepted.ultrafittimer.db.tempmodel.Round
 import io.incepted.ultrafittimer.viewmodel.CustomizeViewModel
-import kotlinx.android.synthetic.main.summary_list_item.view.*
-import timber.log.Timber
 
 class RoundAdapter(var data: MutableList<Round>, val viewModel: CustomizeViewModel)
     : androidx.recyclerview.widget.RecyclerView.Adapter<RoundAdapter.ViewHolder>() {

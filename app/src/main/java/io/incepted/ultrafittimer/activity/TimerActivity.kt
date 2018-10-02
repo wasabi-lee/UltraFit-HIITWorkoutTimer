@@ -19,10 +19,7 @@ import io.incepted.ultrafittimer.view.ProgressHelper
 import io.incepted.ultrafittimer.view.WaveHelper
 import io.incepted.ultrafittimer.viewmodel.TimerViewModel
 import kotlinx.android.synthetic.main.activity_timer.*
-import timber.log.Timber
 import javax.inject.Inject
-import android.content.Context.NOTIFICATION_SERVICE
-import androidx.core.content.ContextCompat.getSystemService
 import android.app.NotificationManager
 
 
@@ -289,7 +286,6 @@ class TimerActivity : BaseActivity() {
 
 
     private fun restoreUIState() {
-        Timber.d("Progress: restoreUiState")
         timerViewModel.setInitialValues(timerService?.lastTick, timerService?.isTimerPaused())
         waveHelper.setAnimState(timerService?.lastTick, timerService?.isTimerPaused())
         progressHelper.animateProgressBar(timerService?.timer?.totalTime,

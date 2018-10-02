@@ -13,7 +13,6 @@ import io.incepted.ultrafittimer.adapter.SummaryAdapter
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.tempmodel.Round
 import io.incepted.ultrafittimer.util.SwipeDeleteCallback
-import timber.log.Timber
 
 object DataBindingAdapters {
 
@@ -31,7 +30,6 @@ object DataBindingAdapters {
     fun setRoundData(v: RecyclerView, data: List<Round>) {
         val adapter: SummaryAdapter = v.adapter as SummaryAdapter
         adapter.replaceData(data as MutableList<Round>)
-        Timber.d("from adapter ${data.size}")
     }
 
 

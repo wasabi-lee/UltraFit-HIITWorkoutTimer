@@ -1,10 +1,8 @@
 package io.incepted.ultrafittimer.util
 
 import android.content.Context
-import android.graphics.Color
 import androidx.core.content.ContextCompat
 import io.incepted.ultrafittimer.R
-import timber.log.Timber
 
 object WorkoutSession {
     const val WARMUP = 0

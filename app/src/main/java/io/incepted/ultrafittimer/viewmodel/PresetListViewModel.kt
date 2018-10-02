@@ -17,7 +17,6 @@ import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.source.LocalDataSource
 import io.incepted.ultrafittimer.util.SingleLiveEvent
-import timber.log.Timber
 import javax.inject.Inject
 
 class PresetListViewModel @Inject constructor(appContext: Application, val repository: DbRepository)

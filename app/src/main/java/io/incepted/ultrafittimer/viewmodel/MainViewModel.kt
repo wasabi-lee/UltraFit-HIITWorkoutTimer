@@ -22,7 +22,6 @@ import io.incepted.ultrafittimer.timer.TimerService
 import io.incepted.ultrafittimer.util.RoundUtil
 import io.incepted.ultrafittimer.util.SingleLiveEvent
 import io.incepted.ultrafittimer.util.WorkoutSession
-import timber.log.Timber
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(val appContext: Application, val repository: DbRepository)

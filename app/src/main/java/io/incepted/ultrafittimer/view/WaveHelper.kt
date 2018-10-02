@@ -8,9 +8,6 @@ import android.graphics.Color
 import android.view.animation.LinearInterpolator
 import com.gelitenight.waveview.library.WaveView
 import io.incepted.ultrafittimer.timer.TickInfo
-import io.incepted.ultrafittimer.util.WorkoutSession
-import timber.log.Timber
-
 
 class WaveHelper(private val mWaveView: WaveView) {
 

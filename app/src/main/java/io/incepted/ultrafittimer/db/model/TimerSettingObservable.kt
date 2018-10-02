@@ -6,7 +6,6 @@ import androidx.databinding.ObservableField
 import io.incepted.ultrafittimer.OpenForTesting
 import io.incepted.ultrafittimer.db.tempmodel.Round
 import io.incepted.ultrafittimer.util.*
-import timber.log.Timber
 
 @OpenForTesting
 class TimerSettingObservable(final val timerSetting: TimerSetting) : BaseObservable() {

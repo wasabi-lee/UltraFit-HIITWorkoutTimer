@@ -182,7 +182,6 @@ class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayL
 
     fun terminateTimer() {
         stopped.set(true)
-        Timber.d("Termnation called")
         if (disposable?.isDisposed == true) disposable?.dispose()
     }
 

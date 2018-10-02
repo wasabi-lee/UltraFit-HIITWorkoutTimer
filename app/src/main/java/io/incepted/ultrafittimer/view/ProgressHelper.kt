@@ -26,8 +26,6 @@ class ProgressHelper(private val progressBar: MaterialProgressBar) {
         progressBar.max = max * 1000
         progressBar.progress = progress * 1000
 
-        Timber.d("progressMax: ${max*1000} / progressProgress: ${progress*1000} / progressPause: $paused")
-        Timber.d("$duration")
 
         progressAnimator = ObjectAnimator.ofInt(progressBar, "progress", progress * 1000, max * 1000)
         progressAnimator?.duration = duration.toLong()
@@ -39,7 +37,6 @@ class ProgressHelper(private val progressBar: MaterialProgressBar) {
 
 
     fun animateProgressBar(max: Int?, progress: Int?, paused: Boolean?) {
-        Timber.d("max: $max / progress: $progress / pause: $paused")
             if (max == null || progress == null || paused == null) return
             startProgressAnim(max, progress, paused)
 

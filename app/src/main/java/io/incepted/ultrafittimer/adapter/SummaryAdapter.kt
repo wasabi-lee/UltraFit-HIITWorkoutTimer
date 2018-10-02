@@ -10,7 +10,6 @@ import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.databinding.SummaryListItemBinding
 import io.incepted.ultrafittimer.db.tempmodel.Round
 import io.incepted.ultrafittimer.viewmodel.SummaryViewModel
-import timber.log.Timber
 
 class SummaryAdapter(var data: MutableList<Round>, val viewmodel: SummaryViewModel)
     : RecyclerView.Adapter<SummaryAdapter.ViewHolder>() {

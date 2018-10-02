@@ -103,7 +103,6 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
                         else cueSoundRes, 1) ?: 0
             }
         } catch (e: Resources.NotFoundException) {
-            Timber.d("Resource not found")
         }
     }
 

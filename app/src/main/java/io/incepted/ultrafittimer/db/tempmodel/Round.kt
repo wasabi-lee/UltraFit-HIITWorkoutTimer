@@ -4,7 +4,6 @@ import androidx.databinding.ObservableField
 import android.view.View
 import io.incepted.ultrafittimer.util.TimerUtil
 import io.incepted.ultrafittimer.util.WorkoutSession
-import timber.log.Timber
 
 data class Round(var workoutName: String, var workSeconds: Int, var restSeconds: Int) {
 
@@ -57,10 +56,6 @@ data class Round(var workoutName: String, var workSeconds: Int, var restSeconds:
         restSeconds = TimerUtil.stringToSecond(rest.get() ?: "0")
     }
 
-
-    fun printData() {
-        Timber.d("Clicked round: ${work.get()} - ${rest.get()}")
-    }
 
 
 }
