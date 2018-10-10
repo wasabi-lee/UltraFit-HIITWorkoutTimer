@@ -103,11 +103,12 @@ class TimerSettingObservable(final val timerSetting: TimerSetting) : BaseObserva
 
     private fun updateRounds(fieldToUpdate: ObservableField<String>, session: Int) {
         if (isCustomizedObservable.get()) {
-            // the customized setting gets reset when the user changes the input in the MainActivity
+            // the customized setting gets reset when the user changes the input in the MainActivity again
             isCustomizedObservable.set(false)
             resetRoundNames()
         }
 
+        // Get the value from the EditText and apply the change to the rounds 
         val updatedValue = TimerUtil.stringToSecond(fieldToUpdate.get() ?: return)
         for (round in mRounds)
             if (session == WorkoutSession.WORK)
@@ -152,9 +153,15 @@ class TimerSettingObservable(final val timerSetting: TimerSetting) : BaseObserva
     fun finalizeDetail() {
         handleChange(WorkoutSession.WARMUP, 0)
         handleChange(WorkoutSession.COOLDOWN, 0)
-        handleChange(WorkoutSession.WORK, 0)
-        handleChange(WorkoutSession.REST, 0)
         handleChange(WorkoutSession.ROUND, 0)
+
+        if (!isCustomizedObservable.get()) {
+            // update the changes in the EditText ONLY when the workout is not customized.
+            // When customized, the customized setting is in higher priority
+            // therefore the change in the EditText doesn't affect the workout.
+            handleChange(WorkoutSession.WORK, 0)
+            handleChange(WorkoutSession.REST, 0)
+        }
 
         finalWarmup = TimerUtil.stringToSecond(warmupObservable.get() ?: return)
         finalCooldown = TimerUtil.stringToSecond(cooldownObservable.get() ?: return)
