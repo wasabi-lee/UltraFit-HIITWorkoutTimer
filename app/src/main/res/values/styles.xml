@@ -69,32 +69,32 @@
     <!-- Widget styles -->
 
     <style name="editText_normal" parent="Base.V7.Widget.AppCompat.EditText">
-        <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">@font/roboto_bold_italic</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="editText_title" parent="Base.V7.Widget.AppCompat.EditText">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
     <style name="editText_large" parent="Base.V7.Widget.AppCompat.EditText">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:paddingTop">@dimen/spacing_no_spacing</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
     <style name="button_accent_light">
         <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:background">@drawable/rounded_button_accent</item>
         <item name="android:textColor">@color/textColor_light</item>
     </style>
 
     <style name="button_accent_dark">
         <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:background">@drawable/rounded_button_accent</item>
         <item name="android:textColor">@color/textColor_dark</item>
     </style>
@@ -108,7 +108,7 @@
     </style>
 
     <style name="workoutSettingHeaderTextStyle">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
@@ -191,43 +191,43 @@
 
 
     <style name="BoldMediumTextStyle">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
     <style name="SemiBoldMediumTextStyle">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <style name="RegularMediumTextStyle">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
     <style name="BoldMediumItalicTextStyle">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto_bold_italic</item>
     </style>
 
 
     <style name="BoldSmallTextStyle">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
     <style name="SemiBoldSmallTextStyle">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <style name="RegularSmallTextStyle">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
     <style name="BoldSmallItalicTextStyle">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/roboto_bold_italic</item>
     </style>
 

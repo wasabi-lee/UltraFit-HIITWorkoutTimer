@@ -108,7 +108,7 @@ class TimerSettingObservable(final val timerSetting: TimerSetting) : BaseObserva
             resetRoundNames()
         }
 
-        // Get the value from the EditText and apply the change to the rounds 
+        // Get the value from the EditText and apply the change to the rounds
         val updatedValue = TimerUtil.stringToSecond(fieldToUpdate.get() ?: return)
         for (round in mRounds)
             if (session == WorkoutSession.WORK)

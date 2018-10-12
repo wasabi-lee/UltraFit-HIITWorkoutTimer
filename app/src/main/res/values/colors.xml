@@ -16,7 +16,7 @@
     <color name="windowBackground_light">#ffffff</color>
     <color name="secondaryWindowBackground_light">#1df8f7f7</color>
     <color name="textColor_light">#000000</color>
-    <color name="cardBackground_light">#f3f3f3</color>
+    <color name="cardBackground_light">#f9f9f9</color>
 
     <!-- Dark theme -->
     <color name="windowBackground_dark">#202020</color>

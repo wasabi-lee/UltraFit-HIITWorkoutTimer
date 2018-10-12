@@ -38,7 +38,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    style="@style/BoldLargeTextStyle"
+                    style="@style/toolbarTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"

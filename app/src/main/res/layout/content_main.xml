@@ -279,7 +279,7 @@
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> viewmodel.openCustomizeActivity()}"
                     customized="@{viewmodel.timerObsvb.isCustomizedObservable}"
-                    style="@style/SemiBoldSmallTextStyle"
+                    style="@style/SemiBoldMediumTextStyle"
                     android:paddingLeft="@dimen/spacing_normal"
                     android:paddingRight="@dimen/spacing_normal"
                     android:paddingStart="@dimen/spacing_normal"

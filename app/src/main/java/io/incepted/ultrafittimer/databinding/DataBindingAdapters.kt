@@ -88,8 +88,10 @@ object DataBindingAdapters {
     @JvmStatic
     @BindingAdapter("itemBackground")
     fun setItemBackground(v: androidx.constraintlayout.widget.ConstraintLayout, dummy: Int) {
-
-
+        val pos: Int = v.tag as Int
+            v.setBackgroundColor(Color.parseColor(if (pos % 2 != 0) "#ffffff" else "#f9f9f9" +
+                    "" +
+                    ""))
     }
 
 }
