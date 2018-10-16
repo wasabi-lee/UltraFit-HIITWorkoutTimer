@@ -6,6 +6,7 @@ import android.app.Service
 import android.content.*
 import android.os.Binder
 import android.os.IBinder
+import android.os.PowerManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.android.AndroidInjection
 import io.incepted.ultrafittimer.R
@@ -57,6 +58,10 @@ class TimerService : Service(),
 
     @Inject
     lateinit var beepHelper: BeepHelper
+
+    @Inject
+    lateinit var wakeLock: PowerManager.WakeLock
+
 
     private lateinit var mReceiver: TimerActionReceiver
 
@@ -116,6 +121,8 @@ class TimerService : Service(),
         mReceiver = TimerActionReceiver()
 
         this.registerReceiver(mReceiver, getTimerActionIntentFilter())
+
+        wakeLock.acquire()
 
     }
 
@@ -342,6 +349,7 @@ class TimerService : Service(),
 
     private fun finish() {
         beepHelper.release()
+        wakeLock.release()
         SERVICE_STARTED = false
         stopSelf()
     }

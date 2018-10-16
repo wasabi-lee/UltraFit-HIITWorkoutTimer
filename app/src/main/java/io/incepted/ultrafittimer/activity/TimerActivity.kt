@@ -228,6 +228,9 @@ class TimerActivity : BaseActivity() {
     private fun finishService() {
         TimerService.STOP_SELF = true
         TimerService.SERVICE_STARTED = false
+        if (timerService?.wakeLock?.isHeld == true) {
+            timerService?.wakeLock?.release()
+        }
         stopService(timerIntent)
     }
 

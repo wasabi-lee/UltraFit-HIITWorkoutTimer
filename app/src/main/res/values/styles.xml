@@ -82,7 +82,7 @@
     <style name="editText_large" parent="Base.V7.Widget.AppCompat.EditText">
         <item name="android:textSize">20sp</item>
         <item name="android:paddingTop">@dimen/spacing_no_spacing</item>
-        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <style name="button_accent_light">

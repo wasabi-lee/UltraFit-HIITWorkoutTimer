@@ -69,7 +69,7 @@ class MainActivity : BaseActivity() {
     }
 
 
-    private fun setupViewModel() {
+    private fun loadPreference() {
         val lastPresetId =
                 sharedPref.getLong(resources.getString(R.string.pref_key_last_used_preset_id), -1)
         val lastTimerId =
@@ -81,6 +81,11 @@ class MainActivity : BaseActivity() {
         mainViewModel.lastPresetId = lastPresetId
         mainViewModel.lastTimerId = lastTimerId
         mainViewModel.offset = offset
+    }
+
+
+    private fun setupViewModel() {
+        loadPreference()
         mainViewModel.start(editMode, editPresetId)
     }
 
@@ -229,5 +234,11 @@ class MainActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         mainViewModel.handleActivityResult(requestCode, resultCode, data)
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        loadPreference()
     }
 }
