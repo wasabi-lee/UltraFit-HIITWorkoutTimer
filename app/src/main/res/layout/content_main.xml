@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -12,349 +14,372 @@
 
     </data>
 
-    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fillViewport="true"
         android:isScrollContainer="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/spacing_normal"
-            android:paddingEnd="@dimen/spacing_normal"
-            android:paddingLeft="@dimen/spacing_normal"
-            android:paddingRight="@dimen/spacing_normal"
-            android:paddingStart="@dimen/spacing_normal">
+            android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.cardview.widget.CardView
                 android:id="@+id/main_card_warmup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="?attr/card_background_drawable"
-                android:padding="@dimen/spacing_normal"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/spacing_small"
+                app:cardCornerRadius="@dimen/card_small_radius"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/main_session_header_warmup_tv"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/warm_up"
-                    android:textAllCaps="true"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:padding="@dimen/spacing_normal">
 
-                <EditText
-                    android:id="@+id/main_session_time_warmup_edit"
-                    style="@style/editText_large"
-                    onFocusChangedListener="@{viewmodel.focusListener}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xxsmall"
-                    android:background="@null"
-                    android:ems="5"
-                    android:inputType="time"
-                    android:maxLength="5"
-                    android:text="@={viewmodel.timerObsvb.warmupObservable}"
-                    android:textCursorDrawable="@null"
-                    android:nextFocusForward="@id/main_session_time_work_edit"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/main_session_header_warmup_tv"
-                    tools:text="05:00" />
+                    <TextView
+                        android:id="@+id/main_session_header_warmup_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/warm_up"
+                        android:textAllCaps="true"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/main_session_warmup_minus_iv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="@dimen/spacing_small"
-                    android:layout_marginRight="@dimen/spacing_small"
-                    android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), false)}"
-                    app:layout_constraintBottom_toBottomOf="@+id/main_session_warmup_plus_iv"
-                    app:layout_constraintEnd_toStartOf="@+id/main_session_warmup_plus_iv"
-                    app:srcCompat="@drawable/ic_remove_circle_black" />
+                    <EditText
+                        android:id="@+id/main_session_time_warmup_edit"
+                        style="@style/editText_normal"
+                        onFocusChangedListener="@{viewmodel.focusListener}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_xxsmall"
+                        android:background="@null"
+                        android:ems="5"
+                        android:inputType="time"
+                        android:maxLength="5"
+                        android:nextFocusForward="@id/main_session_time_work_edit"
+                        android:text="@={viewmodel.timerObsvb.warmupObservable}"
+                        android:textCursorDrawable="@null"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/main_session_header_warmup_tv"
+                        tools:text="05:00" />
 
-                <ImageView
-                    android:id="@+id/main_session_warmup_plus_iv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
-                    app:layout_constraintBottom_toBottomOf="@+id/main_session_time_warmup_edit"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/main_session_time_warmup_edit"
-                    app:srcCompat="@drawable/ic_add_circle_black" />
+                    <ImageView
+                        android:id="@+id/main_session_warmup_minus_iv"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/spacing_small"
+                        android:layout_marginRight="@dimen/spacing_small"
+                        android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), false)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/main_session_warmup_plus_iv"
+                        app:layout_constraintEnd_toStartOf="@+id/main_session_warmup_plus_iv"
+                        app:srcCompat="@drawable/ic_remove_circle_black" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <ImageView
+                        android:id="@+id/main_session_warmup_plus_iv"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/main_session_time_warmup_edit"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/main_session_time_warmup_edit"
+                        app:srcCompat="@drawable/ic_add_circle_black" />
 
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.cardview.widget.CardView
                 android:id="@+id/main_card_workout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
                 android:layout_marginTop="@dimen/spacing_xsmall"
-                android:background="?attr/card_background_drawable"
-                android:paddingTop="@dimen/spacing_normal"
-                android:paddingLeft="@dimen/spacing_normal"
-                android:paddingStart="@dimen/spacing_normal"
+                android:layout_marginEnd="@dimen/spacing_small"
+                app:cardCornerRadius="@dimen/card_small_radius"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_card_warmup"
-                tools:ignore="RtlSymmetry">
+                app:layout_constraintTop_toBottomOf="@id/main_card_warmup">
 
-
-                <!-- ********************* Work time ********************* -->
-
-                <TextView
-                    android:id="@+id/main_session_header_work_tv"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/work"
-                    android:textAllCaps="true"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/main_session_time_work_edit"
-                    style="@style/editText_large"
-                    onFocusChangedListener="@{viewmodel.focusListener}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xxsmall"
-                    android:background="@null"
-                    android:ems="5"
-                    android:inputType="time"
-                    android:maxLength="5"
-                    android:text="@={viewmodel.timerObsvb.workObservable}"
-                    android:textCursorDrawable="@null"
-                    android:nextFocusForward="@id/main_session_time_rest_edit"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/main_session_header_work_tv"
-                    tools:text="05:00" />
-
-                <ImageView
-                    android:id="@+id/main_session_work_minus_iv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="@dimen/spacing_small"
-                    android:layout_marginRight="@dimen/spacing_small"
-                    android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), false)}"
-                    app:layout_constraintBottom_toBottomOf="@+id/main_session_work_plus_iv"
-                    app:layout_constraintEnd_toStartOf="@+id/main_session_work_plus_iv"
-                    app:srcCompat="@drawable/ic_remove_circle_black" />
-
-                <ImageView
-                    android:id="@+id/main_session_work_plus_iv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginRight="@dimen/spacing_normal"
-                    android:layout_marginEnd="@dimen/spacing_normal"
-                    android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
-                    app:layout_constraintBottom_toBottomOf="@+id/main_session_time_work_edit"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/main_session_time_work_edit"
-                    app:srcCompat="@drawable/ic_add_circle_black"/>
-
-
-                <!-- ********************* Rest time ********************* -->
-
-                <TextView
-                    android:id="@+id/main_session_header_rest_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:text="@string/rest"
-                    android:textAllCaps="true"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/main_session_time_work_edit" />
-
-                <EditText
-                    android:id="@+id/main_session_time_rest_edit"
-                    style="@style/editText_large"
-                    onFocusChangedListener="@{viewmodel.focusListener}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xxsmall"
-                    android:background="@null"
-                    android:ems="5"
-                    android:inputType="time"
-                    android:nextFocusForward="@id/main_session_time_rounds_edit"
-                    android:maxLength="5"
-                    android:text="@={viewmodel.timerObsvb.restObservable}"
-                    android:textCursorDrawable="@null"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/main_session_header_rest_tv"
-                    tools:text="05:00" />
-
-                <ImageView
-                    android:id="@+id/main_session_rest_minus_iv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="@dimen/spacing_small"
-                    android:layout_marginRight="@dimen/spacing_small"
-                    android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), false)}"
-                    app:layout_constraintBottom_toBottomOf="@+id/main_session_rest_plus_iv"
-                    app:layout_constraintEnd_toStartOf="@+id/main_session_rest_plus_iv"
-                    app:srcCompat="@drawable/ic_remove_circle_black" />
-
-                <ImageView
-                    android:id="@+id/main_session_rest_plus_iv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginRight="@dimen/spacing_normal"
-                    android:layout_marginEnd="@dimen/spacing_normal"
-                    android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
-                    app:layout_constraintBottom_toBottomOf="@+id/main_session_time_rest_edit"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/main_session_time_rest_edit"
-                    app:srcCompat="@drawable/ic_add_circle_black" />
-
-
-                <!-- ********************* Rounds ********************* -->
-
-                <TextView
-                    android:id="@+id/main_session_header_rounds_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:text="@string/rounds"
-                    android:textAllCaps="true"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/main_session_time_rest_edit" />
-
-                <EditText
-                    android:id="@+id/main_session_time_rounds_edit"
-                    style="@style/editText_large"
-                    onFocusChangedListener="@{viewmodel.focusListener}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_xsmall"
-                    android:layout_marginTop="@dimen/spacing_xxsmall"
-                    android:background="@null"
-                    android:ems="5"
-                    android:inputType="numberSigned"
-                    android:maxLength="5"
-                    android:nextFocusForward="@id/main_session_time_cooldown_edit"
-                    android:text="@={viewmodel.timerObsvb.roundCountObservable}"
-                    android:textCursorDrawable="@null"
-                    app:layout_constraintBottom_toTopOf="@+id/main_session_workout_customize_tv"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/main_session_header_rounds_tv"
-                    app:layout_constraintVertical_bias="1.0"
-                    tools:text="8" />
-
-                <ImageView
-                    android:id="@+id/main_session_rounds_minus_iv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="@dimen/spacing_small"
-                    android:layout_marginRight="@dimen/spacing_small"
-                    android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), false)}"
-                    app:layout_constraintBottom_toBottomOf="@+id/main_session_rounds_plus_iv"
-                    app:layout_constraintEnd_toStartOf="@+id/main_session_rounds_plus_iv"
-                    app:srcCompat="@drawable/ic_remove_circle_black" />
-
-                <ImageView
-                    android:id="@+id/main_session_rounds_plus_iv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginRight="@dimen/spacing_normal"
-                    android:layout_marginEnd="@dimen/spacing_normal"
-                    android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
-                    app:layout_constraintBottom_toBottomOf="@+id/main_session_time_rounds_edit"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/main_session_time_rounds_edit"
-                    app:srcCompat="@drawable/ic_add_circle_black" />
-
-                <TextView
-                    android:id="@+id/main_session_workout_customize_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{() -> viewmodel.openCustomizeActivity()}"
-                    customized="@{viewmodel.timerObsvb.isCustomizedObservable}"
-                    android:paddingLeft="@dimen/spacing_normal"
-                    android:paddingRight="@dimen/spacing_normal"
                     android:paddingStart="@dimen/spacing_normal"
-                    android:paddingEnd="@dimen/spacing_normal"
-                    android:paddingTop="@dimen/spacing_xxsmall"
-                    android:paddingBottom="@dimen/spacing_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:paddingLeft="@dimen/spacing_normal"
+                    android:paddingTop="@dimen/spacing_normal"
+                    app:layout_constraintTop_toBottomOf="@id/main_card_warmup"
+                    tools:ignore="RtlSymmetry">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+                    <!-- ********************* Work time ********************* -->
+
+                    <TextView
+                        android:id="@+id/main_session_header_work_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/work"
+                        android:textAllCaps="true"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/main_session_time_work_edit"
+                        style="@style/editText_normal"
+                        onFocusChangedListener="@{viewmodel.focusListener}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_xxsmall"
+                        android:background="@null"
+                        android:ems="5"
+                        android:inputType="time"
+                        android:maxLength="5"
+                        android:nextFocusForward="@id/main_session_time_rest_edit"
+                        android:text="@={viewmodel.timerObsvb.workObservable}"
+                        android:textCursorDrawable="@null"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/main_session_header_work_tv"
+                        tools:text="05:00" />
+
+                    <ImageView
+                        android:id="@+id/main_session_work_minus_iv"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/spacing_small"
+                        android:layout_marginRight="@dimen/spacing_small"
+                        android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), false)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/main_session_work_plus_iv"
+                        app:layout_constraintEnd_toStartOf="@+id/main_session_work_plus_iv"
+                        app:srcCompat="@drawable/ic_remove_circle_black" />
+
+                    <ImageView
+                        android:id="@+id/main_session_work_plus_iv"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/spacing_normal"
+                        android:layout_marginRight="@dimen/spacing_normal"
+                        android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/main_session_time_work_edit"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/main_session_time_work_edit"
+                        app:srcCompat="@drawable/ic_add_circle_black" />
+
+
+                    <!-- ********************* Rest time ********************* -->
+
+                    <TextView
+                        android:id="@+id/main_session_header_rest_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:text="@string/rest"
+                        android:textAllCaps="true"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/main_session_time_work_edit" />
+
+                    <EditText
+                        android:id="@+id/main_session_time_rest_edit"
+                        style="@style/editText_normal"
+                        onFocusChangedListener="@{viewmodel.focusListener}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_xxsmall"
+                        android:background="@null"
+                        android:ems="5"
+                        android:inputType="time"
+                        android:maxLength="5"
+                        android:nextFocusForward="@id/main_session_time_rounds_edit"
+                        android:text="@={viewmodel.timerObsvb.restObservable}"
+                        android:textCursorDrawable="@null"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/main_session_header_rest_tv"
+                        tools:text="05:00" />
+
+                    <ImageView
+                        android:id="@+id/main_session_rest_minus_iv"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/spacing_small"
+                        android:layout_marginRight="@dimen/spacing_small"
+                        android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), false)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/main_session_rest_plus_iv"
+                        app:layout_constraintEnd_toStartOf="@+id/main_session_rest_plus_iv"
+                        app:srcCompat="@drawable/ic_remove_circle_black" />
+
+                    <ImageView
+                        android:id="@+id/main_session_rest_plus_iv"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/spacing_normal"
+                        android:layout_marginRight="@dimen/spacing_normal"
+                        android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/main_session_time_rest_edit"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/main_session_time_rest_edit"
+                        app:srcCompat="@drawable/ic_add_circle_black" />
+
+
+                    <!-- ********************* Rounds ********************* -->
+
+                    <TextView
+                        android:id="@+id/main_session_header_rounds_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:text="@string/rounds"
+                        android:textAllCaps="true"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/main_session_time_rest_edit" />
+
+                    <EditText
+                        android:id="@+id/main_session_time_rounds_edit"
+                        style="@style/editText_normal"
+                        onFocusChangedListener="@{viewmodel.focusListener}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_xxsmall"
+                        android:layout_marginBottom="@dimen/spacing_xsmall"
+                        android:background="@null"
+                        android:ems="5"
+                        android:inputType="numberSigned"
+                        android:maxLength="5"
+                        android:nextFocusForward="@id/main_session_time_cooldown_edit"
+                        android:text="@={viewmodel.timerObsvb.roundCountObservable}"
+                        android:textCursorDrawable="@null"
+                        app:layout_constraintBottom_toTopOf="@+id/main_session_workout_customize_tv"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/main_session_header_rounds_tv"
+                        app:layout_constraintVertical_bias="1.0"
+                        tools:text="8" />
+
+                    <ImageView
+                        android:id="@+id/main_session_rounds_minus_iv"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/spacing_small"
+                        android:layout_marginRight="@dimen/spacing_small"
+                        android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), false)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/main_session_rounds_plus_iv"
+                        app:layout_constraintEnd_toStartOf="@+id/main_session_rounds_plus_iv"
+                        app:srcCompat="@drawable/ic_remove_circle_black" />
+
+                    <ImageView
+                        android:id="@+id/main_session_rounds_plus_iv"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/spacing_normal"
+                        android:layout_marginRight="@dimen/spacing_normal"
+                        android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/main_session_time_rounds_edit"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/main_session_time_rounds_edit"
+                        app:srcCompat="@drawable/ic_add_circle_black" />
+
+                    <TextView
+                        android:id="@+id/main_session_workout_customize_tv"
+                        customized="@{viewmodel.timerObsvb.isCustomizedObservable}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> viewmodel.openCustomizeActivity()}"
+                        android:paddingStart="@dimen/spacing_normal"
+                        android:paddingLeft="@dimen/spacing_normal"
+                        android:paddingTop="@dimen/spacing_xxsmall"
+                        android:paddingEnd="@dimen/spacing_normal"
+                        android:paddingRight="@dimen/spacing_normal"
+                        android:paddingBottom="@dimen/spacing_normal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:id="@+id/main_card_cooldown"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
                 android:layout_marginTop="@dimen/spacing_xsmall"
-                android:background="?attr/card_background_drawable"
-                android:padding="@dimen/spacing_normal"
+                android:layout_marginEnd="@dimen/spacing_small"
+                app:cardCornerRadius="@dimen/card_small_radius"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/main_card_workout">
 
-                <TextView
-                    android:id="@+id/main_session_header_cooldown_tv"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/cool_down"
-                    android:textAllCaps="true"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/main_session_time_cooldown_edit"
-                    style="@style/editText_large"
-                    onFocusChangedListener="@{viewmodel.focusListener}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xxsmall"
-                    android:background="@null"
-                    android:ems="5"
-                    android:imeOptions="actionDone"
-                    android:inputType="time"
-                    android:maxLength="5"
-                    android:text="@={viewmodel.timerObsvb.cooldownObservable}"
-                    android:textCursorDrawable="@null"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/main_session_header_cooldown_tv"
-                    tools:text="05:00" />
-
-                <ImageView
-                    android:id="@+id/main_session_cooldown_minus_iv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="@dimen/spacing_small"
-                    android:layout_marginRight="@dimen/spacing_small"
-                    android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), false)}"
-                    app:layout_constraintBottom_toBottomOf="@+id/main_session_cooldown_plus_iv"
-                    app:layout_constraintEnd_toStartOf="@+id/main_session_cooldown_plus_iv"
-                    app:srcCompat="@drawable/ic_remove_circle_black" />
-
-                <ImageView
-                    android:id="@+id/main_session_cooldown_plus_iv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:padding="@dimen/spacing_normal"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/main_session_time_cooldown_edit"
-                    app:srcCompat="@drawable/ic_add_circle_black" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/main_card_workout">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/main_session_header_cooldown_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cool_down"
+                        android:textAllCaps="true"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/main_session_time_cooldown_edit"
+                        style="@style/editText_normal"
+                        onFocusChangedListener="@{viewmodel.focusListener}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_xxsmall"
+                        android:background="@null"
+                        android:ems="5"
+                        android:imeOptions="actionDone"
+                        android:inputType="time"
+                        android:maxLength="5"
+                        android:text="@={viewmodel.timerObsvb.cooldownObservable}"
+                        android:textCursorDrawable="@null"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/main_session_header_cooldown_tv"
+                        tools:text="05:00" />
+
+                    <ImageView
+                        android:id="@+id/main_session_cooldown_minus_iv"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/spacing_small"
+                        android:layout_marginRight="@dimen/spacing_small"
+                        android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), false)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/main_session_cooldown_plus_iv"
+                        app:layout_constraintEnd_toStartOf="@+id/main_session_cooldown_plus_iv"
+                        app:srcCompat="@drawable/ic_remove_circle_black" />
+
+                    <ImageView
+                        android:id="@+id/main_session_cooldown_plus_iv"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:onClick="@{(v) -> viewmodel.adjustInput(v.getId(), true)}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/main_session_time_cooldown_edit"
+                        app:srcCompat="@drawable/ic_add_circle_black" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/main_dummy_total_time_tv"
                 style="@style/workoutSettingHeaderTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_xsmall"
-                android:layout_marginStart="@dimen/spacing_xsmall"
-                android:layout_marginTop="@dimen/spacing_xsmall"
+                android:layout_margin="@dimen/spacing_normal"
                 android:text="@string/total"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/main_card_cooldown" />
@@ -364,8 +389,8 @@
                 style="@style/workoutSettingHeaderTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_xxsmall"
                 android:layout_marginStart="@dimen/spacing_xxsmall"
+                android:layout_marginLeft="@dimen/spacing_xxsmall"
                 android:text="@{viewmodel.timerObsvb.totalObservable}"
                 app:layout_constraintBaseline_toBaselineOf="@id/main_dummy_total_time_tv"
                 app:layout_constraintStart_toEndOf="@+id/main_dummy_total_time_tv" />
@@ -374,21 +399,21 @@
             <TextView
                 android:id="@+id/main_start_btn"
                 style="?attr/button_accent_style"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_xsmall"
-                android:fontFamily="@font/roboto_condensed_bold"
-                android:paddingBottom="@dimen/spacing_xsmall"
-                android:paddingEnd="@dimen/spacing_large"
-                android:paddingLeft="@dimen/spacing_large"
-                android:paddingRight="@dimen/spacing_large"
-                android:paddingStart="@dimen/spacing_large"
-                android:paddingTop="@dimen/spacing_xsmall"
+                android:layout_margin="@dimen/spacing_normal"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:onClick="@{() -> viewmodel.onTimerStartClicked()}"
+                android:paddingTop="@dimen/spacing_small"
+                android:paddingBottom="@dimen/spacing_small"
+                android:paddingLeft="@dimen/spacing_xxlarge"
+                android:paddingRight="@dimen/spacing_xxlarge"
                 android:text="@string/start_all_caps"
                 android:visibility="@{viewmodel.editMode ? View.GONE : View.VISIBLE}"
-                android:onClick="@{() -> viewmodel.onTimerStartClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/main_card_cooldown" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
