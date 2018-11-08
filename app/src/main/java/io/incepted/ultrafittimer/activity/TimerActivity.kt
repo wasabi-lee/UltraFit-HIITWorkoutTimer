@@ -21,7 +21,7 @@ import io.incepted.ultrafittimer.viewmodel.TimerViewModel
 import kotlinx.android.synthetic.main.activity_timer.*
 import javax.inject.Inject
 import android.app.NotificationManager
-
+import timber.log.Timber
 
 
 class TimerActivity : BaseActivity() {
@@ -63,6 +63,7 @@ class TimerActivity : BaseActivity() {
                 .get(TimerViewModel::class.java)
         binding.viewmodel = timerViewModel
 
+        Timber.d("oncreate")
 
         unpackExtra()
 
@@ -78,19 +79,28 @@ class TimerActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        initService()
-        registerLocalBroadcastReceiver()
+        Timber.d("onstart")
+
+        // finish activity if the timer was already completed
+        if (timerViewModel.completeTimer.value == true) {
+            wrapUpActivity()
+        } else {
+            initService()
+            registerLocalBroadcastReceiver()
+        }
     }
 
 
     override fun onResume() {
         super.onResume()
+        Timber.d("onresume")
         waveHelper.start()
     }
 
 
     override fun onPause() {
         super.onPause()
+        Timber.d("onpause")
         waveHelper.cancel()
         progressHelper.pauseProgressBar()
     }
@@ -98,6 +108,7 @@ class TimerActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
+        Timber.d("onStop")
         if (serviceBound) {
             unbindService(serviceConn)
             serviceBound = false
@@ -107,8 +118,7 @@ class TimerActivity : BaseActivity() {
 
 
     override fun onDestroy() {
-        if (isFinishing)
-            finishService()
+        Timber.d("ondestroy")
         super.onDestroy()
     }
 
@@ -160,8 +170,8 @@ class TimerActivity : BaseActivity() {
         })
 
         timerViewModel.completeTimer.observe(this, Observer {
-            timerViewModel.completedWhileBound = true
-            Toast.makeText(this, "Workout Completed", Toast.LENGTH_SHORT).show()
+            if (it)
+                Toast.makeText(applicationContext, "Workout Completed", Toast.LENGTH_SHORT).show()
         })
 
         timerViewModel.finishActivity.observe(this, Observer {
@@ -213,9 +223,10 @@ class TimerActivity : BaseActivity() {
 
 
     override fun onBackPressed() {
-        if (timerService?.timerTerminated == false) showWarningDialog()
-        else wrapUpActivity()
-
+        if (timerViewModel.completeTimer.value == false)
+            showWarningDialog()
+        else
+            wrapUpActivity()
     }
 
 
@@ -225,32 +236,25 @@ class TimerActivity : BaseActivity() {
     }
 
 
-    private fun finishService() {
-        TimerService.STOP_SELF = true
+    private fun wrapUpActivity() {
         TimerService.SERVICE_STARTED = false
-        if (timerService?.wakeLock?.isHeld == true) {
-            timerService?.wakeLock?.release()
-        }
-        stopService(timerIntent)
+        cancelNotification()
+        this.finish()
     }
 
 
-    fun exitTimer() {
+    // Timer stopping method called from the dialog fragment by clicking the positive button
+    fun stopTimerFromDialog() {
         // let service finish itself after logging data to DB
-        TimerService.STOP_SELF = true
         timerService?.terminateTimer(false)
         finish()
     }
 
 
-    private fun wrapUpActivity() {
-        finishService()
-        cancelNotification()
-        this.finish()
-    }
-
     private fun cancelNotification() {
-        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+                applicationContext.getSystemService(Context.NOTIFICATION_SERVICE)
+                        as NotificationManager
         notificationManager.cancel(TimerCommunication.TIMER_NOTIFICATION_ID)
         notificationManager.cancel(TimerCommunication.TIMER_COMPLETE_NOTIFICATION_ID)
     }
@@ -266,7 +270,6 @@ class TimerActivity : BaseActivity() {
 
         override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
             setupBoundService(binder)
-            checkIfTimerTerminated()
             restoreUIState()
         }
     }
@@ -276,15 +279,6 @@ class TimerActivity : BaseActivity() {
         val b = binder as TimerService.TimerServiceBinder
         timerService = b.getService()
         serviceBound = true
-        TimerService.STOP_SELF = false
-    }
-
-
-    private fun checkIfTimerTerminated() {
-        // Finish service if the timer was already completed while the activity was not bound.
-        if (timerService?.timerTerminated == true && !timerViewModel.completedWhileBound)
-            wrapUpActivity()
-
     }
 
 

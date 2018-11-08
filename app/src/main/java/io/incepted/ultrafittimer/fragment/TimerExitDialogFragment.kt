@@ -21,7 +21,7 @@ class TimerExitDialogFragment : DialogFragment() {
                 .setMessage(resources.getString(R.string.alert_dialog_timer_exit_warning_message))
                 .setPositiveButton(resources.getString(R.string.alert_dialog_ok)) { dialog, _ ->
                     dialog?.dismiss()
-                    (activity as TimerActivity).exitTimer()
+                    (activity as TimerActivity).stopTimerFromDialog()
                 }
                 .setNegativeButton(resources.getString(R.string.alert_dialog_cancel)) { dialog, _ ->
                     dialog?.dismiss()

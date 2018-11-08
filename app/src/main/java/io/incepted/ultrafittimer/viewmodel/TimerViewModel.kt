@@ -31,7 +31,7 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     val exitTimer = SingleLiveEvent<Void>()
 
-    val completeTimer = SingleLiveEvent<Void>()
+    val completeTimer = SingleLiveEvent<Boolean>()
 
     // Default MutableLiveData because we need to keep the
     val finishActivity = SingleLiveEvent<Void>()
@@ -57,8 +57,9 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     val backgroundColor = ObservableField<Int>(Color.parseColor("#ffffff"))
 
-    var completedWhileBound = false
-
+    init {
+        completeTimer.value = false
+    }
 
     fun start() {
     }
@@ -147,7 +148,7 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
 
     private fun handleTimerCompletion() {
-        completeTimer.value = null
+        completeTimer.value = true
         locked.set(true) // disabling further interaction
     }
 

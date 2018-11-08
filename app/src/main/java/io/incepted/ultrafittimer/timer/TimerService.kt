@@ -10,6 +10,7 @@ import android.os.PowerManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.android.AndroidInjection
 import io.incepted.ultrafittimer.R
+import io.incepted.ultrafittimer.activity.TimerActivity
 import io.incepted.ultrafittimer.db.DbRepository
 import io.incepted.ultrafittimer.db.model.Preset
 import io.incepted.ultrafittimer.db.model.TimerSetting
@@ -34,8 +35,6 @@ class TimerService : Service(),
     companion object {
 
         var SERVICE_STARTED = false
-
-        var STOP_SELF = false
 
     }
 
@@ -186,8 +185,9 @@ class TimerService : Service(),
                         onComplete = {
                             timerTerminated = true
                             beepHelper.requestFire(BeepHelper.FLAG_FINISH)
+                            launchActivity()
                             sendCompleted()
-                            terminateTimer(completed)
+                            terminateTimer(true)
                             completeNotification()
                         },
                         onError = { it.printStackTrace() }
@@ -210,9 +210,16 @@ class TimerService : Service(),
             // session is being switched to the next one. (e.g. work -> rest -> cooldown ... etc)
             sendSessionSwitch(tickInfo)
             if (!tickInfo.firstTick)
-                // if it is not the start second of the entire timer, then fire the switch sound effect.
+            // if it is not the start second of the entire timer, then fire the switch sound effect.
                 beepHelper.requestFire(BeepHelper.FLAG_BEEP)
         }
+    }
+
+    private fun launchActivity() {
+        val intent = Intent(applicationContext, TimerActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        applicationContext.startActivity(intent)
     }
 
 
@@ -240,10 +247,17 @@ class TimerService : Service(),
 
 
     fun terminateTimer(completed: Boolean) {
+        SERVICE_STARTED = false
         timerHelper?.terminateTimer()
         disposable?.dispose()
         saveLastUsedTimer(fromPreset, targetId)
         saveHistory(completed, lastTick)
+    }
+
+    private fun releaseWakeLock() {
+        if (wakeLock.isHeld) {
+            wakeLock.release()
+        }
     }
 
 
@@ -349,8 +363,7 @@ class TimerService : Service(),
 
     private fun finish() {
         beepHelper.release()
-        wakeLock.release()
-        SERVICE_STARTED = false
+        releaseWakeLock()
         stopSelf()
     }
 
@@ -381,14 +394,13 @@ class TimerService : Service(),
 
     override fun onHistorySaved(id: Long) {
         stopForeground(true)
-        if (STOP_SELF) {
-            finish()
-        }
+        finish()
     }
 
 
     override fun onHistorySaveNotAvailable() {
         sendError()
+        finish()
     }
 
 
@@ -398,5 +410,10 @@ class TimerService : Service(),
         }
     }
 
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        Timber.d("Unbound")
+        return true
+    }
 
 }
