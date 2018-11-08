@@ -82,8 +82,8 @@ class TimerActivity : BaseActivity() {
         Timber.d("onstart")
 
         // finish activity if the timer was already completed
-        if (timerViewModel.completeTimer.value == true) {
-            wrapUpActivity()
+        if (TimerService.TIMER_TERMINATED) {
+            finish()
         } else {
             initService()
             registerLocalBroadcastReceiver()
@@ -109,11 +109,16 @@ class TimerActivity : BaseActivity() {
     override fun onStop() {
         super.onStop()
         Timber.d("onStop")
+
+        if (isFinishing)
+            resetService()
+
         if (serviceBound) {
             unbindService(serviceConn)
             serviceBound = false
         }
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
+
     }
 
 
@@ -175,7 +180,7 @@ class TimerActivity : BaseActivity() {
         })
 
         timerViewModel.finishActivity.observe(this, Observer {
-            wrapUpActivity()
+            finish()
         })
 
         timerViewModel.animateWave.observe(this, Observer {
@@ -223,10 +228,10 @@ class TimerActivity : BaseActivity() {
 
 
     override fun onBackPressed() {
-        if (timerViewModel.completeTimer.value == false)
+        if (!TimerService.TIMER_TERMINATED)
             showWarningDialog()
         else
-            wrapUpActivity()
+            finish()
     }
 
 
@@ -236,10 +241,15 @@ class TimerActivity : BaseActivity() {
     }
 
 
-    private fun wrapUpActivity() {
+    // called when the activity gets destroyed to reset the flags to the default values
+    private fun resetService() {
+        if (TimerService.SERVICE_STARTED) {
+            // terminate the timer when the app is getting closed while the service is alive
+            timerService?.terminateTimer(false)
+        }
         TimerService.SERVICE_STARTED = false
+        TimerService.TIMER_TERMINATED = false
         cancelNotification()
-        this.finish()
     }
 
 

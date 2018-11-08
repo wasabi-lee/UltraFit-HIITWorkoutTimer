@@ -36,6 +36,8 @@ class TimerService : Service(),
 
         var SERVICE_STARTED = false
 
+        var TIMER_TERMINATED = false
+
     }
 
     // Injection fields
@@ -183,7 +185,6 @@ class TimerService : Service(),
                             updateNotification(it)
                         },
                         onComplete = {
-                            timerTerminated = true
                             beepHelper.requestFire(BeepHelper.FLAG_FINISH)
                             launchActivity()
                             sendCompleted()
@@ -247,7 +248,7 @@ class TimerService : Service(),
 
 
     fun terminateTimer(completed: Boolean) {
-        SERVICE_STARTED = false
+        TIMER_TERMINATED = true
         timerHelper?.terminateTimer()
         disposable?.dispose()
         saveLastUsedTimer(fromPreset, targetId)
@@ -278,7 +279,6 @@ class TimerService : Service(),
     fun handleNotifAction(context: Context?, intent: Intent?) {
         when (intent?.action) {
             NotificationUtil.ACTION_INTENT_FILTER_DISMISS -> {
-                timerTerminated = true
                 sendTerminated()
                 terminateTimer(false)
             }
