@@ -10,9 +10,13 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import io.incepted.ultrafittimer.R
+import io.reactivex.Single
+import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
+import java.util.*
+import java.util.concurrent.TimeUnit
 
-class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : SoundPool.OnLoadCompleteListener {
+class BeepHelper(val context: Context, val sharedPref: SharedPreferences) {
 
     private var soundPool: SoundPool? = null
 
@@ -21,8 +25,8 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
     private var cueSoundRes: Int = 0
     private var beepSoundRes: Int = 0
 
-    private val soundIds = IntArray(3)
-    private val isLoaded = BooleanArray(3)
+    private var cueSoundId = 0
+    private var beepSoundId = 0
 
     private var vibrationEnabled = true
 
@@ -49,6 +53,7 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
     init {
         initSoundPool()
         getSettingValues(sharedPref)
+        loadSound()
     }
 
     private fun initSoundPool() {
@@ -67,7 +72,6 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
             SoundPool(MAX_STREAM, AudioManager.STREAM_MUSIC, 0)
         }
 
-        soundPool?.setOnLoadCompleteListener(this)
     }
 
 
@@ -76,12 +80,17 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
         val cuePrefKey = context.resources.getString(R.string.pref_key_cue_sound)
         val vibrationPrefKey = context.resources.getString(R.string.pref_key_vibration)
 
-        beepSoundRes = SoundResSwitcher.beepResSwitcher((sharedPref.getString(beepPrefKey, "0")
-                ?: "0").toInt())
-        cueSoundRes = SoundResSwitcher.cueResSwitcher((sharedPref.getString(cuePrefKey, "0")
-                ?: "0").toInt())
+        beepSoundRes = SoundResSwitcher
+                .beepResSwitcher((sharedPref.getString(beepPrefKey, "0") ?: "0").toInt())
+        cueSoundRes = SoundResSwitcher
+                .cueResSwitcher((sharedPref.getString(cuePrefKey, "0") ?: "0").toInt())
         vibrationEnabled = sharedPref.getBoolean(vibrationPrefKey, false)
+    }
 
+
+    private fun loadSound() {
+        cueSoundId = soundPool?.load(context, cueSoundRes, 1) ?: 0;
+        beepSoundId = soundPool?.load(context, beepSoundRes, 1) ?: 0;
     }
 
 
@@ -93,26 +102,14 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
      */
     fun requestFire(flag: Int) {
         try {
-            requestedFlag = flag
-            if (isLoaded[flag]) {
-                // sound is loaded.
-                playBeep(soundIds[flag])
-            } else {
-                soundIds[flag] = soundPool?.load(context,
-                        if (flag == FLAG_BEEP || flag == FLAG_FINISH) beepSoundRes
-                        else cueSoundRes, 1) ?: 0
-            }
+            playBeep(when (flag) {
+                FLAG_CUE -> cueSoundId
+                FLAG_BEEP, FLAG_FINISH -> beepSoundId
+                else -> 0
+            })
+
         } catch (e: Resources.NotFoundException) {
-        }
-    }
-
-
-    override fun onLoadComplete(soundPool: SoundPool?, soundId: Int, status: Int) {
-        if (status == 0) {
-            if (soundId == soundIds[requestedFlag]) {
-                isLoaded[requestedFlag] = true
-                playBeep(soundId)
-            }
+            e.printStackTrace()
         }
     }
 
@@ -151,8 +148,11 @@ class BeepHelper(val context: Context, val sharedPref: SharedPreferences) : Soun
 
 
     fun release() {
-        soundPool?.release()
-        soundPool = null
+        // Delaying SoundPool release() to prevent the last sound from clipping
+        Single.timer(3, TimeUnit.SECONDS)
+                .subscribeBy {
+                    soundPool?.release()
+                    soundPool = null
+                }
     }
-
 }

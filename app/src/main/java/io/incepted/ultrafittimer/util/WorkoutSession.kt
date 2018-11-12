@@ -18,6 +18,7 @@ object WorkoutSession {
     var SESSION_COLOR_WORK: Int? = null
     var SESSION_COLOR_REST: Int? = null
     var SESSION_COLOR_COOLDOWN: Int? = null
+    var SESSION_COLOR_COMPLETED: Int? = null
 
     var SESSION_COLOR_WARMUP_SECONDARY: Int? = null
     var SESSION_COLOR_WORK_SECONDARY: Int? = null
@@ -52,6 +53,8 @@ object WorkoutSession {
             REST -> SESSION_COLOR_REST ?: ContextCompat.getColor(context, R.color.state_rest)
             COOLDOWN -> SESSION_COLOR_COOLDOWN
                     ?: ContextCompat.getColor(context, R.color.state_cooldown)
+            COMPLETED -> SESSION_COLOR_COMPLETED
+                    ?: ContextCompat.getColor(context, R.color.state_completed)
             else -> android.R.color.transparent
         }
 
@@ -63,6 +66,7 @@ object WorkoutSession {
         SESSION_COLOR_WORK = ContextCompat.getColor(context, R.color.state_work)
         SESSION_COLOR_REST = ContextCompat.getColor(context, R.color.state_rest)
         SESSION_COLOR_COOLDOWN = ContextCompat.getColor(context, R.color.state_cooldown)
+        SESSION_COLOR_COMPLETED = ContextCompat.getColor(context, R.color.state_completed)
 
         colorsLoaded = true
     }

@@ -147,6 +147,17 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
     }
 
 
+    fun showCompletedScreen() {
+        backgroundColor.set(WorkoutSession.getSessionColor(appContext, WorkoutSession.COMPLETED))
+
+        workoutName.set("Completed")
+
+        remainingTime.set("00:00")
+
+        roundCount.set("-/-")
+
+    }
+
     private fun handleTimerCompletion() {
         completeTimer.value = true
         locked.set(true) // disabling further interaction

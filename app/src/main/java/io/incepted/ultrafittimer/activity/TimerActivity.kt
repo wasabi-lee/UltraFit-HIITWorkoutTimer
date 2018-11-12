@@ -21,7 +21,10 @@ import io.incepted.ultrafittimer.viewmodel.TimerViewModel
 import kotlinx.android.synthetic.main.activity_timer.*
 import javax.inject.Inject
 import android.app.NotificationManager
+import io.reactivex.Single
+import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 
 class TimerActivity : BaseActivity() {
@@ -83,7 +86,11 @@ class TimerActivity : BaseActivity() {
 
         // finish activity if the timer was already completed
         if (TimerService.TIMER_TERMINATED) {
-            finish()
+            timerViewModel.showCompletedScreen()
+            Single.timer(5, TimeUnit.SECONDS)
+                    .subscribeBy {
+                        finish()
+                    }
         } else {
             initService()
             registerLocalBroadcastReceiver()
