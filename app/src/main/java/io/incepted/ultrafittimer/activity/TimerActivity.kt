@@ -66,11 +66,10 @@ class TimerActivity : BaseActivity() {
                 .get(TimerViewModel::class.java)
         binding.viewmodel = timerViewModel
 
-        Timber.d("oncreate")
-
         unpackExtra()
 
-        if (savedInstanceState == null) timerViewModel.start()
+        if (savedInstanceState == null)
+            timerViewModel.start()
 
         waveHelper = WaveHelper(timer_wave)
         progressHelper = ProgressHelper(timer_progress_bar)
@@ -82,7 +81,6 @@ class TimerActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        Timber.d("onstart")
 
         // finish activity if the timer was already completed
         if (TimerService.TIMER_TERMINATED) {
@@ -100,14 +98,12 @@ class TimerActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        Timber.d("onresume")
         waveHelper.start()
     }
 
 
     override fun onPause() {
         super.onPause()
-        Timber.d("onpause")
         waveHelper.cancel()
         progressHelper.pauseProgressBar()
     }
@@ -115,8 +111,6 @@ class TimerActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        Timber.d("onStop")
-
         if (isFinishing)
             resetService()
 
@@ -126,12 +120,6 @@ class TimerActivity : BaseActivity() {
         }
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
 
-    }
-
-
-    override fun onDestroy() {
-        Timber.d("ondestroy")
-        super.onDestroy()
     }
 
 

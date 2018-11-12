@@ -24,7 +24,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -44,56 +43,36 @@ class TimerService : Service(),
 
     @Inject
     lateinit var sharedPref: SharedPreferences
-
     @Inject
     lateinit var notifManager: NotificationManager
-
     @Inject
     lateinit var broadcaster: LocalBroadcastManager
-
     @Inject
     lateinit var repository: DbRepository
-
     @Inject
     lateinit var notificationUtil: NotificationUtil
-
     @Inject
     lateinit var beepHelper: BeepHelper
-
     @Inject
     lateinit var wakeLock: PowerManager.WakeLock
 
-
     private lateinit var mReceiver: TimerActionReceiver
-
     private val binder = TimerServiceBinder()
 
 
     // Timer properties
 
     private var fromPreset = false
-
     private var targetId = -1L
-
     private var presetId = -1L
-
     private var cueSeconds = 3
 
     var timer: TimerSetting? = null
-
     private var timerHelper: TimerHelper? = null
-
     var totalProgress = 0
-
-    // Timer is completed normally (not by stopping or any interruption)
-    var completed = false
-
-    var timerTerminated = false
-
     var lastTick: TickInfo? = null
 
     private var disposable: Disposable? = null
-
 
     inner class TimerServiceBinder : Binder() {
         fun getService(): TimerService {
@@ -123,7 +102,7 @@ class TimerService : Service(),
 
         this.registerReceiver(mReceiver, getTimerActionIntentFilter())
 
-        wakeLock.acquire()
+        wakeLock.acquire(1000 * 60 * 60 * 3) // 3 hours
 
     }
 
@@ -276,7 +255,7 @@ class TimerService : Service(),
     }
 
 
-    fun handleNotifAction(context: Context?, intent: Intent?) {
+    fun handleNotifAction(intent: Intent?) {
         when (intent?.action) {
             NotificationUtil.ACTION_INTENT_FILTER_DISMISS -> {
                 sendTerminated()
@@ -405,15 +384,10 @@ class TimerService : Service(),
 
 
     inner class TimerActionReceiver : BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            handleNotifAction(p0, p1)
+        override fun onReceive(p0: Context?, intent: Intent?) {
+            handleNotifAction(intent)
         }
     }
 
-
-    override fun onUnbind(intent: Intent?): Boolean {
-        Timber.d("Unbound")
-        return true
-    }
 
 }

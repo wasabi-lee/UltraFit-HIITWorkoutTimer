@@ -23,10 +23,6 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     val snackbarResource = SingleLiveEvent<Int>()
 
-    lateinit var preset: Preset
-
-    lateinit var timer: TimerSetting
-
     val resumePause = SingleLiveEvent<Void>()
 
     val exitTimer = SingleLiveEvent<Void>()
