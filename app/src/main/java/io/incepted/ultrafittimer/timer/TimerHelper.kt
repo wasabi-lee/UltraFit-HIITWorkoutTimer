@@ -56,61 +56,62 @@ class TimerHelper(val warmupTime: Int, val cooldownTime: Int, val rounds: ArrayL
         // (The activity should know if we are starting from Warmup or Work for the view animation)
         emitter.onNext(TickInfo(curSession.get(), getCurrentSessionTime(curSession.get()).toLong(), true, true))
 
-        disposable = Observable.interval(1000, TimeUnit.MILLISECONDS)
-                .startWith(0L)
-                .takeWhile { !stopped.get() }
-                .filter { resumed.get() }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy {
+        disposable =
+                Observable.interval(1000, TimeUnit.MILLISECONDS)
+                        .startWith(0L) // to start the interval without 1 second interval delay
+                        .takeWhile { !stopped.get() }
+                        .filter { resumed.get() }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeBy {
 
-                    // check for session switch
-                    val currentSessionTime = getCurrentSessionTime(curSession.get())
+                            // check for session switch
+                            val currentSessionTime = getCurrentSessionTime(curSession.get())
 
-                    if (shouldSwitchSession(currentSessionTime)) {
-                        // Switching to the next session
-                        switched.set(true)
-                        when (curSession.get()) {
-                            WorkoutSession.WARMUP -> curSession.set(WorkoutSession.WORK)
-                            WorkoutSession.COOLDOWN -> completed.set(true) // flag for finishing the timer
-                            else ->
-                                if (!isLastRound())
-                                // switch session between work - rest
-                                    switchWorkRest()
-                                else
-                                // Last round! Finish the timer if the cooldown time is 0
-                                    if (cooldownTime == 0) completed.set(true) // flag for finishing the timer
-                                    else curSession.set(WorkoutSession.COOLDOWN)
+                            if (shouldSwitchSession(currentSessionTime)) {
+                                // Switching to the next session
+                                switched.set(true)
+                                when (curSession.get()) {
+                                    WorkoutSession.WARMUP -> curSession.set(WorkoutSession.WORK)
+                                    WorkoutSession.COOLDOWN -> completed.set(true) // flag for finishing the timer
+                                    else ->
+                                        if (!isLastRound())
+                                        // switch session between work - rest
+                                            switchWorkRest()
+                                        else
+                                        // Last round! Finish the timer if the cooldown time is 0
+                                            if (cooldownTime == 0) completed.set(true) // flag for finishing the timer
+                                            else curSession.set(WorkoutSession.COOLDOWN)
+                                }
+
+                                // reset the elapsed time because we switched to the next session
+                                if (!completed.get()) elapsed.set(0)
+                            }
+
+
+                            // Send the tick info
+                            val session = curSession.get()
+                            emitter.onNext(TickInfo(
+                                    session = session,
+                                    workoutName = getCurrentSessionName(session),
+                                    remianingSecs = (getCurrentSessionTime(session) - elapsed.get()),
+                                    roundTotalSecs = getCurrentSessionTime(session).toLong(),
+                                    roundCount = getRoundCount(session),
+                                    totalRounds = totalRounds,
+                                    switched = if (completed.get()) false else switched.get(),
+                                    firstTick = false))
+
+                            // completing the timer after sending the last tick
+                            if (completed.get()) {
+                                emitter.onComplete()
+                                terminateTimer()
+                                return@subscribeBy
+                            }
+
+                            // After everything is done, increment elapsed time to move on to the next tick
+                            elapsed.getAndAdd(1)
+                            switched.set(false)
                         }
-
-                        // reset the elapsed time because we switched to the next session
-                        if (!completed.get()) elapsed.set(0)
-                    }
-
-
-                    // Send the tick info
-                    val session = curSession.get()
-                    emitter.onNext(TickInfo(
-                            session = session,
-                            workoutName = getCurrentSessionName(session),
-                            remianingSecs = (getCurrentSessionTime(session) - elapsed.get()),
-                            roundTotalSecs = getCurrentSessionTime(session).toLong(),
-                            roundCount = getRoundCount(session),
-                            totalRounds = totalRounds,
-                            switched = if (completed.get()) false else switched.get(),
-                            firstTick = false))
-
-                    // completing the timer after sending the last tick
-                    if (completed.get()) {
-                        emitter.onComplete()
-                        terminateTimer()
-                        return@subscribeBy
-                    }
-
-                    // After everything is done, increment elapsed time to move on to the next tick
-                    elapsed.getAndAdd(1)
-                    switched.set(false)
-                }
     }
 
 

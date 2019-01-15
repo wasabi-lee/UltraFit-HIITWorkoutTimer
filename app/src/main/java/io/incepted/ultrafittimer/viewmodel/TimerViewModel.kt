@@ -8,8 +8,6 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import io.incepted.ultrafittimer.R
 import io.incepted.ultrafittimer.db.DbRepository
-import io.incepted.ultrafittimer.db.model.Preset
-import io.incepted.ultrafittimer.db.model.TimerSetting
 import io.incepted.ultrafittimer.timer.TickInfo
 import io.incepted.ultrafittimer.timer.TimerCommunication
 import io.incepted.ultrafittimer.util.SingleLiveEvent
@@ -51,13 +49,26 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     val locked = ObservableBoolean(false)
 
+    val shouldLockBackButton: ObservableBoolean
+        // lock the back button only when the lock interface is requested and the timer is still running
+        get() = ObservableBoolean(locked.get() && completeTimer.value == false)
+
+    val timerCompleted = ObservableBoolean(false)
+
     val backgroundColor = ObservableField<Int>(Color.parseColor("#ffffff"))
 
     init {
         completeTimer.value = false
     }
 
+
     fun start() {
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        locked.set(false)
     }
 
 
@@ -137,7 +148,7 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
     private fun handleSessionSwitch(intent: Intent) {
         val sess = intent.getIntExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_SESSION, 0)
         val roundTotal = intent.getLongExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_ROUND_TOTAL_SECS, 0L)
-        val firstTick = intent.getBooleanExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_FIRST_TICK, false);
+        val firstTick = intent.getBooleanExtra(TimerCommunication.BR_EXTRA_KEY_TICK_SESSION_FIRST_TICK, false)
         animateWave.value = TickInfo(sess, roundTotal, firstTick)
         backgroundColor.set(WorkoutSession.getSessionColor(appContext, sess))
     }
@@ -145,16 +156,15 @@ class TimerViewModel @Inject constructor(val appContext: Application, val reposi
 
     fun showCompletedScreen() {
         backgroundColor.set(WorkoutSession.getSessionColor(appContext, WorkoutSession.COMPLETED))
-
+        timerCompleted.set(true)
         workoutName.set("Completed")
-
         remainingTime.set("00:00")
-
         roundCount.set("-/-")
-
     }
 
+
     private fun handleTimerCompletion() {
+        showCompletedScreen()
         completeTimer.value = true
         locked.set(true) // disabling further interaction
     }

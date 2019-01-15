@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="io.incepted.ultrafittimer.viewmodel.TimerViewModel" />
@@ -34,6 +36,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
+            android:visibility="@{viewmodel.timerCompleted ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewmodel.toggleScreenInteraction()}"
             android:src="@{viewmodel.locked ? @drawable/ic_lock_white_24 : @drawable/ic_lock_open_white_24}"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,8 +49,8 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:alpha="@{viewmodel.locked ? 0.5f : 1f}"
-            android:clickable="@{!viewmodel.locked}"
+            android:alpha="@{viewmodel.shouldLockBackButton ? 0.5f : 1f}"
+            android:clickable="@{!viewmodel.shouldLockBackButton}"
             android:onClick="@{() -> viewmodel.exitTimer()}"
             android:src="@drawable/ic_arrow_back_white"
             app:layout_constraintStart_toStartOf="parent"

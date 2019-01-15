@@ -23,7 +23,6 @@ import javax.inject.Inject
 import android.app.NotificationManager
 import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 
@@ -51,9 +50,9 @@ class TimerActivity : BaseActivity() {
 
     private lateinit var receiver: BroadcastReceiver
 
-    lateinit var waveHelper: WaveHelper
+    private lateinit var waveHelper: WaveHelper
 
-    lateinit var progressHelper: ProgressHelper
+    private lateinit var progressHelper: ProgressHelper
 
 
     // ---------------------------------------------- Lifecycle --------------------------------------
@@ -81,10 +80,10 @@ class TimerActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-
         // finish activity if the timer was already completed
         if (TimerService.TIMER_TERMINATED) {
             timerViewModel.showCompletedScreen()
+            completeAnimation()
             Single.timer(5, TimeUnit.SECONDS)
                     .subscribeBy {
                         finish()
@@ -170,8 +169,10 @@ class TimerActivity : BaseActivity() {
         })
 
         timerViewModel.completeTimer.observe(this, Observer {
-            if (it)
+            if (it) {
                 Toast.makeText(applicationContext, "Workout Completed", Toast.LENGTH_SHORT).show()
+                completeAnimation()
+            }
         })
 
         timerViewModel.finishActivity.observe(this, Observer {
@@ -186,6 +187,7 @@ class TimerActivity : BaseActivity() {
             }
         })
 
+
         timerViewModel.resumePauseWave.observe(this, Observer {
             if (it) {
                 waveHelper.pauseWave()
@@ -198,10 +200,14 @@ class TimerActivity : BaseActivity() {
     }
 
 
+    private fun completeAnimation() {
+        waveHelper.completeWave()
+        progressHelper.completeProgress()
+    }
+
+
     private fun initService() {
-
         // Only init Service when the timer hasn't been executed.
-
         val bundle = Bundle()
         bundle.putBoolean(TimerCommunication.BUNDLE_KEY_IS_PRESET, fromPreset)
         bundle.putLong(TimerCommunication.BUNDLE_KEY_TARGET_ID, targetId)

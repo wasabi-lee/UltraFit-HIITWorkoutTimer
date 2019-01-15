@@ -41,6 +41,11 @@ class WaveHelper(private val mWaveView: WaveView) {
     }
 
 
+    fun completeWave() {
+        mWaveView.waterLevelRatio = 1.0f
+    }
+
+
     private fun initAnimation() {
         val animators = arrayListOf<Animator>()
 
@@ -67,6 +72,7 @@ class WaveHelper(private val mWaveView: WaveView) {
         mAnimatorSet = AnimatorSet()
         mAnimatorSet!!.playTogether(animators)
     }
+
 
     fun liftWave(tickInfo: TickInfo) {
 

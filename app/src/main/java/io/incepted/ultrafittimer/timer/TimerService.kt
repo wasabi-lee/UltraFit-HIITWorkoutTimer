@@ -159,7 +159,8 @@ class TimerService : Service(),
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onNext = {
-                            totalProgress++
+                            if (!it.firstTick)
+                                totalProgress++
                             processTick(it)
                             updateNotification(it)
                         },
