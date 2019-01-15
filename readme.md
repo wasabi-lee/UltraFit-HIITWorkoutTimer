@@ -32,5 +32,5 @@ UltraFit+ tries to implement the latest frameworks and tools! UltraFit+ is curre
 
 ### Screenshots
 
-- ![alt text](https://github.com/wasabi-lee/UltraFit-HIITWorkoutTimer/blob/master/screenshots/resized_1.png?raw=true)
-- ![alt text](https://github.com/wasabi-lee/UltraFit-HIITWorkoutTimer/blob/master/screenshots/resized_2.png?raw=true)
+![alt text](https://github.com/wasabi-lee/UltraFit-HIITWorkoutTimer/blob/master/screenshots/resized_1.png?raw=true)
+![alt text](https://github.com/wasabi-lee/UltraFit-HIITWorkoutTimer/blob/master/screenshots/resized_2.png?raw=true)
